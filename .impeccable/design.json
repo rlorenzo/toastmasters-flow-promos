@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-06T16:30:00-07:00",
+  "title": "Design System: Signal Chain Walkthrough",
+  "extensions": {
+    "colorMeta": {
+      "housing-deep": { "role": "neutral", "displayName": "Housing Deep", "canonical": "oklch(20.8% 0.009 255.6)", "tonalRamp": ["oklch(15.0% 0.009 255.6)", "oklch(26.4% 0.009 255.6)", "oklch(37.9% 0.009 255.6)", "oklch(49.3% 0.009 255.6)", "oklch(60.7% 0.009 255.6)", "oklch(72.1% 0.009 255.6)", "oklch(83.6% 0.009 255.6)", "oklch(95.0% 0.009 255.6)"] },
+      "housing": { "role": "neutral", "displayName": "Housing", "canonical": "oklch(23.7% 0.011 254.1)", "tonalRamp": ["oklch(15.0% 0.011 254.1)", "oklch(26.4% 0.011 254.1)", "oklch(37.9% 0.011 254.1)", "oklch(49.3% 0.011 254.1)", "oklch(60.7% 0.011 254.1)", "oklch(72.1% 0.011 254.1)", "oklch(83.6% 0.011 254.1)", "oklch(95.0% 0.011 254.1)"] },
+      "panel": { "role": "neutral", "displayName": "Panel", "canonical": "oklch(27.9% 0.015 256.8)", "tonalRamp": ["oklch(15.0% 0.015 256.8)", "oklch(26.4% 0.015 256.8)", "oklch(37.9% 0.015 256.8)", "oklch(49.3% 0.015 256.8)", "oklch(60.7% 0.015 256.8)", "oklch(72.1% 0.015 256.8)", "oklch(83.6% 0.015 256.8)", "oklch(95.0% 0.015 256.8)"] },
+      "panel-hi": { "role": "neutral", "displayName": "Panel High", "canonical": "oklch(32.3% 0.016 255.6)", "tonalRamp": ["oklch(15.0% 0.016 255.6)", "oklch(26.4% 0.016 255.6)", "oklch(37.9% 0.016 255.6)", "oklch(49.3% 0.016 255.6)", "oklch(60.7% 0.016 255.6)", "oklch(72.1% 0.016 255.6)", "oklch(83.6% 0.016 255.6)", "oklch(95.0% 0.016 255.6)"] },
+      "bezel": { "role": "neutral", "displayName": "Bezel", "canonical": "oklch(37.2% 0.017 251.8)", "tonalRamp": ["oklch(15.0% 0.017 251.8)", "oklch(26.4% 0.017 251.8)", "oklch(37.9% 0.017 251.8)", "oklch(49.3% 0.017 251.8)", "oklch(60.7% 0.017 251.8)", "oklch(72.1% 0.017 251.8)", "oklch(83.6% 0.017 251.8)", "oklch(95.0% 0.017 251.8)"] },
+      "hairline": { "role": "neutral", "displayName": "Etched Hairline", "canonical": "rgba(233,229,218,.10)", "note": "Alpha overlay of ink; no tonal ramp — vary alpha (.10 regular, .18 strong), not lightness." },
+      "hairline-strong": { "role": "neutral", "displayName": "Etched Hairline Strong", "canonical": "rgba(233,229,218,.18)", "note": "Alpha overlay of ink; outer borders and link underlines." },
+      "ink": { "role": "neutral", "displayName": "Silkscreen Ivory", "canonical": "oklch(92.2% 0.015 90.2)", "tonalRamp": ["oklch(15.0% 0.015 90.2)", "oklch(26.4% 0.015 90.2)", "oklch(37.9% 0.015 90.2)", "oklch(49.3% 0.015 90.2)", "oklch(60.7% 0.015 90.2)", "oklch(72.1% 0.015 90.2)", "oklch(83.6% 0.015 90.2)", "oklch(95.0% 0.015 90.2)"] },
+      "ink-bright": { "role": "neutral", "displayName": "Silkscreen Bright", "canonical": "oklch(96.5% 0.010 87.5)", "tonalRamp": ["oklch(15.0% 0.010 87.5)", "oklch(26.4% 0.010 87.5)", "oklch(37.9% 0.010 87.5)", "oklch(49.3% 0.010 87.5)", "oklch(60.7% 0.010 87.5)", "oklch(72.1% 0.010 87.5)", "oklch(83.6% 0.010 87.5)", "oklch(95.0% 0.010 87.5)"] },
+      "ink-dim": { "role": "neutral", "displayName": "Silkscreen Dim", "canonical": "oklch(74.5% 0.009 247.9)", "tonalRamp": ["oklch(15.0% 0.009 247.9)", "oklch(26.4% 0.009 247.9)", "oklch(37.9% 0.009 247.9)", "oklch(49.3% 0.009 247.9)", "oklch(60.7% 0.009 247.9)", "oklch(72.1% 0.009 247.9)", "oklch(83.6% 0.009 247.9)", "oklch(95.0% 0.009 247.9)"] },
+      "ink-faint": { "role": "neutral", "displayName": "Silkscreen Faint", "canonical": "oklch(60.6% 0.013 248.1)", "tonalRamp": ["oklch(15.0% 0.013 248.1)", "oklch(26.4% 0.013 248.1)", "oklch(37.9% 0.013 248.1)", "oklch(49.3% 0.013 248.1)", "oklch(60.7% 0.013 248.1)", "oklch(72.1% 0.013 248.1)", "oklch(83.6% 0.013 248.1)", "oklch(95.0% 0.013 248.1)"] },
+      "go-lens": { "role": "signal-go", "displayName": "Lamp Green (Lens)", "canonical": "oklch(63.7% 0.155 146.0)", "tonalRamp": ["oklch(15.0% 0.155 146.0)", "oklch(26.4% 0.155 146.0)", "oklch(37.9% 0.155 146.0)", "oklch(49.3% 0.155 146.0)", "oklch(60.7% 0.155 146.0)", "oklch(72.1% 0.155 146.0)", "oklch(83.6% 0.155 146.0)", "oklch(95.0% 0.155 146.0)"] },
+      "go-ink": { "role": "signal-go", "displayName": "Lamp Green (Ink)", "canonical": "oklch(77.5% 0.144 146.0)", "tonalRamp": ["oklch(15.0% 0.144 146.0)", "oklch(26.4% 0.144 146.0)", "oklch(37.9% 0.144 146.0)", "oklch(49.3% 0.144 146.0)", "oklch(60.7% 0.144 146.0)", "oklch(72.1% 0.144 146.0)", "oklch(83.6% 0.144 146.0)", "oklch(95.0% 0.144 146.0)"] },
+      "go-glow": { "role": "signal-go", "displayName": "Lamp Green (Glow)", "canonical": "rgba(63,163,77,.55)", "note": "Alpha bloom of go-lens; lamp box-shadow only." },
+      "hold-lens": { "role": "signal-hold", "displayName": "Lamp Amber (Lens)", "canonical": "oklch(75.0% 0.141 76.2)", "tonalRamp": ["oklch(15.0% 0.141 76.2)", "oklch(26.4% 0.141 76.2)", "oklch(37.9% 0.141 76.2)", "oklch(49.3% 0.141 76.2)", "oklch(60.7% 0.141 76.2)", "oklch(72.1% 0.141 76.2)", "oklch(83.6% 0.141 76.2)", "oklch(95.0% 0.141 76.2)"] },
+      "hold-ink": { "role": "signal-hold", "displayName": "Lamp Amber (Ink)", "canonical": "oklch(82.3% 0.122 78.4)", "tonalRamp": ["oklch(15.0% 0.122 78.4)", "oklch(26.4% 0.122 78.4)", "oklch(37.9% 0.122 78.4)", "oklch(49.3% 0.122 78.4)", "oklch(60.7% 0.122 78.4)", "oklch(72.1% 0.122 78.4)", "oklch(83.6% 0.122 78.4)", "oklch(95.0% 0.122 78.4)"] },
+      "hold-glow": { "role": "signal-hold", "displayName": "Lamp Amber (Glow)", "canonical": "rgba(224,160,50,.55)", "note": "Alpha bloom of hold-lens; lamp box-shadow only." },
+      "spend-lens": { "role": "signal-spend", "displayName": "Lamp Red (Lens)", "canonical": "oklch(58.8% 0.170 31.6)", "tonalRamp": ["oklch(15.0% 0.170 31.6)", "oklch(26.4% 0.170 31.6)", "oklch(37.9% 0.170 31.6)", "oklch(49.3% 0.170 31.6)", "oklch(60.7% 0.170 31.6)", "oklch(72.1% 0.170 31.6)", "oklch(83.6% 0.170 31.6)", "oklch(95.0% 0.170 31.6)"] },
+      "spend-ink": { "role": "signal-spend", "displayName": "Lamp Red (Ink)", "canonical": "oklch(72.5% 0.139 33.0)", "tonalRamp": ["oklch(15.0% 0.139 33.0)", "oklch(26.4% 0.139 33.0)", "oklch(37.9% 0.139 33.0)", "oklch(49.3% 0.139 33.0)", "oklch(60.7% 0.139 33.0)", "oklch(72.1% 0.139 33.0)", "oklch(83.6% 0.139 33.0)", "oklch(95.0% 0.139 33.0)"] },
+      "spend-glow": { "role": "signal-spend", "displayName": "Lamp Red (Glow)", "canonical": "rgba(206,75,54,.55)", "note": "Alpha bloom of spend-lens; lamp box-shadow only." }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Masthead headline only. Archivo compressed to wdth 78; stacked spans, one line per thought; the charged line takes spend-ink." },
+      "headline": { "displayName": "Headline", "purpose": "Section heads, wdth 92." },
+      "title": { "displayName": "Title", "purpose": "Step and panel titles." },
+      "lede": { "displayName": "Lede", "purpose": "Masthead standfirst in ink-dim, max 56ch; bold runs get ink at weight 600." },
+      "body": { "displayName": "Body", "purpose": "Prose at wdth 100, held to the 68ch measure." },
+      "label": { "displayName": "Silkscreen Plate", "purpose": "Uppercase equipment labels: wdth 84, tracked 0.17em, ink-faint. State words/badges are the same voice at 0.62-0.63rem / 0.15em tracking in state ink; table headers at 0.66rem / 0.15em." },
+      "code": { "displayName": "Code", "purpose": "JetBrains Mono for anything executable: blocks at 0.82rem/1.72, inline at 0.88em, station numbers 0.78rem, timestamps 0.73rem, costs 0.68rem." }
+    },
+    "shadows": [
+      { "name": "console-frame", "value": "inset 0 1px 0 rgba(255,255,255,.11), 0 16px 44px rgba(0,0,0,.5), 0 3px 8px rgba(0,0,0,.55)", "purpose": "The signal rail only — the heaviest object on the page." },
+      { "name": "raised-panel", "value": "inset 0 1px 0 rgba(255,255,255,.045), 0 8px 26px rgba(0,0,0,.38), 0 2px 5px rgba(0,0,0,.45)", "purpose": "Step panels and the timeline readout. Inset top-light + deep soft shadow + tight contact shadow, always all three." },
+      { "name": "bolted-plate", "value": "inset 0 1px 0 rgba(255,255,255,.075), inset 0 -8px 18px rgba(0,0,0,.28)", "purpose": "Rail stations — no drop shadow, a plate is fastened to the frame, not floating." },
+      { "name": "recessed-well", "value": "inset 0 1px 3px rgba(0,0,0,.5)", "purpose": "Code blocks, sunk into the housing." },
+      { "name": "lens-stack", "value": "inset 0 0 0 1px rgba(0,0,0,.55), inset 0 1px 2px rgba(255,255,255,.22), 0 0 0 3px #3A4149, 0 1px 1px rgba(0,0,0,.7), 0 0 14px var(--glow)", "purpose": "Lamps only: dark seat ring, glass highlight, machined bezel, contact shadow, coloured bloom. --glow swaps per state (go/hold/spend glow tokens); transparent when unlit." }
+    ],
+    "motion": [
+      { "name": "ease-mechanical", "value": "cubic-bezier(.16,1,.3,1)", "purpose": "The only easing on the page; used by every transition and the energize animation." },
+      { "name": "energize", "value": "energize 1.05s cubic-bezier(.16,1,.3,1) both", "purpose": "The one authored moment. Keyframes on filter: 0% saturate(.28) brightness(.42) -> 38% saturate(1.35) brightness(1.5) -> 100% saturate(1.18) brightness(1.06). Fired by adding .is-lit when the group scrolls into view (IntersectionObserver, threshold .35). Lamps are lit by default in CSS; this only adds the warm-up." },
+      { "name": "stagger-rail", "value": "110ms", "purpose": "Per-station delay when the rail energizes." },
+      { "name": "stagger-legend", "value": "140ms", "purpose": "Per-cell delay when the legend energizes." },
+      { "name": "lamp-transition", "value": "filter .5s, box-shadow .5s", "purpose": "Lamp state settling, on ease-mechanical." },
+      { "name": "surface-transition", "value": "background .3s", "purpose": "Station hover: the metal's finish changes, never its position or shadow. No transform animation exists anywhere. prefers-reduced-motion disables all motion." }
+    ],
+    "breakpoints": [
+      { "name": "rail-collapse", "value": "860px", "purpose": "Signal rail 6->2 columns; timeline 4->2." },
+      { "name": "single-column", "value": "560px", "purpose": "Rail and timeline to 1 column; fault table drops its header row and reflows rows as blocks." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Signal Lamp",
+      "kind": "custom",
+      "refersTo": "lamp",
+      "description": "The atom of the system: a lens in a machined bezel built from two radial gradients on one element. Shown in go, hold, spend, and unlit states; state classes swap --lens and --glow.",
+      "html": "<div class=\"ds-lamp-row\"><span class=\"ds-lamp ds-lamp-go\"></span><span class=\"ds-lamp ds-lamp-hold\"></span><span class=\"ds-lamp ds-lamp-spend\"></span><span class=\"ds-lamp\"></span></div>",
+      "css": ".ds-lamp-row{display:flex;gap:18px;align-items:center;padding:14px}.ds-lamp{--lens:#3A4149;--glow:transparent;position:relative;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.22),0 0 0 3px #3A4149,0 1px 1px rgba(0,0,0,.7),0 0 14px var(--glow);filter:saturate(1.18) brightness(1.06);transition:filter .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1)}.ds-lamp::after{content:'';position:absolute;inset:12%;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}.ds-lamp-go{--lens:#3FA34D;--glow:rgba(63,163,77,.55)}.ds-lamp-hold{--lens:#E0A032;--glow:rgba(224,160,50,.55)}.ds-lamp-spend{--lens:#CE4B36;--glow:rgba(206,75,54,.55)}"
+    },
+    {
+      "name": "Rail Station",
+      "kind": "nav",
+      "refersTo": "station",
+      "description": "A bolted plate on the signal rail; an anchor link and the page's only navigation. Fastener strips top and bottom, 40px lamp, silkscreen state word, mono cost. Spend variant shown.",
+      "html": "<a class=\"ds-station ds-station-spend\" href=\"#\"><span class=\"ds-station-num\">02</span><span class=\"ds-station-lamp\"></span><span class=\"ds-station-state\">Spend</span><span class=\"ds-station-name\">Generate background</span><span class=\"ds-station-cost\">~12 credits</span></a>",
+      "css": ".ds-station{--lens:#CE4B36;--glow:rgba(206,75,54,.55);--state-ink:#F0836C;position:relative;display:flex;flex-direction:column;align-items:center;gap:.5rem;width:190px;padding:1.7rem .8rem 1.15rem;border-radius:4px;background:linear-gradient(180deg,#2E343C,#1F242A);border:1px solid rgba(0,0,0,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.075),inset 0 -8px 18px rgba(0,0,0,.28);color:#E9E5DA;font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif;text-decoration:none;cursor:pointer;transition:background .3s cubic-bezier(.16,1,.3,1)}.ds-station:hover,.ds-station:focus-visible{background:linear-gradient(180deg,#3A424C,#242A31)}.ds-station:focus-visible{outline:2px solid #E9E5DA;outline-offset:2px}.ds-station::before,.ds-station::after{content:'';position:absolute;left:7px;right:7px;height:4px;pointer-events:none;background:radial-gradient(circle at 2px 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px),radial-gradient(circle at calc(100% - 2px) 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px)}.ds-station::before{top:6px}.ds-station::after{bottom:6px}.ds-station-num{position:absolute;top:.5rem;left:.75rem;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.78rem;font-weight:500;color:rgba(233,229,218,.3)}.ds-station-lamp{position:relative;width:40px;height:40px;margin:.2rem 0 .35rem;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.22),0 0 0 3px #3A4149,0 1px 1px rgba(0,0,0,.7),0 0 14px var(--glow);filter:saturate(1.18) brightness(1.06)}.ds-station-lamp::after{content:'';position:absolute;inset:12%;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}.ds-station-state{font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84;color:var(--state-ink)}.ds-station-name{font-weight:700;font-size:.88rem;line-height:1.24;letter-spacing:-.01em;text-align:center}.ds-station-cost{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.68rem;color:#7C838A;margin-top:.5rem;text-align:center}"
+    },
+    {
+      "name": "Step Panel",
+      "kind": "card",
+      "refersTo": "step-panel",
+      "description": "A raised console with a lit header strip: lamp, mono number, title, and a bordered state badge. Hold variant shown; only the spend variant may add the tinted border and head gradient.",
+      "html": "<article class=\"ds-step\"><div class=\"ds-step-head\"><span class=\"ds-step-lamp\"></span><span class=\"ds-step-num\">06</span><h3 class=\"ds-step-title\">Verify &amp; clear</h3><span class=\"ds-step-state\">Hold</span></div><div class=\"ds-step-body\"><p class=\"ds-step-p\">The amber lamp is not a formality. Everything upstream is a machine that cannot read, and this is where a person reads.</p></div></article>",
+      "css": ".ds-step{--lens:#E0A032;--glow:rgba(224,160,50,.55);--state-ink:#F0BB63;max-width:560px;border:1px solid rgba(233,229,218,.18);border-radius:12px;overflow:hidden;background:#242930;box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 8px 26px rgba(0,0,0,.38),0 2px 5px rgba(0,0,0,.45);font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E9E5DA}.ds-step-head{display:flex;align-items:center;gap:1rem;padding:1.15rem 1.4rem;background:linear-gradient(180deg,#2E343C,#242930);border-bottom:1px solid rgba(233,229,218,.10)}.ds-step-lamp{position:relative;flex:none;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.22),0 0 0 3px #3A4149,0 1px 1px rgba(0,0,0,.7),0 0 14px var(--glow);filter:saturate(1.18) brightness(1.06)}.ds-step-num{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.78rem;color:#7C838A;font-weight:500}.ds-step-title{flex:1;margin:0;font-size:1.3rem;font-weight:800;line-height:1.08;letter-spacing:-.012em}.ds-step-state{font-size:.63rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84;padding:.32rem .6rem;border-radius:3px;border:1px solid currentColor;color:var(--state-ink)}.ds-step-body{padding:1.5rem 1.4rem}.ds-step-p{margin:0;font-size:1rem;line-height:1.62;max-width:68ch}"
+    },
+    {
+      "name": "Warn Callout",
+      "kind": "custom",
+      "refersTo": "warn-callout",
+      "description": "The hazard voice, used only inside the spend step: triangle icon in spend-ink on a red-tinted well, body text in a red-warmed ivory used nowhere else.",
+      "html": "<div class=\"ds-warn\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg><p class=\"ds-warn-p\"><strong>This is the only step that costs money and the only one you cannot repeat for free.</strong> Read the confirmation dialog before approving it.</p></div>",
+      "css": ".ds-warn{display:flex;gap:.9rem;align-items:flex-start;max-width:520px;padding:1rem 1.15rem;border-radius:8px;background:rgba(206,75,54,.09);border:1px solid rgba(206,75,54,.32);font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif}.ds-warn svg{width:19px;height:19px;flex:none;margin-top:.15rem;color:#F0836C}.ds-warn-p{margin:0;font-size:.92rem;line-height:1.55;color:#EBD5CF}.ds-warn-p strong{font-weight:700;color:#F0836C}"
+    },
+    {
+      "name": "Driver Chip",
+      "kind": "chip",
+      "refersTo": "driver-chip",
+      "description": "Names the tool that drives a step: mono label with a 14px inline stroke icon, on an inset housing fitting. Non-interactive.",
+      "html": "<ul class=\"ds-driver\"><li class=\"ds-driver-chip\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 17l6-6-6-6\"/><path d=\"M12 19h8\"/></svg>templates/build.sh</li><li class=\"ds-driver-chip\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2a10 10 0 100 20 10 10 0 000-20z\"/><path d=\"M12 8v4l3 2\"/></svg>tm-meeting-recap</li></ul>",
+      "css": ".ds-driver{display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none}.ds-driver-chip{display:inline-flex;align-items:center;gap:.45rem;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.775rem;color:#A8ADB2;background:#1B1F24;border:1px solid rgba(233,229,218,.10);border-radius:5px;padding:.34rem .6rem}.ds-driver-chip svg{width:14px;height:14px;flex:none;color:#7C838A}"
+    },
+    {
+      "name": "Code Block",
+      "kind": "custom",
+      "refersTo": "code-block",
+      "description": "A recessed well sunk into the housing. Exactly two highlight voices: comments in ink-faint, strings/parameters in go-ink.",
+      "html": "<pre class=\"ds-pre\"><span class=\"ds-pre-c\"># meeting.conf — the only file edited per meeting</span>\nCLUB_NAME=<span class=\"ds-pre-p\">\"YOUR CLUB TOASTMASTERS\"</span>\nMEETING_DATE=<span class=\"ds-pre-p\">\"AUGUST 5, 2026\"</span></pre>",
+      "css": ".ds-pre{margin:0;padding:1.05rem 1.15rem;overflow-x:auto;max-width:520px;background:#15181C;border:1px solid rgba(233,229,218,.10);border-radius:8px;font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.82rem;line-height:1.72;color:#D5D9DC;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}.ds-pre-c{color:#7C838A}.ds-pre-p{color:#74CE7C}"
+    },
+    {
+      "name": "Checklist",
+      "kind": "custom",
+      "description": "An inset fitting opened by a silkscreen plate label, items led by go-ink check icons (hold-ink inside a hold context).",
+      "html": "<ul class=\"ds-check\"><span class=\"ds-check-plate\">Read before posting</span><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg><span>Every name spelled the way its owner spells it.</span></li><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg><span>No Zoom name label survived into a winner crop.</span></li></ul>",
+      "css": ".ds-check{margin:0;padding:1.05rem 1.2rem;list-style:none;max-width:520px;background:#1B1F24;border:1px solid rgba(233,229,218,.10);border-radius:8px;font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif}.ds-check-plate{display:block;margin-bottom:.7rem;font-size:.685rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;font-variation-settings:'wdth' 84;color:#7C838A}.ds-check li{display:flex;gap:.65rem;align-items:flex-start;font-size:.92rem;color:#A8ADB2;line-height:1.52}.ds-check li+li{margin-top:.5rem}.ds-check svg{width:15px;height:15px;flex:none;margin-top:.32rem;color:#74CE7C}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Signal Lamp Console",
+    "overview": "The walkthrough page (walkthrough.html) is built as a piece of club equipment: the Toastmasters timing light reimagined as a documentation grammar. The world is a machined instrument console — warm graphite housing, panels bolted to a frame, ivory lettering silkscreened onto metal — and the only colour on it comes from three lamp lenses. Green means a step is free and deterministic, amber means a person must look before anything ships, red means real credits are spent on an untrustworthy generator. Colour is never decoration; every coloured element is a literal claim about what a step costs.\n\nScope boundary, and it is load-bearing: this system governs walkthrough.html only. The card templates in templates/ are a separate, deliberately different visual system that follows Toastmasters International brand rules (Loyal Blue, Happy Yellow, Montserrat) because the video output must. The walkthrough page deliberately does not, so the page cannot be mistaken for an official TI property — the repo's non-affiliation notice depends on the two systems never merging. Do not carry tokens in either direction.\n\nThe atmosphere is calm, dense with information but generous with rhythm: fluid clamp() spacing throughout, prose held to a strict measure, and depth rendered as physical machining (inset top-lights, offset drop shadows, screw-head fasteners) rather than as floating cards. Motion is a single authored moment — lamps energizing like incandescent bulbs — and everything else holds still.",
+    "keyCharacteristics": [
+      "Three signal colours (green / amber / red) carrying literal go / hold / spend states; everything else is desaturated graphite and ivory",
+      "Machined-hardware depth: inset edge highlights, paired drop shadows, bolted plates, recessed wells",
+      "Archivo variable font with an active width axis (narrow display, compressed silkscreen labels); JetBrains Mono for anything executable",
+      "Lit-by-default lamps: pure-CSS components that read correctly with no JavaScript",
+      "One keyframe animation on the whole page; layout never moves"
+    ],
+    "rules": [
+      { "name": "The Three Lamps Rule", "body": "Green, amber, and red are the page's only chromatic colours, and each is a literal state. Never add a fourth signal colour, and never use a signal tint decoratively — a coloured element is a claim about what a step costs.", "section": "colors" },
+      { "name": "The Lens-and-Ink Rule", "body": "Every state has a lens value and a lightened ink value. Lenses go on lamp glass, glows, and tinted surfaces; inks go on type against graphite (the lightening is what keeps small text legible on dark panels). Never set text in a lens colour.", "section": "colors" },
+      { "name": "The No-Pure-White Rule", "body": "#FFF never appears as a fill or text colour; the brightest ink is #F6F3EC. Pure white exists only inside gradients and inset highlights at low alpha (specular glints on lenses and panel edges).", "section": "colors" },
+      { "name": "The Silkscreen Rule", "body": "Anything that labels hardware — plates, state words, column headers — is uppercase, weight 700, compressed to wdth 84, and tracked wide (0.15–0.17em) at under 0.7rem. Headings run the opposite direction: as size grows, the width axis narrows (headline 92 → display 78) and letter-spacing tightens. Width and tracking always move together.", "section": "typography" },
+      { "name": "The Mono-Means-Executable Rule", "body": "JetBrains Mono is reserved for the machine register: commands, filenames, config values, station numbers, timestamps, credit costs. It is never used for emphasis or decoration.", "section": "typography" },
+      { "name": "The Machined Edge Rule", "body": "A raised surface always carries all three parts: 1px inset top-light, a deep soft shadow, and a tight contact shadow. A recessed surface uses inset shadows only. Nothing floats with a single ambient shadow, and shadows never respond to hover — hover changes the metal's finish (background gradient), not its height.", "section": "elevation" },
+      { "name": "The Nesting Radius Rule", "body": "Radius steps down with depth: 12px console → 8px well → 4–5px cell → 3px badge. A child surface never has a larger radius than its parent.", "section": "shapes" },
+      { "name": "The Lit-By-Default Rule", "body": "Lamps render fully lit in pure CSS (filter: saturate(1.18) brightness(1.06)). JavaScript only adds the warm-up; a lamp must never depend on script to read correctly.", "section": "components" }
+    ],
+    "dos": [
+      "Do assign every step, station, and badge exactly one state class (go / hold / spend) and let the class colour lamp, word, and badge together — never colour those pieces individually.",
+      "Do keep lamps legible without JavaScript; script may only add the energize warm-up and stagger.",
+      "Do hold prose to the 68ch measure even inside wide panels, and keep all page-level spacing fluid (clamp()), reserving exact pixels for hardware details (fasteners, rail gaps, hairlines).",
+      "Do build dividers as etched hairlines — ivory at .10/.18 alpha, or 1px grid gaps over the hairline colour — rather than opaque borders.",
+      "Do set anything executable (commands, filenames, config values, numbers on plates) in JetBrains Mono, and every hardware label in the compressed silkscreen voice (uppercase, wdth 84, 0.15–0.17em tracking).",
+      "Do honour prefers-reduced-motion by disabling the energize animation and transitions entirely, as the page already does."
+    ],
+    "donts": [
+      "Don't use Toastmasters International brand elements on this page — no Loyal Blue #004165, no Happy Yellow #F2DF74, no Montserrat, no TI logo. Those bind the video templates in templates/; the walkthrough page must stay visually independent or the non-affiliation notice stops being credible.",
+      "Don't add a fourth signal colour, use go/hold/spend tints decoratively, or set text in a lens value — type takes the lightened ink variant only.",
+      "Don't give the spend treatment (tinted border, tinted head gradient, warn callout) to anything that is not the credit-spending hazard; its rarity is the argument.",
+      "Don't move layout: no transform animations, no hover lifts, no parallax. Hover changes a surface's finish (background), never its position or shadow, and the energize filter is the only keyframe animation allowed.",
+      "Don't use pure #FFF or pure #000 as fills or text; the extremes are ink-bright #F6F3EC and housing-deep #15181C, with white/black reserved for low-alpha gradient light and shade.",
+      "Don't introduce a docs sidebar or sticky table of contents; the signal rail's anchor stations are the navigation, and the single-column shell is a thesis decision, not a gap."
+    ]
+  }
+}

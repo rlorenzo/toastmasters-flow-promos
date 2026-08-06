@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal Chain — building a Toastmasters recap video with Claude Code</title>
+<meta name="description" content="A step-by-step walkthrough of the toastmaster-flow-promos pipeline: which steps are free and deterministic, which need your eyes, and the one that spends credits.">
+<style>
+/* Archivo (wght+wdth variable) and JetBrains Mono, self-hosted from webfonts/.
+   Both are SIL OFL and redistributable, unlike everything under assets/ and
+   fonts/. Self-hosted because this page's primary viewing context is a clone,
+   which may be offline; a CDN dependency would drop the silkscreen voice to
+   Helvetica exactly where the page is most likely to be read. latin +
+   latin-ext only, normal styles only — the page uses no italics. */
+@font-face{ font-family: 'Archivo'; font-style: normal; font-weight: 400 800; font-stretch: 62% 125%; font-display: swap; src: url(webfonts/Archivo-400-800-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face{ font-family: 'Archivo'; font-style: normal; font-weight: 400 800; font-stretch: 62% 125%; font-display: swap; src: url(webfonts/Archivo-400-800-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url(webfonts/JetBrainsMono-400-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url(webfonts/JetBrainsMono-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url(webfonts/JetBrainsMono-500-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url(webfonts/JetBrainsMono-500-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 700; font-display: swap; src: url(webfonts/JetBrainsMono-700-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 700; font-display: swap; src: url(webfonts/JetBrainsMono-700-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+/* ============================================================
+   SIGNAL LAMP CONSOLE
+   The Toastmasters timing light as a documentation grammar.
+   Green = free and deterministic. Amber = needs your eyes.
+   Red = spends credits and cannot be trusted.
+   ============================================================ */
+
+:root{
+  /* Housing: warm graphite, the colour of enamelled equipment */
+  --housing-deep:#15181C;
+  --housing:#1B1F24;
+  --panel:#242930;
+  --panel-hi:#2E343C;
+  --bezel:#3A4149;
+  --hairline:rgba(233,229,218,.10);
+  --hairline-strong:rgba(233,229,218,.18);
+
+  /* Silkscreen */
+  --ink:#E9E5DA;
+  --ink-dim:#A8ADB2;
+  --ink-faint:#959DA5;   /* content-carrying: must clear AA on --panel */
+
+  /* Signal states: lens colour, and a lightened tint for type */
+  --go-lens:#3FA34D;      --go-ink:#74CE7C;    --go-glow:rgba(63,163,77,.55);
+  --hold-lens:#E0A032;    --hold-ink:#F0BB63;  --hold-glow:rgba(224,160,50,.55);
+  --spend-lens:#CE4B36;   --spend-ink:#F0836C; --spend-glow:rgba(206,75,54,.55);
+
+  --measure:68ch;
+  --step:clamp(1rem,.72rem + 1.4vw,1.5rem);
+
+  --sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--housing-deep);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:clamp(16px,15px + .18vw,17.5px);
+  line-height:1.62;
+  font-variation-settings:'wdth' 100;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Machined ground: a faint vertical brush over the housing */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.014) 0 1px,transparent 1px 3px),
+    radial-gradient(120% 70% at 50% -10%,rgba(120,140,160,.10),transparent 60%);
+}
+main,header,footer{position:relative;z-index:1}
+
+.shell{width:min(100% - 2.5rem,74rem);margin-inline:auto}
+.prose{max-width:var(--measure)}
+
+h1,h2,h3{font-weight:800;line-height:1.08;letter-spacing:-.022em;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.7rem,1.7rem + 4.7vw,5.6rem);font-variation-settings:'wdth' 78;letter-spacing:-.028em;line-height:.98}
+h2{font-size:clamp(1.9rem,1.4rem + 1.9vw,2.9rem);font-variation-settings:'wdth' 92}
+h3{font-size:clamp(1.18rem,1.06rem + .5vw,1.45rem);letter-spacing:-.012em}
+p{margin:0 0 1.05em}
+a{color:var(--ink);text-decoration-color:var(--hairline-strong);text-underline-offset:.22em;text-decoration-thickness:1px}
+a:hover{text-decoration-color:currentColor}
+strong{font-weight:700;color:#F6F3EC}
+
+/* Silkscreened plate lettering — equipment labels, never a heading kicker */
+.plate{
+  font-size:.685rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;
+  font-variation-settings:'wdth' 84;color:var(--ink-faint);
+}
+
+/* ---------------- Lamp ---------------- */
+.lamp{
+  --lens:var(--bezel);--glow:transparent;
+  position:relative;flex:none;
+  width:var(--d,22px);height:var(--d,22px);border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),
+    radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.55),
+    inset 0 1px 2px rgba(255,255,255,.22),
+    0 0 0 3px var(--bezel),
+    0 1px 1px rgba(0,0,0,.7),
+    0 0 var(--bloom,0px) var(--glow);
+  /* Lit is the default: a lamp must never depend on JS to read correctly. */
+  filter:saturate(var(--sat,1.18)) brightness(var(--bright,1.06));
+  transition:filter .5s var(--ease),box-shadow .5s var(--ease);
+}
+.lamp::after{ /* lens fresnel ring */
+  content:'';position:absolute;inset:12%;border-radius:50%;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+}
+.lamp{--bloom:14px}
+
+.go .lamp{--lens:var(--go-lens);--glow:var(--go-glow)}
+.hold .lamp{--lens:var(--hold-lens);--glow:var(--hold-glow)}
+.spend .lamp{--lens:var(--spend-lens);--glow:var(--spend-glow)}
+
+/* The one authored moment: an incandescent warm-up that overshoots, then settles. */
+@keyframes energize{
+  0%{filter:saturate(.28) brightness(.42)}
+  38%{filter:saturate(1.35) brightness(1.5)}
+  100%{filter:saturate(1.18) brightness(1.06)}
+}
+.is-lit .lamp{animation:energize 1.05s var(--ease) both}
+
+/* ---------------- Masthead ---------------- */
+.masthead{padding:clamp(3.5rem,2rem + 7vw,7.5rem) 0 clamp(2rem,1rem + 3vw,3.5rem)}
+.masthead h1 span{display:block}
+.masthead h1 .lit{color:var(--spend-ink)}
+.lede{font-size:clamp(1.08rem,1rem + .5vw,1.32rem);color:var(--ink-dim);max-width:56ch;margin-top:1.6rem;line-height:1.55}
+.lede b{color:var(--ink);font-weight:600}
+
+.origin{
+  display:flex;flex-wrap:wrap;gap:.55rem 1.4rem;align-items:baseline;
+  margin-top:2.4rem;padding-top:1.1rem;border-top:1px solid var(--hairline);
+}
+.origin code{font-family:var(--mono);font-size:.8rem;color:var(--ink-dim)}
+
+/* ---------------- Signal rail ---------------- */
+.rail-wrap{margin:clamp(2.5rem,1.5rem + 4vw,4.5rem) 0 0}
+/* A bolted instrument panel: plates fastened to a frame that shows between them */
+.rail{
+  position:relative;display:grid;gap:6px;
+  grid-template-columns:repeat(6,1fr);
+  padding:9px;border-radius:12px;
+  background:linear-gradient(180deg,#333942,#22272E);
+  border:1px solid #11141A;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.11),
+    0 16px 44px rgba(0,0,0,.5),
+    0 3px 8px rgba(0,0,0,.55);
+}
+.station{
+  position:relative;border-radius:4px;
+  background:linear-gradient(180deg,var(--panel-hi),#1F242A);
+  border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),inset 0 -8px 18px rgba(0,0,0,.28);
+  padding:1.7rem .8rem 1.15rem;
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:inherit;font:inherit;text-decoration:none;cursor:pointer;
+  transition:background .3s var(--ease);
+}
+.station:hover,.station:focus-visible{background:linear-gradient(180deg,#3A424C,#242A31)}
+.station:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* Fasteners, top and bottom of every plate */
+.station::before,.station::after{
+  content:'';position:absolute;left:7px;right:7px;height:4px;pointer-events:none;
+  background:
+    radial-gradient(circle at 2px 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px),
+    radial-gradient(circle at calc(100% - 2px) 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px);
+}
+.station::before{top:6px}
+.station::after{bottom:6px}
+.station .num{
+  position:absolute;top:.5rem;left:.75rem;
+  font-family:var(--mono);font-size:.78rem;font-weight:500;color:rgba(233,229,218,.3);
+}
+.station .lamp{--d:40px;margin:.2rem 0 .35rem}
+.station .name{font-weight:700;font-size:.88rem;line-height:1.24;letter-spacing:-.01em;text-align:center}
+.station .state{font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84}
+.go .state{color:var(--go-ink)} .hold .state{color:var(--hold-ink)} .spend .state{color:var(--spend-ink)}
+.station .cost{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);margin-top:auto;padding-top:.5rem;text-align:center}
+
+.rail-caption{margin-top:1rem;color:var(--ink-faint);font-size:.83rem}
+
+/* ---------------- Legend ---------------- */
+.legend{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;
+  background:var(--hairline);border:1px solid var(--hairline-strong);border-radius:10px;overflow:hidden;
+  margin-top:clamp(2.5rem,1.5rem + 3vw,3.5rem);
+}
+.legend > div{background:var(--panel);padding:1.35rem 1.4rem}
+.legend .head{display:flex;align-items:center;gap:.7rem;margin-bottom:.55rem}
+.legend .word{font-weight:800;font-size:.95rem;letter-spacing:.02em}
+.legend p{margin:0;font-size:.9rem;color:var(--ink-dim);line-height:1.5}
+.go .word{color:var(--go-ink)} .hold .word{color:var(--hold-ink)} .spend .word{color:var(--spend-ink)}
+
+/* ---------------- Sections ---------------- */
+section{padding:clamp(3.5rem,2rem + 5vw,6.5rem) 0}
+.sec-head{max-width:var(--measure);margin-bottom:clamp(2rem,1rem + 2.5vw,3rem)}
+.sec-head p{color:var(--ink-dim);margin-top:.9rem;margin-bottom:0}
+
+/* ---------------- Step panels ---------------- */
+.steps{display:flex;flex-direction:column;gap:clamp(1.25rem,.8rem + 1.5vw,2rem)}
+.step{
+  border:1px solid var(--hairline-strong);border-radius:12px;overflow:hidden;
+  background:var(--panel);
+  box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 8px 26px rgba(0,0,0,.38),0 2px 5px rgba(0,0,0,.45);
+  scroll-margin-top:2rem;
+}
+.step-head{
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  padding:1.15rem clamp(1.1rem,.8rem + 1vw,1.75rem);
+  background:linear-gradient(180deg,var(--panel-hi),var(--panel));
+  border-bottom:1px solid var(--hairline);
+}
+.step-head .num{font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);font-weight:500}
+.step-head h3{flex:1 1 14rem}
+.step-head .state{
+  font-size:.63rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  font-variation-settings:'wdth' 84;padding:.32rem .6rem;border-radius:3px;
+  border:1px solid currentColor;
+}
+.go .step-head .state{color:var(--go-ink)}
+.hold .step-head .state{color:var(--hold-ink)}
+.spend .step-head .state{color:var(--spend-ink)}
+.step-body{padding:clamp(1.25rem,.9rem + 1.2vw,1.9rem)}
+.step-body > p{max-width:var(--measure)}
+.step-body > :first-child{margin-top:0}
+.step-body > :last-child{margin-bottom:0}
+
+.driver{
+  display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.35rem;padding:0;list-style:none;
+}
+.driver li{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-family:var(--mono);font-size:.775rem;color:var(--ink-dim);
+  background:var(--housing);border:1px solid var(--hairline);border-radius:5px;
+  padding:.34rem .6rem;
+}
+.driver svg{width:14px;height:14px;flex:none;color:var(--ink-faint)}
+
+pre{
+  margin:1.35rem 0;padding:1.05rem 1.15rem;overflow-x:auto;
+  background:var(--housing-deep);border:1px solid var(--hairline);border-radius:8px;
+  font-family:var(--mono);font-size:.82rem;line-height:1.72;color:#D5D9DC;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.5);
+}
+pre .c{color:var(--ink-faint)}
+pre .p{color:var(--go-ink)}
+code{font-family:var(--mono);font-size:.88em;color:#DCE0E3}
+p code,li code,td code{background:var(--housing);border:1px solid var(--hairline);border-radius:4px;padding:.08em .34em}
+
+.check{
+  margin:1.35rem 0 0;padding:1.05rem 1.2rem;
+  background:var(--housing);border:1px solid var(--hairline);border-radius:8px;
+}
+.check ul{list-style:none;margin:0;padding:0}
+.check .plate{display:block;margin-bottom:.7rem}
+.check li{display:flex;gap:.65rem;align-items:flex-start;font-size:.92rem;color:var(--ink-dim);line-height:1.52}
+.check li + li{margin-top:.5rem}
+.check svg{width:15px;height:15px;flex:none;margin-top:.32rem;color:var(--go-ink)}
+.hold .check svg{color:var(--hold-ink)}
+
+/* The one hazardous station gets real weight, not a coloured border */
+.step.spend{border-color:rgba(206,75,54,.42)}
+.step.spend .step-head{background:linear-gradient(180deg,rgba(206,75,54,.20),rgba(206,75,54,.05))}
+.warn{
+  display:flex;gap:.9rem;align-items:flex-start;
+  margin:0 0 1.4rem;padding:1rem 1.15rem;border-radius:8px;
+  background:rgba(206,75,54,.09);border:1px solid rgba(206,75,54,.32);
+}
+.warn svg{width:19px;height:19px;flex:none;margin-top:.15rem;color:var(--spend-ink)}
+.warn p{margin:0;font-size:.92rem;line-height:1.55;color:#EBD5CF}
+.warn strong{color:var(--spend-ink)}
+
+/* ---------------- Timeline readout ---------------- */
+.readout{
+  border:1px solid var(--hairline-strong);border-radius:12px;background:var(--panel);
+  padding:clamp(1.25rem,.9rem + 1.2vw,2rem);
+  box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 8px 26px rgba(0,0,0,.38);
+}
+.tl{display:grid;gap:2px;margin:1.2rem 0 .55rem;grid-template-columns:3.6fr 4.6fr 3.8fr 3fr}
+.tl div{
+  background:linear-gradient(180deg,var(--panel-hi),var(--panel));
+  border:1px solid var(--hairline);border-radius:4px;padding:.85rem .8rem;min-width:0;
+}
+.tl .t{font-family:var(--mono);font-size:.73rem;color:var(--hold-ink)}
+.tl .s{font-weight:700;font-size:.92rem;margin-top:.2rem;letter-spacing:-.01em}
+.tl .d{font-size:.78rem;color:var(--ink-faint);margin-top:.28rem;line-height:1.4}
+.ruler{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);padding-top:.5rem;border-top:1px solid var(--hairline)}
+
+/* ---------------- Fault table ---------------- */
+.faults{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.9rem}
+.faults caption{text-align:left;color:var(--ink-faint);font-size:.85rem;padding-bottom:.9rem}
+.faults th,.faults td{text-align:left;padding:.85rem .9rem;border-bottom:1px solid var(--hairline);vertical-align:top}
+.faults th{font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;font-variation-settings:'wdth' 84}
+.faults td:first-child{color:var(--ink);font-weight:600;width:34%}
+.faults td:last-child{color:var(--ink-dim)}
+.faults tr:last-child td{border-bottom:0}
+.faults .q{color:var(--spend-ink);font-family:var(--mono);font-size:.86em}
+
+/* ---------------- Clearance ---------------- */
+.clear-list{margin:0;padding:0;list-style:none;display:grid;gap:1px;background:var(--hairline);
+  border:1px solid var(--hairline-strong);border-radius:10px;overflow:hidden}
+.clear-list li{background:var(--panel);padding:1rem 1.2rem;display:flex;gap:.8rem;align-items:flex-start;font-size:.93rem;color:var(--ink-dim)}
+.clear-list svg{width:16px;height:16px;flex:none;margin-top:.28rem;color:var(--hold-ink)}
+.clear-list b{color:var(--ink);font-weight:650}
+
+/* ---------------- Footer ---------------- */
+footer{border-top:1px solid var(--hairline);padding:3rem 0 4rem;color:var(--ink-faint);font-size:.86rem}
+footer p{max-width:var(--measure)}
+footer .disclaim{margin-top:1.6rem;padding-top:1.3rem;border-top:1px solid var(--hairline);font-size:.79rem;line-height:1.6}
+
+@media (max-width:860px){
+  .rail{grid-template-columns:repeat(2,1fr)}
+  .tl{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .rail{grid-template-columns:1fr}
+  .tl{grid-template-columns:1fr}
+  .faults td:first-child{width:auto}
+  .faults thead{position:absolute;left:-9999px}
+  .faults td{display:block;border-bottom:0;padding:.25rem .9rem}
+  .faults tr{display:block;border-bottom:1px solid var(--hairline);padding:.7rem 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .is-lit .lamp{animation:none}
+}
+</style>
+</head>
+<body>
+<!--
+THESIS: A recap video is six steps, and exactly one of them can lie to you; the page
+refuses the docs-sidebar arrangement that flattens all six into equals.
+OWN-WORLD: The Toastmasters timing light. Warm graphite housing, ivory silkscreen
+lettering, three lamp lenses — green, amber, red — as the only colour, each carrying a
+literal state. Machined panels with real offset shadow; Archivo silkscreen, JetBrains
+Mono for anything executable.
+STORY: A club officer sees one red lamp in a six-lamp chain, understands that generation
+is fenced off from exactness, and follows the chain to a finished video.
+FIRST VIEWPORT: Headline "Six steps. One red lamp." over a six-station signal rail, each
+station a lamp in its true state with its cost printed beneath.
+FORM: Signal Lamp Console, candidate 3 of the grounded list; seed key 2de9a4df.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+
+<header class="masthead">
+  <div class="shell">
+    <h1><span>Six steps.</span><span class="lit">One red lamp.</span></h1>
+    <p class="lede">Google Flow animates the background, where there is nothing to
+    misspell. Everything that has to be exact — names, dates, the disclaimer
+    Toastmasters requires in your opening frames — is rendered locally from HTML and
+    <b>proofread as a still image</b> before a single frame is assembled.</p>
+
+    <div class="origin">
+      <span class="plate">Repository</span>
+      <code>toastmaster-flow-promos</code>
+      <span class="plate">Output</span>
+      <code>15s · 1920×1080 · 24fps</code>
+    </div>
+
+    <div class="rail-wrap">
+      <div class="rail">
+        <a class="station go" href="#s1">
+          <span class="num">01</span><span class="lamp" aria-hidden="true"></span>
+          <span class="state">Go</span><span class="name">Gather assets</span>
+          <span class="cost">free · local</span>
+        </a>
+        <a class="station spend" href="#s2">
+          <span class="num">02</span><span class="lamp" aria-hidden="true"></span>
+          <span class="state">Spend</span><span class="name">Generate background</span>
+          <span class="cost">~12 credits</span>
+        </a>
+        <a class="station go" href="#s3">
+          <span class="num">03</span><span class="lamp" aria-hidden="true"></span>
+          <span class="state">Go</span><span class="name">Describe the meeting</span>
+          <span class="cost">free · local</span>
+        </a>
+        <a class="station go" href="#s4">
+          <span class="num">04</span><span class="lamp" aria-hidden="true"></span>
+          <span class="state">Go</span><span class="name">Crop the winners</span>
+          <span class="cost">free · local</span>
+        </a>
+        <a class="station go" href="#s5">
+          <span class="num">05</span><span class="lamp" aria-hidden="true"></span>
+          <span class="state">Go</span><span class="name">Build</span>
+          <span class="cost">free · ~30s</span>
+        </a>
+        <a class="station hold" href="#s6">
+          <span class="num">06</span><span class="lamp" aria-hidden="true"></span>
+          <span class="state">Hold</span><span class="name">Verify &amp; clear</span>
+          <span class="cost">your eyes</span>
+        </a>
+      </div>
+      <p class="rail-caption">Five steps you can run again for nothing. One you cannot take back.</p>
+    </div>
+
+    <div class="legend">
+      <div class="go">
+        <div class="head"><span class="lamp" style="--d:16px" aria-hidden="true"></span><span class="word">Go</span></div>
+        <p>Deterministic and free. Same inputs, same output, every time. Run it fifty times while you get the wording right.</p>
+      </div>
+      <div class="hold">
+        <div class="head"><span class="lamp" style="--d:16px" aria-hidden="true"></span><span class="word">Hold</span></div>
+        <p>The machine has done its part and cannot check itself. A person reads the result before it goes anywhere.</p>
+      </div>
+      <div class="spend">
+        <div class="head"><span class="lamp" style="--d:16px" aria-hidden="true"></span><span class="word">Spend</span></div>
+        <p>Costs real credits, returns something different every time, and no amount of prompting makes it trustworthy with text.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="shell">
+    <div class="sec-head">
+      <h2>Before you start</h2>
+      <p>The repository ships documentation, templates, and a build script — and no assets
+      at all. The Toastmasters logo belongs to Toastmasters International, and the meeting
+      photos are of people who agreed to a club post, not to a public repository. You
+      supply both.</p>
+    </div>
+
+    <div class="step go">
+      <div class="step-head">
+        <span class="lamp" aria-hidden="true"></span>
+        <h3>Install and clone</h3>
+        <span class="state">Go</span>
+      </div>
+      <div class="step-body">
+        <pre><span class="c"># macOS; on Debian/Ubuntu use apt, on Windows use WSL</span>
+brew install ffmpeg
+pip3 install Pillow
+
+git clone https://github.com/&lt;you&gt;/toastmaster-flow-promos
+cd toastmaster-flow-promos</pre>
+        <p>Chrome or Chromium is the third dependency — the build script drives it headless
+        to render the text cards, and finds it automatically on macOS and Linux. If yours
+        lives somewhere unusual, pass <code>CHROME=/path/to/chrome</code>.</p>
+        <div class="check">
+          <span class="plate">Drop these into the clone</span>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>assets/ToastmastersLogoWhite.png</code> — the official white logo, from the members' area of the Toastmasters brand portal. Use the white variant on dark backgrounds, unaltered; the rules are in the <a href="https://content.toastmasters.org/image/upload/02330-001-0001-brand-manual.pdf">Brand Manual</a>.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>fonts/Montserrat-*.ttf</code> — Regular, Medium, SemiBold, Bold, ExtraBold from <a href="https://github.com/JulietaUla/Montserrat">JulietaUla/Montserrat</a> (SIL OFL). Montserrat is the Brand Manual's own free alternate to Gotham, which is why it is not a style choice.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>assets/group_photo.png</code> — your meeting screenshot, untouched.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell">
+    <div class="sec-head">
+      <h2>The chain</h2>
+      <p>Each station names the tool that drives it. Four Claude Code skills ship in this
+      repo under <code>.claude/skills/</code> and load automatically once you open the
+      clone — <code>tm-meeting-recap</code> runs the whole chain,
+      <code>google-flow</code> covers the credit-spending station,
+      <code>tm-brand</code> knows the compliance rules, and <code>tm-social-post</code>
+      publishes the result. They do the orchestration you would otherwise do by hand:
+      reading the brand manual, checking the Flow dialog before approving it, proofreading
+      the rendered cards.</p>
+    </div>
+
+    <div class="steps">
+
+      <article class="step go" id="s1">
+        <div class="step-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="num">01</span>
+          <h3>Gather assets</h3>
+          <span class="state">Go</span>
+        </div>
+        <div class="step-body">
+          <ul class="driver">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Finder / shell</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>agent</li>
+          </ul>
+          <p>Take the Zoom grid screenshot while the meeting is still open. It is the source
+          for both the photo scene and every winner crop, so one good capture is the whole
+          shoot.</p>
+          <p>One trap worth knowing before an agent hits it: macOS screenshot filenames
+          contain a narrow no-break space (U+202F) before <code>PM</code>. Typing that
+          filename by hand fails; copy by glob instead.</p>
+          <pre>cp ~/Desktop/Screenshot*8.15.17* assets/group_photo.png</pre>
+        </div>
+      </article>
+
+      <article class="step spend" id="s2">
+        <div class="step-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="num">02</span>
+          <h3>Generate the background</h3>
+          <span class="state">Spend</span>
+        </div>
+        <div class="step-body">
+          <div class="warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <p><strong>This is the only step that costs money and the only one you cannot
+            repeat for free.</strong> About 12 credits per 8-second clip. Read the
+            confirmation dialog before approving it — model, duration, count, and
+            especially aspect ratio. The Flow assistant has read <code>16:9</code> as
+            <code>9:16</code>; it was caught in the confirmation dialog, which is the only
+            reason a portrait clip was never paid for.</p>
+          </div>
+          <ul class="driver">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M2 12h20"/><path d="M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>google-flow</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 18v3"/></svg>claude-in-chrome</li>
+          </ul>
+          <p><strong>Most weeks you skip this station entirely.</strong> The background
+          carries no meeting-specific content, so last week's clip works for this week's
+          recap — point <code>BG_VIDEO</code> at the file you already have. Any 8-second
+          16:9 clip with no text and no people will do, generated here or not. For a weekly
+          club this is a week-one cost, not a per-video one.</p>
+          <p>Google Flow has no public API and no official MCP server, so this step runs in
+          a real browser. That is the reason it is fenced: every other station in the chain
+          is a local process you can re-run, and this one is a paid request to a model that
+          returns something new each time.</p>
+          <p>You need <strong>one</strong> clip. The build loops an 8-second background into
+          15 seconds with a one-second crossfade, so a second generation buys you nothing.</p>
+          <pre><span class="c"># The prompt that worked first try. Every NO is load-bearing.</span>
+Generate ONE 8-second 16:9 video clip using the fastest/cheapest
+video model. Subject: an abstract, minimalist, premium corporate
+motion background. A deep dark navy blue gradient backdrop, very
+slow soft diagonal light rays drifting gently from the upper left,
+and a few tiny softly-glowing warm golden dust particles floating
+slowly. Elegant, calm, professional. Camera is completely static.
+STRICT REQUIREMENTS: absolutely NO text, NO letters, NO numbers,
+NO words, NO typography, NO logos, NO symbols, NO people, NO
+objects, NO brush strokes forming shapes - purely abstract color
+and light only, edge to edge. Audio: soft uplifting instrumental
+corporate background music, warm and gentle, no vocals, no
+narration, no sound effects.</pre>
+          <p>Describe colour in words, never in hex. A prompt containing
+          <code>#F2DF74</code> once produced a gold ribbon reading
+          <span class="q">Best #2DF74</span>.</p>
+          <p>The clip arrives with a usable music bed, which is the other reason one
+          generation is enough — the audio comes free with the video. Save it as
+          <code>assets/bg.mp4</code>.</p>
+        </div>
+      </article>
+
+      <article class="step go" id="s3">
+        <div class="step-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="num">03</span>
+          <h3>Describe the meeting</h3>
+          <span class="state">Go</span>
+        </div>
+        <div class="step-body">
+          <ul class="driver">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>meeting.conf</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 8v4l3 2"/></svg>tm-brand</li>
+          </ul>
+          <p>One file holds everything that changes week to week. Values are HTML-escaped
+          on the way into the templates, so an ampersand in a club name is safe to type
+          literally.</p>
+          <pre>CLUB_NAME=<span class="p">"YOUR CLUB TOASTMASTERS"</span>
+MEETING_DATE=<span class="p">"MARCH 12, 2026"</span>   <span class="c"># full date — meetings are weekly</span>
+THEME_LINE1=<span class="p">"FRESH"</span>
+THEME_LINE2=<span class="p">"START"</span>          <span class="c"># empty for a one-line theme</span>
+WORD_OF_DAY=<span class="p">"ELOQUENT"</span>
+
+WINNER1_NAME=<span class="p">"FIRST NAME"</span>
+WINNER1_AWARD=<span class="p">"Best Speaker"</span>
+WINNER1_IMG=<span class="p">"assets/winner1_crop.png"</span>
+
+PHRASE=<span class="p">"Find Your Voice"</span>   <span class="c"># exactly one approved phrase</span></pre>
+          <p>Two fields carry compliance weight rather than taste. <code>PHRASE</code> must
+          be one of the approved Toastmasters phrases and only one per video.
+          <code>CREDIT</code> must name the creator, the club, the District, and the
+          copyright year — the Brand Manual asks for all four in the end credits.</p>
+          <p>Leave <code>WINNER2</code> and <code>WINNER3</code> empty and the row
+          re-centres for a single winner; fill all three and the tiles resize to fit.</p>
+        </div>
+      </article>
+
+      <article class="step go" id="s4">
+        <div class="step-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="num">04</span>
+          <h3>Crop the winners</h3>
+          <span class="state">Go</span>
+        </div>
+        <div class="step-body">
+          <ul class="driver">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 002 2h14"/><path d="M18 22V8a2 2 0 00-2-2H2"/></svg>Pillow</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>agent</li>
+          </ul>
+          <p>Cut a landscape tile per winner out of the group photo. The tiles are roughly
+          1.9:1 to match the card, and the crop box matters for one specific reason: Zoom
+          burns a name label into the bottom-left of every tile. Include it and you have
+          put un-proofread text back into your video — the exact failure the whole pipeline
+          exists to prevent.</p>
+          <pre>python3 -c <span class="p">"
+from PIL import Image
+im = Image.open('assets/group_photo.png')
+im.crop((320, 96, 1080, 498)).save('assets/winner1_crop.png')
+"</span></pre>
+          <p>This is a good task to hand an agent: it can read the photo, find each
+          person's tile, and propose crop boxes that clear the labels — then you look at
+          the PNGs it wrote.</p>
+        </div>
+      </article>
+
+      <article class="step go" id="s5">
+        <div class="step-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="num">05</span>
+          <h3>Build</h3>
+          <span class="state">Go</span>
+        </div>
+        <div class="step-body">
+          <ul class="driver">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>templates/build.sh</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 8v4l3 2"/></svg>tm-meeting-recap</li>
+          </ul>
+          <pre>templates/build.sh</pre>
+          <p>Roughly thirty seconds later you have a finished video. The script fills the
+          templates from your config, screenshots them through headless Chrome at
+          1920×1080 on a transparent background, frames the photo with a rounded white
+          card, and hands six layers to ffmpeg.</p>
+          <p>It checks every input before rendering anything, and that check exists for a
+          precise reason: <strong>Chrome draws a missing image or font as blank space
+          rather than failing</strong>. A mistyped crop filename would otherwise sail
+          through and land in the finished cut as a hole where a face should be.</p>
+          <p>Everything here is deterministic. Changing a name, a date, or a fade time is a
+          re-render, not another generation — which is why it is worth getting the wording
+          right at this station rather than at the previous one.</p>
+        </div>
+      </article>
+
+      <article class="step hold" id="s6">
+        <div class="step-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <span class="num">06</span>
+          <h3>Verify &amp; clear</h3>
+          <span class="state">Hold</span>
+        </div>
+        <div class="step-body">
+          <ul class="driver">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>your eyes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 8v4l3 2"/></svg>tm-brand</li>
+          </ul>
+          <p>The amber lamp is not a formality. Everything upstream is a machine that
+          cannot read, and this is where a person reads.</p>
+          <pre><span class="c"># substitute whatever OUTPUT names in meeting.conf</span>
+<span class="c"># one frame per second, tiled — scan for garbled text</span>
+ffmpeg -i Meeting_Recap.mp4 -vf <span class="p">"select='not(mod(n\,24))',scale=640:-1,tile=4x4"</span> \
+  -frames:v 1 sheet.png
+
+<span class="c"># audio sanity: mean should sit near -15 dB (silence reads -91)</span>
+ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</pre>
+          <div class="check">
+            <span class="plate">Read before posting</span>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Every name spelled the way its owner spells it. Read the PNGs in <code>cards/</code>, not the video — the still is where a typo is actually legible.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>The disclaimer is readable in the opening frames — 14px or larger at 1080p, 60% white or brighter.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>No Zoom name label survived into a winner crop.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>The logo is unaltered and not overlapped, with the club name below it.</span></li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell">
+    <div class="sec-head">
+      <h2>What the fifteen seconds are made of</h2>
+      <p>One 8-second clip, played twice with a one-second crossfade, carrying four
+      overlays that fade their alpha channel in and out. Because the background never
+      stops moving underneath, it reads as one designed piece rather than four slides.</p>
+    </div>
+    <div class="readout">
+      <div class="tl">
+        <div><div class="t">0.0 → 3.6</div><div class="s">Title</div><div class="d">Theme, word of the day, club name under the logo, TI disclaimer</div></div>
+        <div><div class="t">3.6 → 8.2</div><div class="s">Meeting</div><div class="d">Group photo, static, in a white rounded card</div></div>
+        <div><div class="t">8.2 → 12.0</div><div class="s">Winners</div><div class="d">One to three tiles with names and awards</div></div>
+        <div><div class="t">12.0 → 15.0</div><div class="s">Close</div><div class="d">Logo, club name, one approved phrase, URL, credits</div></div>
+      </div>
+      <div class="ruler"><span>00:00</span><span>00:05</span><span>00:10</span><span>00:15</span></div>
+      <p style="margin:1.4rem 0 0;color:var(--ink-dim);font-size:.92rem;max-width:var(--measure)">
+      Timing lives in the ffmpeg <code>st=</code> values inside <code>build.sh</code>;
+      content lives in <code>meeting.conf</code>. Both re-render in seconds, so the timing
+      is worth playing with.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell">
+    <div class="sec-head">
+      <h2>Why the red lamp is red</h2>
+      <p>Seven failed generations, recorded rather than deleted. Every one of these was
+      observed, and together they are the argument for keeping generation away from
+      anything that has to be correct.</p>
+    </div>
+    <table class="faults">
+      <caption>Observed failure modes, Veo via Google Flow</caption>
+      <thead>
+        <tr><th scope="col">What was tried</th><th scope="col">What came back</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A hex colour in the prompt</td><td>The model rendered the string. A gold ribbon came back reading <span class="q">Best #2DF74</span>.</td></tr>
+        <tr><td>Quoting text meant for the screen</td><td>Sometimes clean, sometimes soup. A coin flip you cannot afford on a member's name.</td></tr>
+        <tr><td>Animating a photo containing text</td><td>Zoom name labels and the backdrop slogan were re-drawn as gibberish.</td></tr>
+        <tr><td>Animating faces</td><td>Identity drift. People come back looking subtly not like themselves.</td></tr>
+        <tr><td><code>16:9</code> in an assistant prompt</td><td>Read as <code>9:16</code>. Caught in the confirmation dialog and corrected before approving — which is the whole reason to read it.</td></tr>
+        <tr><td>Re-using an old approval dialog</td><td>Spent dialogs linger in the chat and look clickable but do nothing. Only a fresh one spends credits.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="shell">
+    <div class="sec-head">
+      <h2>Clearance</h2>
+      <p>Brand compliance here is a requirement rather than a preference, and two of these
+      have nothing to do with Toastmasters at all.</p>
+    </div>
+    <ul class="clear-list">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Written permission from every person who appears.</b> Guardians for anyone under 18. This one is not about branding.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>The disclaimer appears in one of the first frames.</b> The title card carries it by default — do not delete it to buy space.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Club name below the logo</b>, and end credits naming creator, club, District, and © year.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>One approved phrase, no more.</b> No drop shadows or word art on type; the logo unaltered and never overlapping a face.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Submit the finished video to <a href="mailto:brand@toastmasters.org">brand@toastmasters.org</a></b> for approval before it represents your club in public.</span></li>
+    </ul>
+    <p style="margin:1.6rem 0 0;color:var(--ink-dim);max-width:var(--measure)">Publishing
+    is deliberately outside the chain. The six stations end at a verified file, because
+    posting is the one action nothing downstream can undo — a misspelled name is a
+    correction, a published misspelled name is a screenshot. The
+    <code>tm-social-post</code> skill drives your own signed-in browser to a Facebook Page
+    and personal LinkedIn, drafts a caption with every name copied verbatim from
+    <code>meeting.conf</code>, and stops for your explicit approval before it clicks
+    anything.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="shell">
+    <p>Full reference in the repository: <a href="README.md"><code>README.md</code></a> for
+    setup, <a href="brand-cheatsheet.md"><code>brand-cheatsheet.md</code></a> for the brand
+    rules, <a href="flow-prompts.md"><code>flow-prompts.md</code></a> for prompt patterns
+    and the rest of the failure log,
+    <a href="ffmpeg-pipeline.md"><code>ffmpeg-pipeline.md</code></a> for the assembly
+    commands, <code>.claude/skills/</code> for the four skills, and
+    <a href="AGENTS.md"><code>AGENTS.md</code></a> for the instructions that let any coding
+    agent drive all of it.</p>
+    <p style="margin-top:1.1rem">MIT licensed. The licence covers the scripts, templates,
+    and documentation — not Toastmasters International trademarks or brand assets, not
+    Montserrat, and not any media you supply.</p>
+    <p class="disclaim">Toastmasters International and all other Toastmasters
+    International trademarks and copyrights are the sole property of Toastmasters
+    International. This project is the work of its authors and is independent of
+    Toastmasters International. It is not authorized by, endorsed by, sponsored by,
+    affiliated with, or otherwise approved by Toastmasters International.</p>
+  </div>
+</footer>
+
+<script>
+// The one authored moment: lamps energize in sequence as the rail comes into view,
+// the way an incandescent bulb overshoots before it settles.
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var groups = [
+    { root: document.querySelector('.rail'), sel: '.station', stagger: 110 },
+    { root: document.querySelector('.legend'), sel: '> div', stagger: 140 }
+  ];
+  document.querySelectorAll('.step').forEach(function (s) {
+    groups.push({ root: s, sel: null, stagger: 0 });
+  });
+
+  function light(group) {
+    var targets = group.sel
+      ? group.root.querySelectorAll(group.sel.replace(/^> /, ':scope > '))
+      : [group.root];
+    Array.prototype.forEach.call(targets, function (el, i) {
+      if (reduced || !group.stagger) { el.classList.add('is-lit'); return; }
+      setTimeout(function () { el.classList.add('is-lit'); }, i * group.stagger);
+    });
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    groups.forEach(function (g) { if (g.root) light(g); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var g = groups.filter(function (x) { return x.root === e.target; })[0];
+      if (g) light(g);
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
+
+  groups.forEach(function (g) { if (g.root) io.observe(g.root); });
+})();
+</script>
+</body>
+</html>

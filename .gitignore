@@ -1,0 +1,26 @@
+# Supplied by each user, never redistributed: TI logo, meeting photos,
+# winner crops, Veo background, Montserrat TTFs. See README.
+assets/
+fonts/
+# NOTE: webfonts/ is deliberately NOT ignored. Those are Archivo and JetBrains
+# Mono for walkthrough.html — SIL OFL, redistributable, and self-hosted so the
+# page keeps its typography when a clone is opened offline. The rule above is
+# about licensing and privacy, not about file type.
+
+# Build output
+cards/
+templates/*.rendered.html
+*.mp4
+
+# Verification artifacts (ffmpeg-pipeline.md "Verify")
+sheet.png
+check_*.png
+
+# Local tooling / editor cruft
+agent-code-review.md
+agent-review-summary.md
+.DS_Store
+.impeccable/hook.cache.json
+.impeccable/config.local.json
+.impeccable/questions/
+.impeccable/sketches/

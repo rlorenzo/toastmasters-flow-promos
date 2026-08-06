@@ -1,0 +1,11 @@
+/* Shared card boilerplate: fonts, reset, 1920x1080 transparent stage.
+   Unused weights are never fetched, so every card links this one file.
+   Card-specific layout stays in each HTML file. */
+@font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-Regular.ttf');font-weight:400}
+@font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-Medium.ttf');font-weight:500}
+@font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-SemiBold.ttf');font-weight:600}
+@font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-Bold.ttf');font-weight:700}
+@font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-ExtraBold.ttf');font-weight:800}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;background:transparent;font-family:'Montserrat',sans-serif;overflow:hidden}
+.wrap{position:relative;width:1920px;height:1080px}

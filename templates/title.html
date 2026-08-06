@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- The double-brace placeholders are filled in from meeting.conf by build.sh.
+     Edit values there, not here; edit here only to change the layout. -->
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="card.css"><style>
+.brand{position:absolute;top:52px;left:60px;text-align:center}
+.brand img{height:120px;display:block;margin:0 auto}
+.brand .club{margin-top:14px;color:#fff;font-weight:600;font-size:19px;letter-spacing:3px}
+.center{position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);text-align:center;width:1700px}
+.eyebrow{color:#F2DF74;font-weight:600;font-size:27px;letter-spacing:9px;margin-bottom:34px}
+h1{color:#fff;font-weight:800;font-size:136px;letter-spacing:10px;line-height:1.04}
+.rule{width:150px;height:3px;background:#F2DF74;margin:44px auto 40px}
+.wod{color:#fff;font-weight:500;font-size:36px;letter-spacing:1px}
+.wod b{color:#F2DF74;font-weight:700;letter-spacing:4px}
+.disclaimer{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);width:1560px;color:rgba(255,255,255,.62);font-size:14.5px;font-weight:400;line-height:1.55;text-align:center}
+</style></head><body>
+<div class="wrap">
+  <div class="brand">
+    <img src="{{LOGO}}" alt="">
+    <div class="club">{{CLUB_NAME}}</div>
+  </div>
+  <div class="center">
+    <div class="eyebrow">MEETING RECAP &middot; {{MEETING_DATE}}</div>
+    <h1>{{THEME_HTML}}</h1>
+    <div class="rule"></div>
+    <div class="wod">Word of the Day: <b>{{WORD_OF_DAY}}</b></div>
+  </div>
+  <!-- Required by the Brand Manual in one of the first frames. Do not remove. -->
+  <div class="disclaimer">Toastmasters International and all other Toastmasters International trademarks and copyrights are the sole property of Toastmasters International. This video is the opinion of the creator and is independent of Toastmasters International. It is not authorized by, endorsed by, sponsored by, affiliated with, or otherwise approved by Toastmasters International.</div>
+</div>
+</body></html>
