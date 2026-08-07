@@ -9,7 +9,7 @@ web
 ## Stack
 
 Static HTML/CSS, no framework or build step. The repo already ships hand-written
-HTML/CSS card templates rendered by headless Chrome; `walkthrough.html` is a standalone
+HTML/CSS card templates rendered by headless Chrome; `index.html` is a standalone
 page committed alongside them and viewable from a clone or GitHub Pages.
 
 ## Users
@@ -67,7 +67,7 @@ is rendered locally from HTML and proofread as a still image before assembly. Mo
 - Toastmasters brand rules — Loyal Blue `#004165`, Happy Yellow `#F2DF74` as accent only,
   Montserrat, unaltered logo, required disclaimer — are binding on the **video output**,
   not on the tooling around it. That distinction is deliberate and load-bearing.
-- Repo name: `toastmaster-flow-promos`. MIT licensed, © Rex Lorenzo.
+- Repo name: `toastmasters-flow-promos`. MIT licensed, © Rex Lorenzo.
 
 ## Evidence on Hand
 

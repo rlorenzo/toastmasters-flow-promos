@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Signal Chain — building a Toastmasters recap video with Claude Code</title>
-<meta name="description" content="A step-by-step walkthrough of the toastmaster-flow-promos pipeline: which steps are free and deterministic, which need your eyes, and the one that spends credits.">
+<meta name="description" content="A step-by-step walkthrough of the toastmasters-flow-promos pipeline: which steps are free and deterministic, which need your eyes, and the one that spends credits.">
 <style>
 /* Archivo (wght+wdth variable) and JetBrains Mono, self-hosted from webfonts/.
    Both are SIL OFL and redistributable, unlike everything under assets/ and
@@ -365,7 +365,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
     <div class="origin">
       <span class="plate">Repository</span>
-      <code>toastmaster-flow-promos</code>
+      <code>toastmasters-flow-promos</code>
       <span class="plate">Output</span>
       <code>15s · 1920×1080 · 24fps</code>
     </div>
@@ -446,8 +446,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 brew install ffmpeg
 pip3 install Pillow
 
-git clone https://github.com/&lt;you&gt;/toastmaster-flow-promos
-cd toastmaster-flow-promos</pre>
+git clone https://github.com/rlorenzo/toastmasters-flow-promos
+cd toastmasters-flow-promos</pre>
         <p>Chrome or Chromium is the third dependency — the build script drives it headless
         to render the text cards, and finds it automatically on macOS and Linux. If yours
         lives somewhere unusual, pass <code>CHROME=/path/to/chrome</code>.</p>
@@ -761,13 +761,13 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
 
 <footer>
   <div class="shell">
-    <p>Full reference in the repository: <a href="README.md"><code>README.md</code></a> for
-    setup, <a href="brand-cheatsheet.md"><code>brand-cheatsheet.md</code></a> for the brand
-    rules, <a href="flow-prompts.md"><code>flow-prompts.md</code></a> for prompt patterns
+    <p>Full reference in the repository: <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/README.md"><code>README.md</code></a> for
+    setup, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/brand-cheatsheet.md"><code>brand-cheatsheet.md</code></a> for the brand
+    rules, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/flow-prompts.md"><code>flow-prompts.md</code></a> for prompt patterns
     and the rest of the failure log,
-    <a href="ffmpeg-pipeline.md"><code>ffmpeg-pipeline.md</code></a> for the assembly
-    commands, <code>.claude/skills/</code> for the four skills, and
-    <a href="AGENTS.md"><code>AGENTS.md</code></a> for the instructions that let any coding
+    <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/ffmpeg-pipeline.md"><code>ffmpeg-pipeline.md</code></a> for the assembly
+    commands, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/tree/main/.claude/skills"><code>.claude/skills/</code></a> for the four skills, and
+    <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/AGENTS.md"><code>AGENTS.md</code></a> for the instructions that let any coding
     agent drive all of it.</p>
     <p style="margin-top:1.1rem">MIT licensed. The licence covers the scripts, templates,
     and documentation — not Toastmasters International trademarks or brand assets, not

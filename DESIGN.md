@@ -1,6 +1,6 @@
 ---
 name: Signal Chain Walkthrough
-description: Signal-lamp console design system for walkthrough.html — warm graphite hardware, ivory silkscreen, three state lamps as the only colour
+description: Signal-lamp console design system for index.html — warm graphite hardware, ivory silkscreen, three state lamps as the only colour
 colors:
   housing-deep: "#15181C"
   housing: "#1B1F24"
@@ -173,7 +173,7 @@ components:
 
 **Creative North Star: "The Signal Lamp Console"**
 
-The walkthrough page (`walkthrough.html`) is built as a piece of club equipment: the
+The walkthrough page (`index.html`) is built as a piece of club equipment: the
 Toastmasters timing light reimagined as a documentation grammar. The world is a machined
 instrument console — warm graphite housing, panels bolted to a frame, ivory lettering
 silkscreened onto metal — and the only colour on it comes from three lamp lenses. Green
@@ -181,7 +181,7 @@ means a step is free and deterministic, amber means a person must look before an
 ships, red means real credits are spent on an untrustworthy generator. Colour is never
 decoration; every coloured element is a literal claim about what a step costs.
 
-**Scope boundary, and it is load-bearing:** this system governs `walkthrough.html` only.
+**Scope boundary, and it is load-bearing:** this system governs `index.html` only.
 The card templates in `templates/` are a separate, deliberately different visual system
 that follows Toastmasters International brand rules (Loyal Blue, Happy Yellow, Montserrat)
 because the *video output* must. The walkthrough page deliberately does not, so the page
