@@ -149,7 +149,7 @@ the pipeline, and every step is a plain command you can run yourself.
 ## Files here
 
 - [index.html](index.html) — the visual walkthrough. Published at
-  [rlorenzo.github.io/toastmasters-flow-promos](https://rlorenzo.github.io/toastmasters-flow-promos/),
+  [rexlorenzo.com/toastmasters-flow-promos](https://rexlorenzo.com/toastmasters-flow-promos/),
   or open the file in a browser
 - [meeting.conf](meeting.conf) — everything you edit per meeting
 - [brand-cheatsheet.md](brand-cheatsheet.md) — colors, fonts, logo rules, video checklist
