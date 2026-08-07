@@ -76,10 +76,10 @@ ffmpeg -y -i assets/bg.mp4 -i assets/bg.mp4 \
 [1:v]scale=1920:1080:flags=lanczos,setsar=1[v1];\
 [v0][v1]xfade=transition=fade:duration=1:offset=7[bg];\
 [2:v]format=rgba,fade=t=in:st=0:d=0.4:alpha=1,fade=t=out:st=3.2:d=0.4:alpha=1[t];\
-[3:v]fps=25,format=rgba[pfr];\
+[3:v]fps=24,format=rgba[pfr];\
 [4:v]format=rgba,fade=t=in:st=8.2:d=0.4:alpha=1,fade=t=out:st=11.6:d=0.4:alpha=1[w];\
 [5:v]format=rgba,fade=t=in:st=12:d=0.4:alpha=1[c];\
-[6:v]setpts=PTS-STARTPTS,fps=25,scale=1519:900:flags=lanczos,setsar=1,format=rgba[pm];\
+[6:v]setpts=PTS-STARTPTS,fps=24,scale=1519:900:flags=lanczos,setsar=1,format=rgba[pm];\
 [7:v]format=gray[pmk];\
 [pm][pmk]alphamerge,tpad=stop_mode=clone:stop_duration=4.6,\
 trim=duration=4.6,setpts=PTS-STARTPTS[pmv];\
@@ -97,6 +97,12 @@ fade=t=in:st=3.6:d=0.4:alpha=1,fade=t=out:st=7.8:d=0.4:alpha=1[p];\
 
 (`build.sh` computes the `scale=` and `overlay=` numbers from the source's aspect ratio;
 1519:900 at 200:90 is what a 1828×1083 screenshot works out to.)
+
+The `fps=24` on both scene inputs is the output rate, not a spare number: the image
+demuxer hands `-loop 1` PNGs over at 25fps by default, and letting the scene run at 25
+under a 24fps output makes the 0.4s alpha fade land its last step twice as far as the
+rest of the ramp — a visible hitch. Matching the two also spares a clip a second
+resampling pass (30 → 24, not 30 → 25 → 24).
 
 Key idea: `fade=...:alpha=1` fades only the alpha channel, so overlays melt in/out over
 the continuously-moving background — one designed piece, not a slideshow. The meeting

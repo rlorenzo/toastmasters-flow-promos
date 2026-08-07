@@ -110,10 +110,14 @@ FPS=24
 
 if [[ -n "${GROUP_VIDEO:-}" ]]; then
   need GROUP_VIDEO "$GROUP_VIDEO"
+  START="${GROUP_VIDEO_START:-0}"
   # Step 3 needs the source dimensions to size the card; for a clip only ffprobe
   # knows them, so they go through the environment. A still is measured there.
+  # `|| true`: an audio-only file gives ffprobe nothing to print, and read would
+  # then fail on EOF and take set -e with it — exiting 1 with no explanation,
+  # instead of reaching the message below.
   IFS=, read -r MEDIA_W MEDIA_H < <(ffprobe -v error -select_streams v:0 \
-    -show_entries stream=width,height -of csv=p=0 "$GROUP_VIDEO")
+    -show_entries stream=width,height -of csv=p=0 "$GROUP_VIDEO") || true
   [[ -n "${MEDIA_W:-}" && -n "${MEDIA_H:-}" ]] \
     || { echo "$CONFIG: no video stream in $GROUP_VIDEO" >&2; exit 1; }
   export MEDIA_W MEDIA_H
@@ -121,19 +125,18 @@ if [[ -n "${GROUP_VIDEO:-}" ]]; then
   # norm — warn rather than fail. The last frame holds for the remainder, which
   # reads better on a talking head than a jump cut back to the start.
   DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$GROUP_VIDEO" || true)
-  awk -v dur="$DUR" -v start="${GROUP_VIDEO_START:-0}" -v len="$SCENE_LEN" \
-      -v src="$GROUP_VIDEO" 'BEGIN {
+  awk -v dur="$DUR" -v start="$START" -v len="$SCENE_LEN" -v src="$GROUP_VIDEO" 'BEGIN {
     avail = dur - start
     if (avail < 0) avail = 0
     # dur + 0 forces a numeric test: a container without a duration reports
-    # "N/A", and that must not read as "shorter than the scene".
+    # "N/A", and that must not compare as "shorter than the scene".
     if (dur + 0 > 0 && avail < len)
       printf("Warning: %s has only %.1fs after GROUP_VIDEO_START; the last " \
              "frame holds for the rest of the %.1fs scene.\n",
              src, avail, len) > "/dev/stderr"
   }'
-  MEDIA_INPUT=(-ss "${GROUP_VIDEO_START:-0}" -i "$GROUP_VIDEO")
-  echo "Meeting scene: $GROUP_VIDEO from ${GROUP_VIDEO_START:-0}s (silent)"
+  MEDIA_INPUT=(-ss "$START" -i "$GROUP_VIDEO")
+  echo "Meeting scene: $GROUP_VIDEO from ${START}s (silent)"
 else
   [[ -n "${GROUP_PHOTO:-}" ]] \
     || { echo "$CONFIG: set GROUP_PHOTO, or GROUP_VIDEO for a moving scene" >&2; exit 1; }

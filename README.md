@@ -6,6 +6,9 @@ Pillow) for everything containing text or faces.
 
 Edit one config file, run one script, get a 15-second recap video.
 
+**[Read the visual walkthrough →](https://rexlorenzo.com/toastmasters-flow-promos/)**
+Six steps, which ones are free, and the one that spends credits.
+
 > **Not affiliated with Toastmasters International.** This is an independent,
 > community-made kit. Toastmasters International and all other Toastmasters
 > International trademarks and copyrights are the sole property of Toastmasters
