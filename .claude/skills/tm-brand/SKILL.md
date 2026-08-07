@@ -22,8 +22,9 @@ Questions → brand@toastmasters.org; trademarks → trademarks@toastmasters.org
   faces. No custom club logos, themes, or taglines (District conference theme is the sole
   exception). Club name goes below the logo.
 - **Phrases**: max ONE approved phrase per piece (Find Your Voice · Relax, present
-  confidently. · Relax, speak confidently. · Communicate Confidently® · Find your
-  confidence · Become a better leader · Invest in a Brighter Future).
+  confidently. · Relax, speak confidently. · Communicate Confidently® · 100 Years of
+  Confident Voices · Find your confidence · Become a better leader · Invest in a
+  Brighter Future). `templates/build.sh` checks `PHRASE` against exactly this list.
 - **Photography**: people engaged/empowered in Toastmasters settings; no unrelated stock
   themes; cartoons/clip art only as secondary elements.
 - **Voice**: confident, friendly-professional, positive, upbeat, succinct,

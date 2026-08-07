@@ -1,4 +1,4 @@
-# Agent Instructions — toastmaster-flow-promos
+# Agent Instructions — toastmasters-flow-promos
 
 (Claude Code users: CLAUDE.md imports this file — this is the single source of truth.)
 
@@ -11,7 +11,9 @@ affiliated with Toastmasters International; see the notice at the top of README.
 1. **Never let AI render exact content.** No text in Veo prompts or generated frames;
    no AI animation of photos containing faces or text. All type is rendered locally
    from `templates/*.html` (Montserrat) and verified by reading the output PNGs.
-   Rationale and evidence: [flow-prompts.md](flow-prompts.md).
+   Rationale and evidence: [flow-prompts.md](flow-prompts.md). A real recording the user
+   supplies (`GROUP_VIDEO`) is untouched pixels like the photo, and is fine — the rule is
+   about AI *generating* faces and type, not about motion.
 2. **Brand compliance is a hard requirement**, not a style preference. Follow
    [brand-cheatsheet.md](brand-cheatsheet.md): official colors (Loyal Blue `#004165`,
    Happy Yellow `#F2DF74` as accent only), Montserrat (the manual's free Gotham
@@ -43,7 +45,7 @@ background → edit `meeting.conf` → `templates/build.sh` → verify → deliv
 - `.claude/skills/` — `tm-meeting-recap`, `google-flow`, `tm-brand`, `tm-social-post`;
   they ship with the repo so a clone gets them, and they must stay club-agnostic like
   everything else here
-- `walkthrough.html` — the visual walkthrough page. Its design is deliberately NOT
+- `index.html` — the visual walkthrough page. Its design is deliberately NOT
   Toastmasters-branded: the video output follows TI brand rules, the tooling around it
   must not, or the page starts to read as an official TI property. See `DESIGN.md`.
 - `webfonts/` — Archivo + JetBrains Mono for that page, self-hosted. Tracked on purpose:
@@ -66,3 +68,8 @@ background → edit `meeting.conf` → `templates/build.sh` → verify → deliv
   date (use the full date, e.g. "AUGUST 5, 2026" — month alone can't tell weekly recaps
   apart), winner names/awards, crop coordinates for winner tiles (exclude Zoom name
   labels), credit line, and the output filename.
+- The meeting scene takes either a still (`GROUP_PHOTO`) or a silent clip (`GROUP_VIDEO`
+  + `GROUP_VIDEO_START`); both feed one filter chain, so keep them that way rather than
+  branching the filtergraph. Winner tiles are stills only.
+- `PHRASE` is validated against the eight approved phrases (the list lives in `build.sh`,
+  `meeting.conf`, `brand-cheatsheet.md` and the `tm-brand` skill — update all four).

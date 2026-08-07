@@ -5,7 +5,7 @@ description: Produce a Toastmasters club meeting recap/promo video (15s, brand-c
 
 # Toastmasters Meeting Recap Video
 
-This skill ships with the `toastmaster-flow-promos` kit; run it from the repo root. Read
+This skill ships with the `toastmasters-flow-promos` kit; run it from the repo root. Read
 `README.md` if anything here is unclear, and `AGENTS.md` for the prime directives.
 
 Core rule: **no AI-generated text, no AI-animated faces.** All type renders locally from
@@ -20,15 +20,22 @@ Core rule: **no AI-generated text, no AI-animated faces.** All type renders loca
 4. Path to the meeting photo. On macOS, screenshots land in `~/Desktop` and their
    filenames contain a narrow no-break space (U+202F) before "PM" — copy via glob, never
    a typed name
-5. Anything else changing this week: credit line, club URL, background clip
+5. Whether the meeting scene should move: a Zoom recording (the gallery, or a winner
+   mid-speech) can play there instead of the still. Ask only if they mention having one —
+   the still is the default and stays fully supported
+6. Anything else changing this week: credit line, club URL, background clip
 
 Club identity (name, URL, credit line, approved phrase) is set once in `meeting.conf` and
-should already be filled in. Confirm rather than re-ask.
+should already be filled in. Confirm rather than re-ask. `PHRASE` must be one of the eight
+approved phrases listed in `meeting.conf`; the build rejects anything else, and picks one
+at random when it is left empty.
 
 ## Steps
 
 1. **Photo** — copy to the path `GROUP_PHOTO` names in `meeting.conf`
-   (default `assets/group_photo.png`).
+   (default `assets/group_photo.png`). For a moving meeting scene instead, set
+   `GROUP_VIDEO` to the recording and `GROUP_VIDEO_START` to the second the good 4.6s
+   begins; it plays silent, and the still stays the default when `GROUP_VIDEO` is empty.
 2. **Winner crops** — view the photo, pick landscape ~1.89:1 crops of each winner's Zoom
    tile that **exclude the name-label pill** (bottom-left of every tile). Crop with Pillow
    to the paths `WINNER1_IMG` … `WINNER3_IMG` name. Open each crop and confirm the face is

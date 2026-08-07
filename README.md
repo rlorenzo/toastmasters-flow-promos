@@ -31,7 +31,7 @@ The fix is a **hybrid pipeline** — split the work by what each tool is good at
 |---|---|---|
 | Animated background (no text, no people) | Google Flow / Veo | This is what it's great at; nothing exists to misspell |
 | Title/winner/closing cards | HTML + Montserrat → headless Chrome → PNG | Pixel-perfect type, exact brand hex colors, verifiable spelling |
-| Meeting photo | Untouched pixels, framed with Pillow | Zero AI drift; people look like themselves |
+| Meeting photo or clip | Untouched pixels, framed locally | Zero AI drift; people look like themselves |
 | Assembly, timing, crossfades, audio | ffmpeg | Deterministic, instant re-renders, free |
 | Music | Veo's audio track from the background clip | Comes free with the 12-credit clip |
 
@@ -55,6 +55,7 @@ because the logo is TI's property and the photos are of real people.
 |---|---|
 | `assets/bg.mp4` | An 8s, 16:9 background clip with **no text and no people**. Generate in Flow with the prompt in [flow-prompts.md](flow-prompts.md), or bring your own |
 | `assets/group_photo.png` | Your meeting photo, untouched |
+| *(optional)* a meeting clip | A Zoom recording — the gallery, or someone mid-speech — for a moving meeting scene instead of the still. Point `GROUP_VIDEO` at it; any length works. Played **silent**, so a room of overlapping voices can't muddy the music |
 | `assets/winner1_crop.png`, … | Landscape crops of each winner, taken from the group photo |
 | `assets/ToastmastersLogoWhite.png` | The official **white** logo from the TI brand portal (members' area). Use the white variant on dark backgrounds; never a recolored or redrawn one |
 | `fonts/Montserrat-{Regular,Medium,SemiBold,Bold,ExtraBold}.ttf` | [github.com/JulietaUla/Montserrat](https://github.com/JulietaUla/Montserrat) (SIL OFL). Montserrat is the Brand Manual's official free alternate to Gotham |
@@ -65,7 +66,8 @@ requires it, and it is the right thing to do regardless.
 ## Quick start
 
 ```bash
-git clone <your-fork-url> && cd toastmaster-flow-promos
+git clone https://github.com/rlorenzo/toastmasters-flow-promos
+cd toastmasters-flow-promos
 
 # 1. Drop your files into assets/ and fonts/ (see the table above)
 # 2. Edit meeting.conf — club name, theme, winners, credits
@@ -90,7 +92,7 @@ continuous canvas under four timed overlays:
 | Time | Scene | Overlay |
 |---|---|---|
 | 0.0–3.6s | Title | Theme, word of the day, club name under logo, **TI disclaimer** (required in first frames) |
-| 3.6–8.2s | Meeting | Group photo, static, in a white rounded card |
+| 3.6–8.2s | Meeting | Group photo — or a silent 4.6s clip — in a white rounded card |
 | 8.2–12.0s | Winners | 1–3 winners with photo crops; the row resizes to fit |
 | 12.0–15.0s | Close | Logo, club name, one approved phrase, URL, credit line |
 
@@ -105,9 +107,15 @@ Each overlay alpha-fades in/out over 0.4s; the final 0.6s fades to black; audio 
    [flow-prompts.md](flow-prompts.md). Verify the confirmation says **16:9 landscape**
    before approving — the assistant has misread "16:9" as "9:16".
 3. **Fill in `meeting.conf`** — club identity once, then theme/date/word/winners per meeting.
+   `PHRASE` must be one of the eight approved phrases listed there; leave it empty and the
+   build picks one at random and prints which.
 4. **Crop winner portraits** from the group photo — landscape "Zoom tile" crops, positioned
    to **exclude the Zoom name labels** (they sit at the bottom-left of each tile).
-5. **Run `templates/build.sh`** — renders the cards, frames the photo, assembles the video.
+   *Optional:* set `GROUP_VIDEO` to a meeting recording for a moving meeting scene, and
+   `GROUP_VIDEO_START` to the second it should start at. Zoom gallery view reflows when
+   people join or leave, so spotlight the speaker if the framing has to hold.
+5. **Run `templates/build.sh`** — renders the cards, frames the photo or clip, assembles
+   the video.
 6. **Verify** — proofread the PNGs in `cards/`, then extract a contact sheet and check
    spelling, faces, and contrast. Commands in [ffmpeg-pipeline.md](ffmpeg-pipeline.md).
 
@@ -119,13 +127,13 @@ From the Brand Manual (v2.0, p.35) — see [brand-cheatsheet.md](brand-cheatshee
 - [ ] Club name appears below the logo
 - [ ] End credits: creator name, club, District, © year
 - [ ] **Written permission from every person shown** (guardians for minors)
-- [ ] Only one approved phrase used (e.g., "Find Your Voice")
+- [ ] Only one approved phrase used (`build.sh` enforces this against the list in `meeting.conf`)
 - [ ] No drop shadows / word art on type; logo unaltered, not overlapped
 - [ ] Submit to brand@toastmasters.org for approval
 
 ## Using it with Claude Code
 
-Three skills ship in [.claude/skills/](.claude/skills/) and load automatically when you
+Four skills ship in [.claude/skills/](.claude/skills/) and load automatically when you
 open the clone:
 
 | Skill | What it does |
@@ -140,13 +148,15 @@ the pipeline, and every step is a plain command you can run yourself.
 
 ## Files here
 
-- [walkthrough.html](walkthrough.html) — the visual walkthrough; open it in a browser
+- [index.html](index.html) — the visual walkthrough. Published at
+  [rlorenzo.github.io/toastmasters-flow-promos](https://rlorenzo.github.io/toastmasters-flow-promos/),
+  or open the file in a browser
 - [meeting.conf](meeting.conf) — everything you edit per meeting
 - [brand-cheatsheet.md](brand-cheatsheet.md) — colors, fonts, logo rules, video checklist
 - [flow-prompts.md](flow-prompts.md) — prompt patterns that work in Flow, and known failure modes
 - [ffmpeg-pipeline.md](ffmpeg-pipeline.md) — the assembly commands, run by hand
 - [templates/](templates/) — card HTML/CSS + `build.sh`
-- [.claude/skills/](.claude/skills/) — the three Claude Code skills above
+- [.claude/skills/](.claude/skills/) — the four Claude Code skills above
 - [AGENTS.md](AGENTS.md) — instructions for AI coding agents working in this repo
 
 ## License

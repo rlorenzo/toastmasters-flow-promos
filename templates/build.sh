@@ -15,7 +15,7 @@ CONFIG="${CONFIG:-meeting.conf}"
 # set -a exports everything the config defines so the render step below can read
 # it from the environment instead of us threading 15 values through argv.
 set -a
-# shellcheck source=../meeting.conf disable=SC1090
+# shellcheck source-path=SCRIPTDIR source=../meeting.conf disable=SC1090
 source "$CONFIG"
 set +a
 
@@ -39,8 +39,8 @@ if [[ -z "${CHROME:-}" ]]; then
 fi
 [[ -n "${CHROME:-}" ]] || { echo "No Chrome/Chromium found — set CHROME=/path/to/chrome" >&2; exit 1; }
 
-for v in CLUB_NAME CLUB_URL CREDIT PHRASE MEETING_DATE THEME_LINE1 WORD_OF_DAY \
-         BG_VIDEO GROUP_PHOTO LOGO; do
+for v in CLUB_NAME CLUB_URL CREDIT MEETING_DATE THEME_LINE1 WORD_OF_DAY \
+         BG_VIDEO LOGO; do
   [[ -n "${!v:-}" ]] || { echo "$CONFIG: $v must not be empty" >&2; exit 1; }
 done
 [[ -n "${WINNER1_NAME:-}${WINNER2_NAME:-}${WINNER3_NAME:-}" ]] \
@@ -48,7 +48,6 @@ done
 
 need() { [[ -f "$2" ]] || { echo "$CONFIG: $1 not found: $2" >&2; exit 1; }; }
 need BG_VIDEO "$BG_VIDEO"
-need GROUP_PHOTO "$GROUP_PHOTO"
 need LOGO "$LOGO"
 for i in 1 2 3; do
   name="WINNER${i}_NAME"; img="WINNER${i}_IMG"
@@ -56,6 +55,95 @@ for i in 1 2 3; do
   [[ -n "${!img:-}" ]] || { echo "$CONFIG: $name is set but $img is empty" >&2; exit 1; }
   need "$img" "${!img}"
 done
+
+# --- Approved phrase ----------------------------------------------------------
+# The Brand Manual allows exactly one approved phrase per piece, from a fixed
+# list. The list is also in brand-cheatsheet.md and .claude/skills/tm-brand for
+# humans to read; it lives here too because the build has to check against it.
+
+PHRASE=$(python3 - <<'PY'
+import os, random, re, sys
+
+APPROVED = [
+    "Find Your Voice",
+    "Relax, present confidently.",
+    "Relax, speak confidently.",
+    "Communicate Confidently®",
+    "100 Years of Confident Voices",
+    "Find your confidence",
+    "Become a better leader",
+    "Invest in a Brighter Future",
+]
+
+def norm(s):
+    # Match loosely: casing, spacing, a trailing period and a typed-around (R)
+    # shouldn't fail a build over a phrase the user obviously meant. No two
+    # entries collide under this, so a match is still unambiguous.
+    s = s.replace('®', '').replace('(R)', '').replace('(r)', '')
+    return re.sub(r'[\s.]+', ' ', s).strip().casefold()
+
+want = os.environ.get('PHRASE', '').strip()
+if not want:
+    print(random.choice(APPROVED))
+    sys.exit(0)
+for phrase in APPROVED:
+    if norm(phrase) == norm(want):
+        print(phrase)   # emit TI's spelling, not the user's
+        sys.exit(0)
+sys.exit('%s: PHRASE "%s" is not an approved Toastmasters phrase.\n'
+         'Use one of these, or leave it empty to pick one at random:\n  %s'
+         % (os.environ.get('CONFIG', 'meeting.conf'), want, '\n  '.join(APPROVED)))
+PY
+)
+export PHRASE
+echo "Phrase: $PHRASE"
+
+# --- Meeting scene media ------------------------------------------------------
+# The scene runs 3.6s -> 8.2s (the st= values in step 4). It takes a still by
+# default, or a clip when GROUP_VIDEO is set; both feed the same filter chain
+# below, so the only difference is how the input is declared.
+
+SCENE_LEN=4.6
+# The scene is composited at the output frame rate, so a clip is resampled once
+# instead of once to the image demuxer's default 25fps and again on the way out.
+FPS=24
+
+if [[ -n "${GROUP_VIDEO:-}" ]]; then
+  need GROUP_VIDEO "$GROUP_VIDEO"
+  # Step 3 needs the source dimensions to size the card; for a clip only ffprobe
+  # knows them, so they go through the environment. A still is measured there.
+  IFS=, read -r MEDIA_W MEDIA_H < <(ffprobe -v error -select_streams v:0 \
+    -show_entries stream=width,height -of csv=p=0 "$GROUP_VIDEO")
+  [[ -n "${MEDIA_W:-}" && -n "${MEDIA_H:-}" ]] \
+    || { echo "$CONFIG: no video stream in $GROUP_VIDEO" >&2; exit 1; }
+  export MEDIA_W MEDIA_H
+  # A Zoom recording runs an hour, so a short clip is the odd case, not the
+  # norm — warn rather than fail. The last frame holds for the remainder, which
+  # reads better on a talking head than a jump cut back to the start.
+  DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$GROUP_VIDEO" || true)
+  awk -v dur="$DUR" -v start="${GROUP_VIDEO_START:-0}" -v len="$SCENE_LEN" \
+      -v src="$GROUP_VIDEO" 'BEGIN {
+    avail = dur - start
+    if (avail < 0) avail = 0
+    # dur + 0 forces a numeric test: a container without a duration reports
+    # "N/A", and that must not read as "shorter than the scene".
+    if (dur + 0 > 0 && avail < len)
+      printf("Warning: %s has only %.1fs after GROUP_VIDEO_START; the last " \
+             "frame holds for the rest of the %.1fs scene.\n",
+             src, avail, len) > "/dev/stderr"
+  }'
+  MEDIA_INPUT=(-ss "${GROUP_VIDEO_START:-0}" -i "$GROUP_VIDEO")
+  echo "Meeting scene: $GROUP_VIDEO from ${GROUP_VIDEO_START:-0}s (silent)"
+else
+  [[ -n "${GROUP_PHOTO:-}" ]] \
+    || { echo "$CONFIG: set GROUP_PHOTO, or GROUP_VIDEO for a moving scene" >&2; exit 1; }
+  need GROUP_PHOTO "$GROUP_PHOTO"
+  # Stills are resized by Pillow in step 3 and handed over at final size, so the
+  # scale filter below is a no-op for them: a photo keeps taking exactly the one
+  # LANCZOS pass it always has. Clips get ffmpeg's scaler instead.
+  MEDIA_INPUT=(-loop 1 -t "$SCENE_LEN" -i cards/photo_media.png)
+  echo "Meeting scene: $GROUP_PHOTO"
+fi
 
 mkdir -p cards
 
@@ -123,48 +211,98 @@ for c in title winners close; do
   [[ -s "cards/${c}_overlay.png" ]] || { echo "Chrome wrote no cards/${c}_overlay.png" >&2; exit 1; }
 done
 
-# --- 3) Photo scene: rounded card + border + shadow (photo pixels untouched) --
+# --- 3) Meeting scene: rounded card + border + shadow (media pixels untouched) -
+#
+# The card is drawn empty and the photo or clip is composited into it by ffmpeg
+# below, so both kinds of source take one code path. Two outputs: the frame
+# (shadow + white card, sits under the media) and an alpha mask that rounds the
+# media's own corners.
 
-python3 - <<'PY'
+GEOM=$(python3 - <<'PY'
 import os
-from PIL import Image, ImageDraw, ImageFilter
-photo = Image.open(os.environ['GROUP_PHOTO']).convert('RGB')
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
+
+clip = os.environ.get('GROUP_VIDEO', '').strip()
+if clip:
+    W, H = int(os.environ['MEDIA_W']), int(os.environ['MEDIA_H'])
+else:
+    with Image.open(os.environ['GROUP_PHOTO']) as im:
+        W, H = im.size
 # Fit inside 1600x900 preserving aspect ratio; a fixed width would push
-# 4:3 photos past 1080px and paste() would silently crop heads/feet.
-scale = min(1600 / photo.width, 900 / photo.height)
-w, h = round(photo.width * scale), round(photo.height * scale)
-photo = photo.resize((w, h), Image.LANCZOS)
+# 4:3 sources past 1080px and the card would run off the frame.
+scale = min(1600 / W, 900 / H)
+w, h = round(W * scale), round(H * scale)
+px, py = (1920 - w)//2, (1080 - h)//2
+
+# Alpha for the media itself: ffmpeg alphamerges this onto the scaled source, so
+# the corners are rounded there rather than baked into the card.
 mask = Image.new('L', (w, h), 0)
 ImageDraw.Draw(mask).rounded_rectangle([0, 0, w, h], radius=22, fill=255)
-canvas = Image.new('RGBA', (1920, 1080), (0, 0, 0, 0))
-px, py = (1920 - w)//2, (1080 - h)//2
+mask.save('cards/photo_mask.png')
+
+frame = Image.new('RGBA', (1920, 1080), (0, 0, 0, 0))
 sh = Image.new('RGBA', (1920, 1080), (0, 0, 0, 0))
 ImageDraw.Draw(sh).rounded_rectangle([px-6, py+8, px+w+6, py+h+26], radius=30, fill=(0, 0, 0, 150))
-canvas.alpha_composite(sh.filter(ImageFilter.GaussianBlur(22)))
-ImageDraw.Draw(canvas).rounded_rectangle([px-5, py-5, px+w+5, py+h+5], radius=27, fill=(255, 255, 255, 235))
-canvas.paste(photo, (px, py), mask)
-canvas.save('cards/photo_overlay.png')
+frame.alpha_composite(sh.filter(ImageFilter.GaussianBlur(22)))
+ImageDraw.Draw(frame).rounded_rectangle([px-5, py-5, px+w+5, py+h+5], radius=27, fill=(255, 255, 255, 235))
+
+# Clear the frame exactly where the media will land, leaving the 5px ring and the
+# shadow. ffmpeg drops the media into the hole rather than onto a white fill, so
+# the two fade as one unit -- a translucent card behind a translucent photo would
+# bloom white through it for the 0.4s the scene spends fading. The hole is cut
+# with the media's own mask so the two edges cannot disagree by a pixel.
+eraser = Image.new('L', (1920, 1080), 0)
+eraser.paste(mask, (px, py))
+frame.putalpha(ImageChops.subtract(frame.getchannel('A'), eraser))
+frame.save('cards/photo_frame.png')
+
+# A still is resized here rather than by ffmpeg, so its pixels go through the
+# same LANCZOS pass they always have. GROUP_VIDEO builds skip this and let the
+# scale filter handle the clip frame by frame.
+if not clip:
+    with Image.open(os.environ['GROUP_PHOTO']) as im:
+        im.convert('RGB').resize((w, h), Image.LANCZOS).save('cards/photo_media.png')
+
+print(w, h, px, py)
 PY
+)
+read -r FIT_W FIT_H MEDIA_X MEDIA_Y <<< "$GEOM"
 
 # --- 4) Assemble: bg looped 8+8-1=15s, overlays alpha-faded, end fade, audio --
+#
+# Inputs 6 and 7 are the meeting-scene media and its corner mask. The media is
+# alphamerged, held or trimmed to the scene length, then shifted to 3.6s so the
+# same chain serves a still and a clip. Its audio is never mapped — the Veo
+# music track is the only sound in the piece.
 
 ffmpeg -y -v error -i "$BG_VIDEO" -i "$BG_VIDEO" \
  -loop 1 -t 15 -i cards/title_overlay.png \
- -loop 1 -t 15 -i cards/photo_overlay.png \
+ -loop 1 -t "$SCENE_LEN" -i cards/photo_frame.png \
  -loop 1 -t 15 -i cards/winners_overlay.png \
  -loop 1 -t 15 -i cards/close_overlay.png \
+ "${MEDIA_INPUT[@]}" \
+ -loop 1 -t "$SCENE_LEN" -i cards/photo_mask.png \
  -filter_complex "\
 [0:v]scale=1920:1080:flags=lanczos,setsar=1[v0];\
 [1:v]scale=1920:1080:flags=lanczos,setsar=1[v1];\
 [v0][v1]xfade=transition=fade:duration=1:offset=7[bg];\
 [2:v]format=rgba,fade=t=in:st=0:d=0.4:alpha=1,fade=t=out:st=3.2:d=0.4:alpha=1[t];\
-[3:v]format=rgba,fade=t=in:st=3.6:d=0.4:alpha=1,fade=t=out:st=7.8:d=0.4:alpha=1[p];\
+[3:v]fps=$FPS,format=rgba[pfr];\
 [4:v]format=rgba,fade=t=in:st=8.2:d=0.4:alpha=1,fade=t=out:st=11.6:d=0.4:alpha=1[w];\
 [5:v]format=rgba,fade=t=in:st=12:d=0.4:alpha=1[c];\
-[bg][t]overlay=0:0[a1];[a1][p]overlay=0:0[a2];[a2][w]overlay=0:0[a3];\
+[6:v]setpts=PTS-STARTPTS,fps=$FPS,scale=$FIT_W:$FIT_H:flags=lanczos,setsar=1,format=rgba[pm];\
+[7:v]format=gray[pmk];\
+[pm][pmk]alphamerge,tpad=stop_mode=clone:stop_duration=$SCENE_LEN,\
+trim=duration=$SCENE_LEN,setpts=PTS-STARTPTS[pmv];\
+[pfr][pmv]overlay=$MEDIA_X:$MEDIA_Y:format=auto:shortest=1[scene];\
+[scene]setpts=PTS-STARTPTS+3.6/TB,\
+fade=t=in:st=3.6:d=0.4:alpha=1,fade=t=out:st=7.8:d=0.4:alpha=1[p];\
+[bg][t]overlay=0:0[a1];\
+[a1][p]overlay=0:0:eof_action=pass:repeatlast=0[a2];\
+[a2][w]overlay=0:0[a3];\
 [a3][c]overlay=0:0,fade=t=out:st=14.4:d=0.6[vout];\
 [0:a][1:a]acrossfade=d=1[aa];[aa]afade=t=out:st=13.6:d=1.4[aout]" \
- -map "[vout]" -map "[aout]" -t 15 -r 24 \
+ -map "[vout]" -map "[aout]" -t 15 -r "$FPS" \
  -c:v libx264 -crf 18 -preset medium -pix_fmt yuv420p -c:a aac -b:a 192k "$OUT"
 
 echo "Built $OUT"
