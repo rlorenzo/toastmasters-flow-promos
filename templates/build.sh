@@ -11,7 +11,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 CONFIG="${CONFIG:-meeting.conf}"
-[[ -f "$CONFIG" ]] || { echo "Missing $CONFIG — see README.md" >&2; exit 1; }
+[[ -f "$CONFIG" ]] || { echo "Missing $CONFIG; see README.md" >&2; exit 1; }
 # set -a exports everything the config defines so the render step below can read
 # it from the environment instead of us threading 15 values through argv.
 set -a
@@ -26,9 +26,9 @@ OUT="${1:-${OUTPUT:-Meeting_Recap.mp4}}"
 # every input is checked up front; otherwise a typo'd path reaches the final cut.
 
 for t in ffmpeg ffprobe python3; do
-  command -v "$t" >/dev/null 2>&1 || { echo "Missing $t — see README Prerequisites" >&2; exit 1; }
+  command -v "$t" >/dev/null 2>&1 || { echo "Missing $t; see README Prerequisites" >&2; exit 1; }
 done
-python3 -c 'import PIL' 2>/dev/null || { echo "Missing Pillow — pip3 install Pillow" >&2; exit 1; }
+python3 -c 'import PIL' 2>/dev/null || { echo "Missing Pillow; pip3 install Pillow" >&2; exit 1; }
 
 if [[ -z "${CHROME:-}" ]]; then
   for c in "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
@@ -37,7 +37,7 @@ if [[ -z "${CHROME:-}" ]]; then
     if [[ -x "$c" ]] || command -v "$c" >/dev/null 2>&1; then CHROME="$c"; break; fi
   done
 fi
-[[ -n "${CHROME:-}" ]] || { echo "No Chrome/Chromium found — set CHROME=/path/to/chrome" >&2; exit 1; }
+[[ -n "${CHROME:-}" ]] || { echo "No Chrome/Chromium found; set CHROME=/path/to/chrome" >&2; exit 1; }
 
 for v in CLUB_NAME CLUB_URL CREDIT MEETING_DATE THEME_LINE1 WORD_OF_DAY \
          BG_VIDEO LOGO; do
@@ -45,6 +45,55 @@ for v in CLUB_NAME CLUB_URL CREDIT MEETING_DATE THEME_LINE1 WORD_OF_DAY \
 done
 [[ -n "${WINNER1_NAME:-}${WINNER2_NAME:-}${WINNER3_NAME:-}" ]] \
   || { echo "$CONFIG: set at least one WINNERn_NAME" >&2; exit 1; }
+
+# Under BG_MODE="generate" the mood string becomes a Veo prompt, and Veo renders
+# text it is given. A theme word or a hex code in there is the one mistake this
+# feature can make, and the failure is expensive, so it is caught before the
+# spend rather than on the contact sheet afterwards. Only called from the
+# generate arm below: a stale mood string that nothing reads is not a reason to
+# fail a build.
+reject_text_in_bg_mood() {
+  if [[ "$BG_MOOD" == *"#"* ]]; then
+    echo "$CONFIG: BG_MOOD contains '#'. Describe colour in words; a hex code in a" >&2
+    echo "         prompt once came back rendered as \"Best #2DF74\"." >&2
+    exit 1
+  fi
+  local themed
+  shopt -s nocasematch
+  for themed in "${THEME_LINE1:-}" "${THEME_LINE2:-}" "${WORD_OF_DAY:-}"; do
+    [[ -n "$themed" ]] || continue
+    if [[ "$BG_MOOD" == *"$themed"* ]]; then
+      echo "$CONFIG: BG_MOOD contains the word \"$themed\", which also appears in your" >&2
+      echo "         theme or word of the day. BG_MOOD becomes a Veo prompt, and Veo" >&2
+      echo "         renders words it is given. Describe light and colour instead." >&2
+      exit 1
+    fi
+  done
+  shopt -u nocasematch
+}
+
+# The background policy is validated here but never acted on: Flow is a browser
+# tool with no API, and spending credits stays a step a person approves. All this
+# does is refuse a typo and say out loud which clip is about to be used.
+case "${BG_MODE:-reuse}" in
+  reuse)
+    echo "Background: reusing $BG_VIDEO (0 credits)"
+    ;;
+  generate)
+    if [[ -n "${BG_MOOD:-}" ]]; then
+      reject_text_in_bg_mood
+      echo "Background: $CONFIG asks for a fresh clip; mood \"$BG_MOOD\""
+    else
+      echo "Background: $CONFIG asks for a fresh clip; no BG_MOOD set, so the house look applies"
+    fi
+    echo "            Generate it before building, then point BG_VIDEO at the result."
+    echo "            This build uses $BG_VIDEO as it stands."
+    ;;
+  *)
+    echo "$CONFIG: BG_MODE must be \"reuse\" or \"generate\", not \"$BG_MODE\"" >&2
+    exit 1
+    ;;
+esac
 
 need() { [[ -f "$2" ]] || { echo "$CONFIG: $1 not found: $2" >&2; exit 1; }; }
 need BG_VIDEO "$BG_VIDEO"
@@ -114,7 +163,7 @@ if [[ -n "${GROUP_VIDEO:-}" ]]; then
   # Step 3 needs the source dimensions to size the card; for a clip only ffprobe
   # knows them, so they go through the environment. A still is measured there.
   # `|| true`: an audio-only file gives ffprobe nothing to print, and read would
-  # then fail on EOF and take set -e with it — exiting 1 with no explanation,
+  # then fail on EOF and take set -e with it, exiting 1 with no explanation,
   # instead of reaching the message below.
   IFS=, read -r MEDIA_W MEDIA_H < <(ffprobe -v error -select_streams v:0 \
     -show_entries stream=width,height -of csv=p=0 "$GROUP_VIDEO") || true
@@ -122,7 +171,7 @@ if [[ -n "${GROUP_VIDEO:-}" ]]; then
     || { echo "$CONFIG: no video stream in $GROUP_VIDEO" >&2; exit 1; }
   export MEDIA_W MEDIA_H
   # A Zoom recording runs an hour, so a short clip is the odd case, not the
-  # norm — warn rather than fail. The last frame holds for the remainder, which
+  # norm, so warn rather than fail. The last frame holds for the remainder, which
   # reads better on a talking head than a jump cut back to the start.
   DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$GROUP_VIDEO" || true)
   awk -v dur="$DUR" -v start="$START" -v len="$SCENE_LEN" -v src="$GROUP_VIDEO" 'BEGIN {
@@ -275,7 +324,7 @@ read -r FIT_W FIT_H MEDIA_X MEDIA_Y <<< "$GEOM"
 #
 # Inputs 6 and 7 are the meeting-scene media and its corner mask. The media is
 # alphamerged, held or trimmed to the scene length, then shifted to 3.6s so the
-# same chain serves a still and a clip. Its audio is never mapped — the Veo
+# same chain serves a still and a clip. Its audio is never mapped; the Veo
 # music track is the only sound in the piece.
 
 ffmpeg -y -v error -i "$BG_VIDEO" -i "$BG_VIDEO" \
@@ -310,4 +359,4 @@ fade=t=in:st=3.6:d=0.4:alpha=1,fade=t=out:st=7.8:d=0.4:alpha=1[p];\
 
 echo "Built $OUT"
 ffprobe -v error -show_entries format=duration,size -of csv=p=0 "$OUT"
-echo "Now verify before posting — see README 'Verify' and the compliance checklist."
+echo "Now verify before posting; see README 'Verify' and the compliance checklist."

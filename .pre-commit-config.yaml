@@ -1,0 +1,46 @@
+# Fast checks only. Anything that needs a network fetch or a slow validator runs
+# in CI instead, so committing stays quick. See .github/workflows/ci.yml.
+#
+#   pip3 install pre-commit && pre-commit install
+#
+# To run the same set by hand:  scripts/lint.sh --fast
+# To run everything CI runs:    scripts/lint.sh
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^webfonts/
+      - id: end-of-file-fixer
+        exclude: ^webfonts/
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+        # webfonts are the only large tracked binaries and they are already in.
+        exclude: ^webfonts/
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
+    hooks:
+      - id: shellcheck
+        args: ["--severity=warning"]
+
+  - repo: local
+    hooks:
+      - id: repo-checks
+        name: repo invariants (AGENTS.md / DESIGN.md rules)
+        # No --fast: every check here is a handful of file reads, so there is no
+        # slow subset to skip. The slow tools (html-validate) are CI-only and are
+        # not wired into this hook at all, which is what keeps commits quick.
+        entry: python3 scripts/repo_checks.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.44.0
+    hooks:
+      - id: markdownlint
+        args: ["--config", ".markdownlint.json"]

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Signal Chain — building a Toastmasters recap video with Claude Code</title>
+<title>Signal Chain: building a Toastmasters recap video with Claude Code</title>
 <meta name="description" content="A step-by-step walkthrough of the toastmasters-flow-promos pipeline: which steps are free and deterministic, which need your eyes, and the one that spends credits.">
 <style>
 /* Archivo (wght+wdth variable) and JetBrains Mono, self-hosted from webfonts/.
@@ -11,15 +11,15 @@
    fonts/. Self-hosted because this page's primary viewing context is a clone,
    which may be offline; a CDN dependency would drop the silkscreen voice to
    Helvetica exactly where the page is most likely to be read. latin +
-   latin-ext only, normal styles only — the page uses no italics. */
+   latin-ext only, normal styles only, because the page uses no italics. Mono ships at
+   400 and 500 only: 700 was declared for a year and matched by no rule, so it
+   could never load. Add the face back if a rule ever asks for it. */
 @font-face{ font-family: 'Archivo'; font-style: normal; font-weight: 400 800; font-stretch: 62% 125%; font-display: swap; src: url(webfonts/Archivo-400-800-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face{ font-family: 'Archivo'; font-style: normal; font-weight: 400 800; font-stretch: 62% 125%; font-display: swap; src: url(webfonts/Archivo-400-800-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url(webfonts/JetBrainsMono-400-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url(webfonts/JetBrainsMono-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url(webfonts/JetBrainsMono-500-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url(webfonts/JetBrainsMono-500-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 700; font-display: swap; src: url(webfonts/JetBrainsMono-700-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-@font-face{ font-family: 'JetBrains Mono'; font-style: normal; font-weight: 700; font-display: swap; src: url(webfonts/JetBrainsMono-700-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* ============================================================
    SIGNAL LAMP CONSOLE
    The Toastmasters timing light as a documentation grammar.
@@ -28,6 +28,8 @@
    ============================================================ */
 
 :root{
+  color-scheme:dark;   /* the page is unconditionally dark; tell the UA so scrollbars match */
+
   /* Housing: warm graphite, the colour of enamelled equipment */
   --housing-deep:#15181C;
   --housing:#1B1F24;
@@ -37,18 +39,54 @@
   --hairline:rgba(233,229,218,.10);
   --hairline-strong:rgba(233,229,218,.18);
 
+  /* Console frame and station plates: the metal the panels bolt onto */
+  --frame-hi:#333942;     --frame-lo:#22272E;    --frame-edge:#11141A;
+  --plate-lo:#1F242A;
+  --plate-hover-hi:#3A424C; --plate-hover-lo:#242A31;
+  --fastener:#666E79;     /* screw heads; appears nowhere else */
+
   /* Silkscreen */
   --ink:#E9E5DA;
+  --ink-bright:#F6F3EC;  /* strong emphasis only; the brightest value on the page */
   --ink-dim:#A8ADB2;
   --ink-faint:#959DA5;   /* content-carrying: must clear AA on --panel */
+  --ink-stamp:rgba(233,229,218,.3);  /* ornament only: the station ordinal, which
+                                        repeats at full contrast in its step head */
+
+  /* Specialist inks, one surface each */
+  --code-ink:#D5D9DC;
+  --inline-code-ink:#DCE0E3;
+  --warn-ink:#EBD5CF;
 
   /* Signal states: lens colour, and a lightened tint for type */
   --go-lens:#3FA34D;      --go-ink:#74CE7C;    --go-glow:rgba(63,163,77,.55);
   --hold-lens:#E0A032;    --hold-ink:#F0BB63;  --hold-glow:rgba(224,160,50,.55);
   --spend-lens:#CE4B36;   --spend-ink:#F0836C; --spend-glow:rgba(206,75,54,.55);
 
+  /* Spend surfaces: --spend-lens at alpha. The only step that earns tinted metal. */
+  --spend-border:rgba(206,75,54,.42);
+  --spend-head-hi:rgba(206,75,54,.20);
+  --spend-head-lo:rgba(206,75,54,.05);
+  --spend-fill:rgba(206,75,54,.09);
+  --spend-edge:rgba(206,75,54,.32);
+
+  /* The machining alphas. Every shadow and inset highlight on the page comes
+     from these two ramps; they are system tokens, not one-off values. */
+  --shade-28:rgba(0,0,0,.28);   --shade-38:rgba(0,0,0,.38);
+  --shade-45:rgba(0,0,0,.45);   --shade-50:rgba(0,0,0,.5);
+  --shade-55:rgba(0,0,0,.55);   --shade-70:rgba(0,0,0,.7);
+  --light-014:rgba(255,255,255,.014); --light-045:rgba(255,255,255,.045);
+  --light-075:rgba(255,255,255,.075); --light-10:rgba(255,255,255,.10);
+  --light-11:rgba(255,255,255,.11);   --light-22:rgba(255,255,255,.22);
+  --light-55:rgba(255,255,255,.55);
+  --overhead-glow:rgba(120,140,160,.10);  /* the room's single light source */
+
+  /* Two widths, and the difference is load-bearing. Instruments (the rail, the
+     legend, the timeline readout) span the full shell because they are read
+     across. Anything read as sentences sits in --column, which is sized so the
+     68ch measure nearly fills its panel instead of ragging out mid-box. */
   --measure:68ch;
-  --step:clamp(1rem,.72rem + 1.4vw,1.5rem);
+  --column:56rem;
 
   --sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
@@ -73,13 +111,15 @@ body{
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    repeating-linear-gradient(90deg,rgba(255,255,255,.014) 0 1px,transparent 1px 3px),
-    radial-gradient(120% 70% at 50% -10%,rgba(120,140,160,.10),transparent 60%);
+    repeating-linear-gradient(90deg,var(--light-014) 0 1px,transparent 1px 3px),
+    radial-gradient(120% 70% at 50% -10%,var(--overhead-glow),transparent 60%);
 }
 main,header,footer{position:relative;z-index:1}
 
 .shell{width:min(100% - 2.5rem,74rem);margin-inline:auto}
-.prose{max-width:var(--measure)}
+/* Everything read as sentences. Left-aligned inside the shell, so the space it
+   leaves is composition outside a container rather than a void inside one. */
+.column{max-width:var(--column)}
 
 h1,h2,h3{font-weight:800;line-height:1.08;letter-spacing:-.022em;text-wrap:balance;margin:0}
 h1{font-size:clamp(2.7rem,1.7rem + 4.7vw,5.6rem);font-variation-settings:'wdth' 78;letter-spacing:-.028em;line-height:.98}
@@ -88,9 +128,13 @@ h3{font-size:clamp(1.18rem,1.06rem + .5vw,1.45rem);letter-spacing:-.012em}
 p{margin:0 0 1.05em}
 a{color:var(--ink);text-decoration-color:var(--hairline-strong);text-underline-offset:.22em;text-decoration-thickness:1px}
 a:hover{text-decoration-color:currentColor}
-strong{font-weight:700;color:#F6F3EC}
+/* One focus treatment for every link on the page. Without this, text links fall
+   back to the UA ring, a blue that is both a fourth chroma on a three-colour
+   page and only ~3:1 against the housing. */
+a:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:3px}
+strong{font-weight:700;color:var(--ink-bright)}
 
-/* Silkscreened plate lettering — equipment labels, never a heading kicker */
+/* Silkscreened plate lettering: equipment labels, never a heading kicker */
 .plate{
   font-size:.685rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;
   font-variation-settings:'wdth' 84;color:var(--ink-faint);
@@ -102,13 +146,13 @@ strong{font-weight:700;color:#F6F3EC}
   position:relative;flex:none;
   width:var(--d,22px);height:var(--d,22px);border-radius:50%;
   background:
-    radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),
+    radial-gradient(circle at 34% 30%,var(--light-55),rgba(255,255,255,0) 42%),
     radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);
   box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,.55),
-    inset 0 1px 2px rgba(255,255,255,.22),
+    inset 0 0 0 1px var(--shade-55),
+    inset 0 1px 2px var(--light-22),
     0 0 0 3px var(--bezel),
-    0 1px 1px rgba(0,0,0,.7),
+    0 1px 1px var(--shade-70),
     0 0 var(--bloom,0px) var(--glow);
   /* Lit is the default: a lamp must never depend on JS to read correctly. */
   filter:saturate(var(--sat,1.18)) brightness(var(--bright,1.06));
@@ -116,7 +160,7 @@ strong{font-weight:700;color:#F6F3EC}
 }
 .lamp::after{ /* lens fresnel ring */
   content:'';position:absolute;inset:12%;border-radius:50%;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
+  box-shadow:inset 0 0 0 1px var(--light-10);
 }
 .lamp{--bloom:14px}
 
@@ -133,56 +177,62 @@ strong{font-weight:700;color:#F6F3EC}
 .is-lit .lamp{animation:energize 1.05s var(--ease) both}
 
 /* ---------------- Masthead ---------------- */
-.masthead{padding:clamp(3.5rem,2rem + 7vw,7.5rem) 0 clamp(2rem,1rem + 3vw,3.5rem)}
+/* Top padding is tuned so the whole six-lamp rail clears a 900px laptop fold.
+   Seeing all six lamps at once is the page's argument. Check it before growing
+   anything in the masthead. */
+.masthead{padding:clamp(3rem,1.8rem + 5.6vw,5.75rem) 0 clamp(2rem,1rem + 3vw,3.5rem)}
 .masthead h1 span{display:block}
 .masthead h1 .lit{color:var(--spend-ink)}
 .lede{font-size:clamp(1.08rem,1rem + .5vw,1.32rem);color:var(--ink-dim);max-width:56ch;margin-top:1.6rem;line-height:1.55}
 .lede b{color:var(--ink);font-weight:600}
+/* The standfirst states what the thing is; this one states why it can be trusted.
+   Promise, then proof, so it steps down a size rather than repeating the weight. */
+.lede-proof{font-size:clamp(1rem,.97rem + .16vw,1.1rem);max-width:64ch;margin-top:1rem;line-height:1.6}
 
 .origin{
   display:flex;flex-wrap:wrap;gap:.55rem 1.4rem;align-items:baseline;
-  margin-top:2.4rem;padding-top:1.1rem;border-top:1px solid var(--hairline);
+  margin-top:2rem;padding-top:1.1rem;border-top:1px solid var(--hairline);
 }
 .origin code{font-family:var(--mono);font-size:.8rem;color:var(--ink-dim)}
 
 /* ---------------- Signal rail ---------------- */
-.rail-wrap{margin:clamp(2.5rem,1.5rem + 4vw,4.5rem) 0 0}
+.rail-wrap{margin:clamp(2.25rem,1.45rem + 3.2vw,3.5rem) 0 0;display:block}
 /* A bolted instrument panel: plates fastened to a frame that shows between them */
 .rail{
   position:relative;display:grid;gap:6px;
   grid-template-columns:repeat(6,1fr);
   padding:9px;border-radius:12px;
-  background:linear-gradient(180deg,#333942,#22272E);
-  border:1px solid #11141A;
+  background:linear-gradient(180deg,var(--frame-hi),var(--frame-lo));
+  border:1px solid var(--frame-edge);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.11),
-    0 16px 44px rgba(0,0,0,.5),
-    0 3px 8px rgba(0,0,0,.55);
+    inset 0 1px 0 var(--light-11),
+    0 16px 44px var(--shade-50),
+    0 3px 8px var(--shade-55);
 }
 .station{
   position:relative;border-radius:4px;
-  background:linear-gradient(180deg,var(--panel-hi),#1F242A);
-  border:1px solid rgba(0,0,0,.5);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),inset 0 -8px 18px rgba(0,0,0,.28);
+  background:linear-gradient(180deg,var(--panel-hi),var(--plate-lo));
+  border:1px solid var(--shade-50);
+  box-shadow:inset 0 1px 0 var(--light-075),inset 0 -8px 18px var(--shade-28);
   padding:1.7rem .8rem 1.15rem;
   display:flex;flex-direction:column;align-items:center;gap:.5rem;
   color:inherit;font:inherit;text-decoration:none;cursor:pointer;
   transition:background .3s var(--ease);
 }
-.station:hover,.station:focus-visible{background:linear-gradient(180deg,#3A424C,#242A31)}
+.station:hover,.station:focus-visible{background:linear-gradient(180deg,var(--plate-hover-hi),var(--plate-hover-lo))}
 .station:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* Fasteners, top and bottom of every plate */
 .station::before,.station::after{
   content:'';position:absolute;left:7px;right:7px;height:4px;pointer-events:none;
   background:
-    radial-gradient(circle at 2px 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px),
-    radial-gradient(circle at calc(100% - 2px) 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px);
+    radial-gradient(circle at 2px 50%,var(--fastener) 0 1.8px,var(--shade-55) 2px 2.6px,transparent 2.7px),
+    radial-gradient(circle at calc(100% - 2px) 50%,var(--fastener) 0 1.8px,var(--shade-55) 2px 2.6px,transparent 2.7px);
 }
 .station::before{top:6px}
 .station::after{bottom:6px}
 .station .num{
   position:absolute;top:.5rem;left:.75rem;
-  font-family:var(--mono);font-size:.78rem;font-weight:500;color:rgba(233,229,218,.3);
+  font-family:var(--mono);font-size:.78rem;font-weight:500;color:var(--ink-stamp);
 }
 .station .lamp{--d:40px;margin:.2rem 0 .35rem}
 .station .name{font-weight:700;font-size:.88rem;line-height:1.24;letter-spacing:-.01em;text-align:center}
@@ -212,9 +262,10 @@ section{padding:clamp(3.5rem,2rem + 5vw,6.5rem) 0}
 /* ---------------- Step panels ---------------- */
 .steps{display:flex;flex-direction:column;gap:clamp(1.25rem,.8rem + 1.5vw,2rem)}
 .step{
+  max-width:var(--column);
   border:1px solid var(--hairline-strong);border-radius:12px;overflow:hidden;
   background:var(--panel);
-  box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 8px 26px rgba(0,0,0,.38),0 2px 5px rgba(0,0,0,.45);
+  box-shadow:0 1px 0 var(--light-045) inset,0 8px 26px var(--shade-38),0 2px 5px var(--shade-45);
   scroll-margin-top:2rem;
 }
 .step-head{
@@ -252,12 +303,12 @@ section{padding:clamp(3.5rem,2rem + 5vw,6.5rem) 0}
 pre{
   margin:1.35rem 0;padding:1.05rem 1.15rem;overflow-x:auto;
   background:var(--housing-deep);border:1px solid var(--hairline);border-radius:8px;
-  font-family:var(--mono);font-size:.82rem;line-height:1.72;color:#D5D9DC;
-  box-shadow:inset 0 1px 3px rgba(0,0,0,.5);
+  font-family:var(--mono);font-size:.82rem;line-height:1.72;color:var(--code-ink);
+  box-shadow:inset 0 1px 3px var(--shade-50);
 }
 pre .c{color:var(--ink-faint)}
 pre .p{color:var(--go-ink)}
-code{font-family:var(--mono);font-size:.88em;color:#DCE0E3}
+code{font-family:var(--mono);font-size:.88em;color:var(--inline-code-ink)}
 p code,li code,td code{background:var(--housing);border:1px solid var(--hairline);border-radius:4px;padding:.08em .34em}
 
 .check{
@@ -268,27 +319,29 @@ p code,li code,td code{background:var(--housing);border:1px solid var(--hairline
 .check .plate{display:block;margin-bottom:.7rem}
 .check li{display:flex;gap:.65rem;align-items:flex-start;font-size:.92rem;color:var(--ink-dim);line-height:1.52}
 .check li + li{margin-top:.5rem}
+.check li > span{max-width:var(--measure)}
 .check svg{width:15px;height:15px;flex:none;margin-top:.32rem;color:var(--go-ink)}
 .hold .check svg{color:var(--hold-ink)}
 
 /* The one hazardous station gets real weight, not a coloured border */
-.step.spend{border-color:rgba(206,75,54,.42)}
-.step.spend .step-head{background:linear-gradient(180deg,rgba(206,75,54,.20),rgba(206,75,54,.05))}
+.step.spend{border-color:var(--spend-border)}
+.step.spend .step-head{background:linear-gradient(180deg,var(--spend-head-hi),var(--spend-head-lo))}
 .warn{
   display:flex;gap:.9rem;align-items:flex-start;
   margin:0 0 1.4rem;padding:1rem 1.15rem;border-radius:8px;
-  background:rgba(206,75,54,.09);border:1px solid rgba(206,75,54,.32);
+  background:var(--spend-fill);border:1px solid var(--spend-edge);
 }
 .warn svg{width:19px;height:19px;flex:none;margin-top:.15rem;color:var(--spend-ink)}
-.warn p{margin:0;font-size:.92rem;line-height:1.55;color:#EBD5CF}
+.warn p{margin:0;max-width:var(--measure);font-size:.92rem;line-height:1.55;color:var(--warn-ink)}
 .warn strong{color:var(--spend-ink)}
 
 /* ---------------- Timeline readout ---------------- */
 .readout{
   border:1px solid var(--hairline-strong);border-radius:12px;background:var(--panel);
   padding:clamp(1.25rem,.9rem + 1.2vw,2rem);
-  box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 8px 26px rgba(0,0,0,.38);
+  box-shadow:0 1px 0 var(--light-045) inset,0 8px 26px var(--shade-38);
 }
+.readout .note{margin:1.4rem 0 0;max-width:var(--measure);color:var(--ink-dim);font-size:.92rem}
 .tl{display:grid;gap:2px;margin:1.2rem 0 .55rem;grid-template-columns:3.6fr 4.6fr 3.8fr 3fr}
 .tl div{
   background:linear-gradient(180deg,var(--panel-hi),var(--panel));
@@ -307,18 +360,24 @@ p code,li code,td code{background:var(--housing);border:1px solid var(--hairline
 .faults td:first-child{color:var(--ink);font-weight:600;width:34%}
 .faults td:last-child{color:var(--ink-dim)}
 .faults tr:last-child td{border-bottom:0}
-.faults .q{color:var(--spend-ink);font-family:var(--mono);font-size:.86em}
+/* Quoted machine output: what the model actually gave back, or a literal string
+   headed for a prompt. Global, not table-scoped: step 2's prose quotes output too,
+   and scoping this to .faults meant those quotes silently rendered as plain body. */
+.q{color:var(--spend-ink);font-family:var(--mono);font-size:.86em}
 
 /* ---------------- Clearance ---------------- */
 .clear-list{margin:0;padding:0;list-style:none;display:grid;gap:1px;background:var(--hairline);
   border:1px solid var(--hairline-strong);border-radius:10px;overflow:hidden}
 .clear-list li{background:var(--panel);padding:1rem 1.2rem;display:flex;gap:.8rem;align-items:flex-start;font-size:.93rem;color:var(--ink-dim)}
+.clear-list li > span{max-width:var(--measure)}
 .clear-list svg{width:16px;height:16px;flex:none;margin-top:.28rem;color:var(--hold-ink)}
 .clear-list b{color:var(--ink);font-weight:650}
+.clear-note{margin:1.6rem 0 0;max-width:var(--measure);color:var(--ink-dim)}
 
 /* ---------------- Footer ---------------- */
 footer{border-top:1px solid var(--hairline);padding:3rem 0 4rem;color:var(--ink-faint);font-size:.86rem}
 footer p{max-width:var(--measure)}
+footer .licence{margin-top:1.1rem}
 footer .disclaim{margin-top:1.6rem;padding-top:1.3rem;border-top:1px solid var(--hairline);font-size:.79rem;line-height:1.6}
 
 @media (max-width:860px){
@@ -330,8 +389,11 @@ footer .disclaim{margin-top:1.6rem;padding-top:1.3rem;border-top:1px solid var(-
   .tl{grid-template-columns:1fr}
   .faults td:first-child{width:auto}
   .faults thead{position:absolute;left:-9999px}
+  /* Changing display on table parts drops the row/column association from the
+     a11y tree, which is why the markup carries explicit table roles. */
   .faults td{display:block;border-bottom:0;padding:.25rem .9rem}
   .faults tr{display:block;border-bottom:1px solid var(--hairline);padding:.7rem 0}
+  .faults tr:last-child{border-bottom:0}   /* the rule moved from td to tr; so does the exception */
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -344,7 +406,7 @@ footer .disclaim{margin-top:1.6rem;padding-top:1.3rem;border-top:1px solid var(-
 THESIS: A recap video is six steps, and exactly one of them can lie to you; the page
 refuses the docs-sidebar arrangement that flattens all six into equals.
 OWN-WORLD: The Toastmasters timing light. Warm graphite housing, ivory silkscreen
-lettering, three lamp lenses — green, amber, red — as the only colour, each carrying a
+lettering, three lamp lenses (green, amber, red) as the only colour, each carrying a
 literal state. Machined panels with real offset shadow; Archivo silkscreen, JetBrains
 Mono for anything executable.
 STORY: A club officer sees one red lamp in a six-lamp chain, understands that generation
@@ -358,10 +420,13 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <header class="masthead">
   <div class="shell">
     <h1><span>Six steps.</span><span class="lit">One red lamp.</span></h1>
-    <p class="lede">Google Flow animates the background, where there is nothing to
-    misspell. Everything that has to be exact — names, dates, the disclaimer
-    Toastmasters requires in your opening frames — is rendered locally from HTML and
-    <b>proofread as a still image</b> before a single frame is assembled.</p>
+    <p class="lede">A club meeting goes in. A <b>15-second recap video</b> comes out,
+    ready to post the same week: no video editor, no timeline, no render queue. You
+    drive the whole chain from Claude Code.</p>
+    <p class="lede lede-proof"><b>The model never touches a fact.</b> Google Flow
+    animates an abstract background and nothing else. Your members appear as the pixels
+    you actually recorded, and every name, date, and disclaimer is rendered locally from
+    HTML and proofread as a still image before a single frame is assembled.</p>
 
     <div class="origin">
       <span class="plate">Repository</span>
@@ -370,7 +435,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       <code>15s · 1920×1080 · 24fps</code>
     </div>
 
-    <div class="rail-wrap">
+    <nav class="rail-wrap" aria-label="The six steps">
       <div class="rail">
         <a class="station go" href="#s1">
           <span class="num">01</span><span class="lamp" aria-hidden="true"></span>
@@ -403,8 +468,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
           <span class="cost">your eyes</span>
         </a>
       </div>
-      <p class="rail-caption">Five steps you can run again for nothing. One you cannot take back.</p>
-    </div>
+      <p class="rail-caption">Five steps give the same answer every time you run them. One never comes back the same.</p>
+    </nav>
 
     <div class="legend">
       <div class="go">
@@ -425,11 +490,11 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 <main>
 
-<section>
+<section aria-labelledby="h-before">
   <div class="shell">
     <div class="sec-head">
-      <h2>Before you start</h2>
-      <p>The repository ships documentation, templates, and a build script — and no assets
+      <h2 id="h-before">Before you start</h2>
+      <p>The repository ships documentation, templates, and a build script, and no assets
       at all. The Toastmasters logo belongs to Toastmasters International, and the meeting
       photos are of people who agreed to a club post, not to a public repository. You
       supply both.</p>
@@ -448,15 +513,15 @@ pip3 install Pillow
 
 git clone https://github.com/rlorenzo/toastmasters-flow-promos
 cd toastmasters-flow-promos</pre>
-        <p>Chrome or Chromium is the third dependency — the build script drives it headless
+        <p>Chrome or Chromium is the third dependency. The build script drives it headless
         to render the text cards, and finds it automatically on macOS and Linux. If yours
         lives somewhere unusual, pass <code>CHROME=/path/to/chrome</code>.</p>
         <div class="check">
           <span class="plate">Drop these into the clone</span>
           <ul>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>assets/ToastmastersLogoWhite.png</code> — the official white logo, from the members' area of the Toastmasters brand portal. Use the white variant on dark backgrounds, unaltered; the rules are in the <a href="https://content.toastmasters.org/image/upload/02330-001-0001-brand-manual.pdf">Brand Manual</a>.</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>fonts/Montserrat-*.ttf</code> — Regular, Medium, SemiBold, Bold, ExtraBold from <a href="https://github.com/JulietaUla/Montserrat">JulietaUla/Montserrat</a> (SIL OFL). Montserrat is the Brand Manual's own free alternate to Gotham, which is why it is not a style choice.</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>assets/group_photo.png</code> — your meeting screenshot, untouched.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>assets/ToastmastersLogoWhite.png</code>: the official white logo, from the members' area of the Toastmasters brand portal. Use the white variant on dark backgrounds, unaltered; the rules are in the <a href="https://content.toastmasters.org/image/upload/02330-001-0001-brand-manual.pdf">Brand Manual</a>.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>fonts/Montserrat-*.ttf</code>: Regular, Medium, SemiBold, Bold, ExtraBold from <a href="https://github.com/JulietaUla/Montserrat">JulietaUla/Montserrat</a> (SIL OFL). Montserrat is the Brand Manual's own free alternate to Gotham, which is why it is not a style choice.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><code>assets/group_photo.png</code>: your meeting screenshot, untouched. Optionally a clip as well, for a moving meeting scene.</span></li>
           </ul>
         </div>
       </div>
@@ -464,13 +529,13 @@ cd toastmasters-flow-promos</pre>
   </div>
 </section>
 
-<section>
+<section aria-labelledby="h-chain">
   <div class="shell">
     <div class="sec-head">
-      <h2>The chain</h2>
+      <h2 id="h-chain">The chain</h2>
       <p>Each station names the tool that drives it. Four Claude Code skills ship in this
       repo under <code>.claude/skills/</code> and load automatically once you open the
-      clone — <code>tm-meeting-recap</code> runs the whole chain,
+      clone. <code>tm-meeting-recap</code> runs the whole chain,
       <code>google-flow</code> covers the credit-spending station,
       <code>tm-brand</code> knows the compliance rules, and <code>tm-social-post</code>
       publishes the result. They do the orchestration you would otherwise do by hand:
@@ -492,9 +557,20 @@ cd toastmasters-flow-promos</pre>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Finder / shell</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>agent</li>
           </ul>
-          <p>Take the Zoom grid screenshot while the meeting is still open. It is the source
-          for both the photo scene and every winner crop, so one good capture is the whole
-          shoot.</p>
+          <p>Take the Zoom grid screenshot while the meeting is still open. Every winner
+          crop comes out of it, and so does the meeting scene unless you give it a clip
+          instead, so one good capture is most of the shoot.</p>
+          <p>The meeting scene will take a recording as happily as a still. Point
+          <code>GROUP_VIDEO</code> at a Zoom gallery clip or someone mid-speech and it
+          plays inside the same white card, with <code>GROUP_VIDEO_START</code> choosing
+          which 4.6 seconds. It runs silent on purpose: the music that came with the
+          background is the only audio in the piece, so a room of overlapping voices
+          cannot muddy it. Winner tiles stay stills either way.</p>
+          <p>Footage you shot is not what the red lamp is about. Real motion of real
+          people is untouched pixels, exactly like the photo; what the pipeline refuses is
+          a <strong>model</strong> drawing faces or type. Record with the speaker spotlighted if
+          the framing matters, because Zoom's gallery reflows whenever somebody joins or
+          leaves.</p>
           <p>One trap worth knowing before an agent hits it: macOS screenshot filenames
           contain a narrow no-break space (U+202F) before <code>PM</code>. Typing that
           filename by hand fails; copy by glob instead.</p>
@@ -512,28 +588,51 @@ cd toastmasters-flow-promos</pre>
         <div class="step-body">
           <div class="warn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-            <p><strong>This is the only step that costs money and the only one you cannot
-            repeat for free.</strong> About 12 credits per 8-second clip. Read the
-            confirmation dialog before approving it — model, duration, count, and
-            especially aspect ratio. The Flow assistant has read <code>16:9</code> as
-            <code>9:16</code>; it was caught in the confirmation dialog, which is the only
-            reason a portrait clip was never paid for.</p>
+            <p><strong>This is the only step whose output cannot be trusted.</strong> The
+            model returns something new every run and will render text it is given, so
+            nothing that has to be correct may enter the prompt. It also costs about 12
+            credits per 8-second clip. Read the confirmation dialog before approving it:
+            model, duration, count, and especially aspect ratio. The Flow assistant has
+            read <code>16:9</code> as <code>9:16</code>; it was caught in the confirmation
+            dialog, which is the only reason a portrait clip was never paid for.</p>
           </div>
           <ul class="driver">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M2 12h20"/><path d="M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>google-flow</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 18v3"/></svg>claude-in-chrome</li>
           </ul>
-          <p><strong>Most weeks you skip this station entirely.</strong> The background
-          carries no meeting-specific content, so last week's clip works for this week's
-          recap — point <code>BG_VIDEO</code> at the file you already have. Any 8-second
-          16:9 clip with no text and no people will do, generated here or not. For a weekly
-          club this is a week-one cost, not a per-video one.</p>
+          <p>Flow produces exactly one file: <code>assets/bg.mp4</code>, an 8-second 16:9
+          clip of abstract moving light with a music bed and nothing else in it. No text,
+          no people, no objects, nothing that could be wrong. That single file does two
+          jobs in the finished video. It is the moving wallpaper under all four scenes,
+          played twice with a one-second crossfade to fill the fifteen seconds, and its
+          soundtrack is the only audio in the piece. Every other pixel is either a card
+          your machine rendered from HTML or footage you supplied yourself.</p>
+          <p><strong>Whether you come back here every week is a setting.</strong>
+          <code>BG_MODE="reuse"</code>, the default, points <code>BG_VIDEO</code> at the
+          clip you already have and spends nothing; one background carries the whole
+          season and gives a run of recaps a consistent signature.
+          <code>BG_MODE="generate"</code> asks for a fresh clip each meeting so no two
+          recaps look alike. On a typical subscription that is a few percent of a month's credits for
+          a weekly club, so pick the one you prefer to look at rather than the one you
+          think you can afford.</p>
+          <p>A generated background can follow the meeting's mood, and this is the one
+          place the pipeline's rule needs restating rather than relaxing.
+          <code>BG_MOOD</code> describes light: <span class="q">cool dawn palette, pale
+          green and soft gold, light rising from below</span>. It never contains the
+          theme. A theme is text, Veo renders text it is given, and a prompt carrying
+          <span class="q">FRESH START</span> is how you get those two words drifting in
+          wobbly letters across the backdrop. The theme still reaches the video, through
+          <code>THEME_LINE1</code> and <code>THEME_LINE2</code>, rendered locally by
+          Chrome at a known size and proofread as a still. <code>build.sh</code> refuses
+          to build if <code>BG_MOOD</code> repeats a theme word or contains a
+          <code>#</code>, and it refuses before the spend rather than after it.</p>
           <p>Google Flow has no public API and no official MCP server, so this step runs in
           a real browser. That is the reason it is fenced: every other station in the chain
           is a local process you can re-run, and this one is a paid request to a model that
           returns something new each time.</p>
-          <p>You need <strong>one</strong> clip. The build loops an 8-second background into
-          15 seconds with a one-second crossfade, so a second generation buys you nothing.</p>
+          <p>You need <strong>one</strong> clip per recap, never two. The build loops a
+          single 8-second background to fill fifteen seconds, so a second generation for
+          the same video buys you nothing at all.</p>
           <pre><span class="c"># The prompt that worked first try. Every NO is load-bearing.</span>
 Generate ONE 8-second 16:9 video clip using the fastest/cheapest
 video model. Subject: an abstract, minimalist, premium corporate
@@ -550,9 +649,12 @@ narration, no sound effects.</pre>
           <p>Describe colour in words, never in hex. A prompt containing
           <code>#F2DF74</code> once produced a gold ribbon reading
           <span class="q">Best #2DF74</span>.</p>
-          <p>The clip arrives with a usable music bed, which is the other reason one
-          generation is enough — the audio comes free with the video. Save it as
-          <code>assets/bg.mp4</code>.</p>
+          <p>Save the result as <code>assets/bg.mp4</code>. Under
+          <code>BG_MODE="reuse"</code> that is this station finished, most likely for the
+          rest of the year. Under <code>generate</code> it is finished until next week,
+          and the amber lamp at the end of the chain is the one that matters: a fresh
+          background is a fresh chance for the model to have drawn something, so the
+          contact sheet stops being a formality and starts being the point.</p>
         </div>
       </article>
 
@@ -572,7 +674,7 @@ narration, no sound effects.</pre>
           on the way into the templates, so an ampersand in a club name is safe to type
           literally.</p>
           <pre>CLUB_NAME=<span class="p">"YOUR CLUB TOASTMASTERS"</span>
-MEETING_DATE=<span class="p">"MARCH 12, 2026"</span>   <span class="c"># full date — meetings are weekly</span>
+MEETING_DATE=<span class="p">"MARCH 12, 2026"</span>   <span class="c"># full date; meetings are weekly</span>
 THEME_LINE1=<span class="p">"FRESH"</span>
 THEME_LINE2=<span class="p">"START"</span>          <span class="c"># empty for a one-line theme</span>
 WORD_OF_DAY=<span class="p">"ELOQUENT"</span>
@@ -585,7 +687,7 @@ PHRASE=<span class="p">"Find Your Voice"</span>   <span class="c"># exactly one 
           <p>Two fields carry compliance weight rather than taste. <code>PHRASE</code> must
           be one of the approved Toastmasters phrases and only one per video.
           <code>CREDIT</code> must name the creator, the club, the District, and the
-          copyright year — the Brand Manual asks for all four in the end credits.</p>
+          copyright year. The Brand Manual asks for all four in the end credits.</p>
           <p>Leave <code>WINNER2</code> and <code>WINNER3</code> empty and the row
           re-centres for a single winner; fill all three and the tiles resize to fit.</p>
         </div>
@@ -606,7 +708,7 @@ PHRASE=<span class="p">"Find Your Voice"</span>   <span class="c"># exactly one 
           <p>Cut a landscape tile per winner out of the group photo. The tiles are roughly
           1.9:1 to match the card, and the crop box matters for one specific reason: Zoom
           burns a name label into the bottom-left of every tile. Include it and you have
-          put un-proofread text back into your video — the exact failure the whole pipeline
+          put un-proofread text back into your video, the exact failure the whole pipeline
           exists to prevent.</p>
           <pre>python3 -c <span class="p">"
 from PIL import Image
@@ -614,7 +716,7 @@ im = Image.open('assets/group_photo.png')
 im.crop((320, 96, 1080, 498)).save('assets/winner1_crop.png')
 "</span></pre>
           <p>This is a good task to hand an agent: it can read the photo, find each
-          person's tile, and propose crop boxes that clear the labels — then you look at
+          person's tile, and propose crop boxes that clear the labels. Then you look at
           the PNGs it wrote.</p>
         </div>
       </article>
@@ -641,7 +743,7 @@ im.crop((320, 96, 1080, 498)).save('assets/winner1_crop.png')
           rather than failing</strong>. A mistyped crop filename would otherwise sail
           through and land in the finished cut as a hole where a face should be.</p>
           <p>Everything here is deterministic. Changing a name, a date, or a fade time is a
-          re-render, not another generation — which is why it is worth getting the wording
+          re-render, not another generation, which is why it is worth getting the wording
           right at this station rather than at the previous one.</p>
         </div>
       </article>
@@ -661,7 +763,7 @@ im.crop((320, 96, 1080, 498)).save('assets/winner1_crop.png')
           <p>The amber lamp is not a formality. Everything upstream is a machine that
           cannot read, and this is where a person reads.</p>
           <pre><span class="c"># substitute whatever OUTPUT names in meeting.conf</span>
-<span class="c"># one frame per second, tiled — scan for garbled text</span>
+<span class="c"># one frame per second, tiled; scan for garbled text</span>
 ffmpeg -i Meeting_Recap.mp4 -vf <span class="p">"select='not(mod(n\,24))',scale=640:-1,tile=4x4"</span> \
   -frames:v 1 sheet.png
 
@@ -670,8 +772,8 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
           <div class="check">
             <span class="plate">Read before posting</span>
             <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Every name spelled the way its owner spells it. Read the PNGs in <code>cards/</code>, not the video — the still is where a typo is actually legible.</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>The disclaimer is readable in the opening frames — 14px or larger at 1080p, 60% white or brighter.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Every name spelled the way its owner spells it. Read the PNGs in <code>cards/</code>, not the video. The still is where a typo is actually legible.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>The disclaimer is readable in the opening frames: 14px or larger at 1080p, 60% white or brighter.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>No Zoom name label survived into a winner crop.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>The logo is unaltered and not overlapped, with the club name below it.</span></li>
             </ul>
@@ -683,10 +785,10 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
   </div>
 </section>
 
-<section>
+<section aria-labelledby="h-fifteen">
   <div class="shell">
     <div class="sec-head">
-      <h2>What the fifteen seconds are made of</h2>
+      <h2 id="h-fifteen">What the fifteen seconds are made of</h2>
       <p>One 8-second clip, played twice with a one-second crossfade, carrying four
       overlays that fade their alpha channel in and out. Because the background never
       stops moving underneath, it reads as one designed piece rather than four slides.</p>
@@ -694,12 +796,12 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
     <div class="readout">
       <div class="tl">
         <div><div class="t">0.0 → 3.6</div><div class="s">Title</div><div class="d">Theme, word of the day, club name under the logo, TI disclaimer</div></div>
-        <div><div class="t">3.6 → 8.2</div><div class="s">Meeting</div><div class="d">Group photo, static, in a white rounded card</div></div>
+        <div><div class="t">3.6 → 8.2</div><div class="s">Meeting</div><div class="d">Your photo or a silent clip, in a white rounded card</div></div>
         <div><div class="t">8.2 → 12.0</div><div class="s">Winners</div><div class="d">One to three tiles with names and awards</div></div>
         <div><div class="t">12.0 → 15.0</div><div class="s">Close</div><div class="d">Logo, club name, one approved phrase, URL, credits</div></div>
       </div>
       <div class="ruler"><span>00:00</span><span>00:05</span><span>00:10</span><span>00:15</span></div>
-      <p style="margin:1.4rem 0 0;color:var(--ink-dim);font-size:.92rem;max-width:var(--measure)">
+      <p class="note">
       Timing lives in the ffmpeg <code>st=</code> values inside <code>build.sh</code>;
       content lives in <code>meeting.conf</code>. Both re-render in seconds, so the timing
       is worth playing with.</p>
@@ -707,48 +809,53 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
   </div>
 </section>
 
-<section>
+<section aria-labelledby="h-why">
   <div class="shell">
     <div class="sec-head">
-      <h2>Why the red lamp is red</h2>
+      <h2 id="h-why">Why the red lamp is red</h2>
       <p>Seven failed generations, recorded rather than deleted. Every one of these was
       observed, and together they are the argument for keeping generation away from
       anything that has to be correct.</p>
     </div>
-    <table class="faults">
+    <!-- These roles look redundant to a static parser and are not. Below 560px the
+         stylesheet sets display:block on the cells, which drops the rows and cells out
+         of the table formatting context and takes the a11y row/column association with
+         them. Stating the roles keeps the table readable at that width. -->
+    <!-- [html-validate-disable-block no-redundant-role -- roles survive the 560px display:block reflow] -->
+    <table class="faults column" role="table">
       <caption>Observed failure modes, Veo via Google Flow</caption>
-      <thead>
-        <tr><th scope="col">What was tried</th><th scope="col">What came back</th></tr>
+      <thead role="rowgroup">
+        <tr role="row"><th role="columnheader" scope="col">What was tried</th><th role="columnheader" scope="col">What came back</th></tr>
       </thead>
-      <tbody>
-        <tr><td>A hex colour in the prompt</td><td>The model rendered the string. A gold ribbon came back reading <span class="q">Best #2DF74</span>.</td></tr>
-        <tr><td>Quoting text meant for the screen</td><td>Sometimes clean, sometimes soup. A coin flip you cannot afford on a member's name.</td></tr>
-        <tr><td>Animating a photo containing text</td><td>Zoom name labels and the backdrop slogan were re-drawn as gibberish.</td></tr>
-        <tr><td>Animating faces</td><td>Identity drift. People come back looking subtly not like themselves.</td></tr>
-        <tr><td><code>16:9</code> in an assistant prompt</td><td>Read as <code>9:16</code>. Caught in the confirmation dialog and corrected before approving — which is the whole reason to read it.</td></tr>
-        <tr><td>Re-using an old approval dialog</td><td>Spent dialogs linger in the chat and look clickable but do nothing. Only a fresh one spends credits.</td></tr>
+      <tbody role="rowgroup">
+        <tr role="row"><td role="cell">A hex colour in the prompt</td><td role="cell">The model rendered the string. A gold ribbon came back reading <span class="q">Best #2DF74</span>.</td></tr>
+        <tr role="row"><td role="cell">Quoting text meant for the screen</td><td role="cell">Sometimes clean, sometimes soup. A coin flip you cannot afford on a member's name.</td></tr>
+        <tr role="row"><td role="cell">Animating a photo containing text</td><td role="cell">Zoom name labels and the backdrop slogan were re-drawn as gibberish.</td></tr>
+        <tr role="row"><td role="cell">Animating faces</td><td role="cell">Identity drift. People come back looking subtly not like themselves.</td></tr>
+        <tr role="row"><td role="cell"><code>16:9</code> in an assistant prompt</td><td role="cell">Read as <code>9:16</code>. Caught in the confirmation dialog and corrected before approving, which is the whole reason to read it.</td></tr>
+        <tr role="row"><td role="cell">Re-using an old approval dialog</td><td role="cell">Spent dialogs linger in the chat and look clickable but do nothing. Only a fresh one spends credits.</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<section>
+<section aria-labelledby="h-clearance">
   <div class="shell">
     <div class="sec-head">
-      <h2>Clearance</h2>
+      <h2 id="h-clearance">Clearance</h2>
       <p>Brand compliance here is a requirement rather than a preference, and two of these
       have nothing to do with Toastmasters at all.</p>
     </div>
-    <ul class="clear-list">
+    <ul class="clear-list column">
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Written permission from every person who appears.</b> Guardians for anyone under 18. This one is not about branding.</span></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>The disclaimer appears in one of the first frames.</b> The title card carries it by default — do not delete it to buy space.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>The disclaimer appears in one of the first frames.</b> The title card carries it by default. Do not delete it to buy space.</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Club name below the logo</b>, and end credits naming creator, club, District, and © year.</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>One approved phrase, no more.</b> No drop shadows or word art on type; the logo unaltered and never overlapping a face.</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Submit the finished video to <a href="mailto:brand@toastmasters.org">brand@toastmasters.org</a></b> for approval before it represents your club in public.</span></li>
     </ul>
-    <p style="margin:1.6rem 0 0;color:var(--ink-dim);max-width:var(--measure)">Publishing
+    <p class="clear-note">Publishing
     is deliberately outside the chain. The six stations end at a verified file, because
-    posting is the one action nothing downstream can undo — a misspelled name is a
+    posting is the one action nothing downstream can undo. A misspelled name is a
     correction, a published misspelled name is a screenshot. The
     <code>tm-social-post</code> skill drives your own signed-in browser to a Facebook Page
     and personal LinkedIn, drafts a caption with every name copied verbatim from
@@ -769,8 +876,8 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
     commands, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/tree/main/.claude/skills"><code>.claude/skills/</code></a> for the four skills, and
     <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/AGENTS.md"><code>AGENTS.md</code></a> for the instructions that let any coding
     agent drive all of it.</p>
-    <p style="margin-top:1.1rem">MIT licensed. The licence covers the scripts, templates,
-    and documentation — not Toastmasters International trademarks or brand assets, not
+    <p class="licence">MIT licensed. The licence covers the scripts, templates,
+    and documentation, not Toastmasters International trademarks or brand assets, not
     Montserrat, and not any media you supply.</p>
     <p class="disclaim">Toastmasters International and all other Toastmasters
     International trademarks and copyrights are the sole property of Toastmasters

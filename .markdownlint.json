@@ -1,0 +1,12 @@
+{
+  "default": true,
+
+  "//": "Line length and table pipe padding are style, not correctness. These docs wrap at roughly 90 by hand and their tables render fine; enforcing either would mean reflowing every paragraph in the repo for no reader benefit.",
+  "MD013": false,
+  "MD060": false,
+
+  "//2": "DESIGN.md carries a YAML frontmatter `name:` that is design-system metadata, not a rendered document title, so it must not count as the first H1.",
+  "MD025": { "front_matter_title": "" },
+
+  "//3": "Every other default rule stays on. If one of them fires, fix the document rather than adding an exception here."
+}
