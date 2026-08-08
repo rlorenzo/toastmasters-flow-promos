@@ -1,0 +1,51 @@
+# Fast checks only. Anything that needs a network fetch or a slow validator runs
+# in CI instead, so committing stays quick. See .github/workflows/ci.yml.
+#
+#   pip3 install pre-commit && pre-commit install
+#
+# To run the same set by hand:  scripts/lint.sh --fast
+# To run everything CI runs:    scripts/lint.sh
+
+# Remote hooks are pinned to commits, not tags. A hook runs on contributors'
+# machines, and a tag can be moved to point at different code without this file
+# changing, so the reviewed config and the executed code would silently diverge.
+# The tag is kept in a trailing comment for readability; `pre-commit autoupdate`
+# still works and rewrites both.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^webfonts/
+      - id: end-of-file-fixer
+        exclude: ^webfonts/
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+        # webfonts are the only large tracked binaries and they are already in.
+        exclude: ^webfonts/
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: 2491238703a5d3415bb2b7ff11388bf775372f29  # v0.10.0
+    hooks:
+      - id: shellcheck
+        args: ["--severity=warning"]
+
+  - repo: local
+    hooks:
+      - id: repo-checks
+        name: repo invariants (AGENTS.md / DESIGN.md rules)
+        # No --fast: every check here is a handful of file reads, so there is no
+        # slow subset to skip. The slow tools (html-validate) are CI-only and are
+        # not wired into this hook at all, which is what keeps commits quick.
+        entry: python3 scripts/repo_checks.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: 586c3ea3f51230da42bab657c6a32e9e66c364f0  # v0.44.0
+    hooks:
+      - id: markdownlint
+        args: ["--config", ".markdownlint.json"]

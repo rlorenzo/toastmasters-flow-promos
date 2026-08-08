@@ -1,6 +1,6 @@
 # Local Assembly Pipeline (ffmpeg + headless Chrome + Pillow)
 
-Everything below is deterministic and free — iterate without spending credits.
+Everything below is deterministic and free, so iterate without spending credits.
 
 `templates/build.sh` runs all of this for you from `meeting.conf`; this file is the
 reference for what it does and for running the steps by hand when you're debugging one.
@@ -9,14 +9,14 @@ reference for what it does and for running the steps by hand when you're debuggi
 
 Paths are whatever `meeting.conf` points at; the defaults are:
 
-- `assets/bg.mp4` — 8s Veo background, 1280×720@24fps with audio (upscales cleanly; it's soft gradient)
-- `assets/group_photo.png` — the meeting photo, untouched
-- *(optional)* a meeting clip for `GROUP_VIDEO` — any size or length; used silent
-- `assets/winner{1,2,3}_crop.png` — landscape winner crops from the group photo
-- `assets/ToastmastersLogoWhite.png` — official white logo (for dark backgrounds)
+- `assets/bg.mp4`: 8s Veo background, 1280×720@24fps with audio (upscales cleanly; it's soft gradient)
+- `assets/group_photo.png`: the meeting photo, untouched
+- *(optional)* a meeting clip for `GROUP_VIDEO`: any size or length, used silent
+- `assets/winner{1,2,3}_crop.png`: landscape winner crops from the group photo
+- `assets/ToastmastersLogoWhite.png`: official white logo (for dark backgrounds)
 - `fonts/Montserrat-{Regular,Medium,SemiBold,Bold,ExtraBold}.ttf`
 
-None of these are in the repo — see README "What you need to supply".
+None of these are in the repo; see README "What you need to supply".
 
 ## 1. Render text cards → transparent PNGs
 
@@ -35,20 +35,20 @@ done
 ```
 
 `--default-background-color=00000000` is what makes the PNG transparent.
-**Proofread the rendered PNGs** — this is the anti-misspelling gate.
+**Proofread the rendered PNGs.** This is the anti-misspelling gate.
 
 ## 2. Frame the meeting scene (Pillow)
 
 Fit the source inside 1600×900, then emit two 1920×1080 RGBA files rather than one
 composite, so a still and a clip can share the rest of the pipeline:
 
-- `cards/photo_frame.png` — Gaussian-blurred shadow + white rounded card (+5px, ~92%
+- `cards/photo_frame.png`: Gaussian-blurred shadow + white rounded card (+5px, ~92%
   alpha), with the interior **cut out** using the media's own mask. ffmpeg drops the
   media into that hole instead of onto a white fill; otherwise the card would bloom
   white through the media for the 0.4s the scene spends fading.
-- `cards/photo_mask.png` — the r=22 rounded rectangle that ffmpeg alphamerges onto the
+- `cards/photo_mask.png`: the r=22 rounded rectangle that ffmpeg alphamerges onto the
   media to round its corners.
-- `cards/photo_media.png` — stills only: the photo, LANCZOS-resized to final size here
+- `cards/photo_media.png`: stills only, the photo, LANCZOS-resized to final size here
   rather than by ffmpeg, so its pixels take the same path they always have.
 
 Winner portraits: landscape "Zoom-tile" crops from the group photo, coordinates chosen
@@ -101,11 +101,11 @@ fade=t=in:st=3.6:d=0.4:alpha=1,fade=t=out:st=7.8:d=0.4:alpha=1[p];\
 The `fps=24` on both scene inputs is the output rate, not a spare number: the image
 demuxer hands `-loop 1` PNGs over at 25fps by default, and letting the scene run at 25
 under a 24fps output makes the 0.4s alpha fade land its last step twice as far as the
-rest of the ramp — a visible hitch. Matching the two also spares a clip a second
+rest of the ramp, a visible hitch. Matching the two also spares a clip a second
 resampling pass (30 → 24, not 30 → 25 → 24).
 
 Key idea: `fade=...:alpha=1` fades only the alpha channel, so overlays melt in/out over
-the continuously-moving background — one designed piece, not a slideshow. The meeting
+the continuously-moving background: one designed piece, not a slideshow. The meeting
 scene is assembled **before** it is faded (`[pfr][pmv]overlay` → `[scene]` → `fade`) so
 the card ring and its contents always share one alpha; fading them as two layers makes
 the card glow white through the photo mid-transition.
@@ -116,7 +116,7 @@ which on a talking head looks better than a jump cut back to the start.
 ## 4. Verify
 
 ```bash
-# one frame per second, tiled — scan for garbled text / artifacts
+# one frame per second, tiled; scan for garbled text / artifacts
 ffmpeg -y -i out.mp4 -vf "select='not(mod(n\,24))',scale=640:-1,tile=4x4" -frames:v 1 sheet.png
 # per-scene stills
 for t in 2 5.5 10 13.5; do ffmpeg -y -ss $t -i out.mp4 -frames:v 1 check_$t.png; done
@@ -126,7 +126,7 @@ ffmpeg -i out.mp4 -af volumedetect -f null - 2>&1 | grep volume
 
 ## Gotchas
 
-- macOS screenshot filenames contain a **narrow no-break space** (U+202F) before "PM" —
+- macOS screenshot filenames contain a **narrow no-break space** (U+202F) before "PM".
   `cp "Screenshot ... 8.15.17 PM.png"` fails if typed; use a glob (`Screenshot*8.15.17*`).
 - Match output fps to the Veo clip (24) to avoid judder.
 - Keep the disclaimer ≥14px at 1080p and ≥60% white for legibility (it must be readable

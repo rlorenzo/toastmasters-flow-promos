@@ -17,9 +17,9 @@ path, but this kit does not use it.
   then raises an Approve/Reject credit dialog.
 - **`+` → Create Scene** = timeline assembly of *existing* clips only, no generation.
 - **Tools** = community tools gallery, not the core generator.
-- **Videos list view** shows every generation's full prompt — use it to diagnose old clips.
+- **Videos list view** shows every generation's full prompt; use it to diagnose old clips.
 - Finished clips: open clip editor → download icon → lands in `~/Downloads`.
-- Uploads usually originated on this machine — check `~/Desktop` and `~/Downloads` before
+- Uploads usually originated on this machine, so check `~/Desktop` and `~/Downloads` before
   re-downloading from Flow.
 
 ## Credit hygiene (hard rules)
@@ -27,24 +27,30 @@ path, but this kit does not use it.
 - **Never approve a spend the user hasn't authorized.** Veo 3.1 Lite ≈ 12 credits per
   8s 720p/24fps clip (with audio).
 - **Read the assistant's confirmation before approving**: model, count, duration, and
-  aspect ratio. It has misread "16:9" as "9:16" — write "16:9 LANDSCAPE (widescreen
+  aspect ratio. It has misread "16:9" as "9:16", so write "16:9 LANDSCAPE (widescreen
   horizontal)" and correct it if the confirmation disagrees.
 - **Stale dialogs**: consumed Approve/Reject dialogs linger in chat history and look
   clickable but are inert. Only a freshly-raised dialog does anything. If clicks change
-  nothing, the dialog is dead — check whether the generation already ran.
+  nothing, the dialog is dead; check whether the generation already ran.
 - Prefer reusing existing clips (loop 8s → any length with a 1s crossfade) over generating.
 
 ## Prompt rules (learned from failures)
 
-1. **No hex codes** — `#F2DF74` in a prompt became ribbon text "Best #2DF74".
-2. **No text you want rendered** — quoting text is a coin flip; render type locally instead.
+1. **No hex codes.** `#F2DF74` in a prompt became ribbon text "Best #2DF74".
+2. **No text you want rendered.** Quoting text is a coin flip; render type locally instead.
 3. **Ban text redundantly** when you want none: "absolutely NO text, NO letters, NO
    numbers, NO words, NO typography, NO logos, NO symbols".
 4. Describe colors in words ("deep dark navy blue"), camera as "completely static" for
    backgrounds, and request the audio explicitly ("soft uplifting instrumental corporate
-   background music, no vocals") — the audio bed comes free.
+   background music, no vocals"); the audio bed comes free.
 5. Nothing exact in-frame: faces, logos, and photos with text must never be AI-animated;
    composite them locally over textless generated motion.
+6. **A theme is text.** When a caller asks for a background "matching the theme", steer
+   only the colour, light direction and movement, and keep the theme wording out of the
+   prompt entirely. In `toastmasters-flow-promos` that steering value is `BG_MOOD` in
+   `meeting.conf`; substitute it for the palette clause of the background prompt and keep
+   every NO. A prompt carrying "FRESH START" is how you get `FRESH START` rendered in
+   wobbly letters across the backdrop, which is rule 2 with a friendlier face.
 
 ## Verify every clip before using it
 

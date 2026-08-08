@@ -1,57 +1,665 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-06T16:30:00-07:00",
+  "generatedAt": "2026-08-07T11:40:00-07:00",
   "title": "Design System: Signal Chain Walkthrough",
   "extensions": {
     "colorMeta": {
-      "housing-deep": { "role": "neutral", "displayName": "Housing Deep", "canonical": "oklch(20.8% 0.009 255.6)", "tonalRamp": ["oklch(15.0% 0.009 255.6)", "oklch(26.4% 0.009 255.6)", "oklch(37.9% 0.009 255.6)", "oklch(49.3% 0.009 255.6)", "oklch(60.7% 0.009 255.6)", "oklch(72.1% 0.009 255.6)", "oklch(83.6% 0.009 255.6)", "oklch(95.0% 0.009 255.6)"] },
-      "housing": { "role": "neutral", "displayName": "Housing", "canonical": "oklch(23.7% 0.011 254.1)", "tonalRamp": ["oklch(15.0% 0.011 254.1)", "oklch(26.4% 0.011 254.1)", "oklch(37.9% 0.011 254.1)", "oklch(49.3% 0.011 254.1)", "oklch(60.7% 0.011 254.1)", "oklch(72.1% 0.011 254.1)", "oklch(83.6% 0.011 254.1)", "oklch(95.0% 0.011 254.1)"] },
-      "panel": { "role": "neutral", "displayName": "Panel", "canonical": "oklch(27.9% 0.015 256.8)", "tonalRamp": ["oklch(15.0% 0.015 256.8)", "oklch(26.4% 0.015 256.8)", "oklch(37.9% 0.015 256.8)", "oklch(49.3% 0.015 256.8)", "oklch(60.7% 0.015 256.8)", "oklch(72.1% 0.015 256.8)", "oklch(83.6% 0.015 256.8)", "oklch(95.0% 0.015 256.8)"] },
-      "panel-hi": { "role": "neutral", "displayName": "Panel High", "canonical": "oklch(32.3% 0.016 255.6)", "tonalRamp": ["oklch(15.0% 0.016 255.6)", "oklch(26.4% 0.016 255.6)", "oklch(37.9% 0.016 255.6)", "oklch(49.3% 0.016 255.6)", "oklch(60.7% 0.016 255.6)", "oklch(72.1% 0.016 255.6)", "oklch(83.6% 0.016 255.6)", "oklch(95.0% 0.016 255.6)"] },
-      "bezel": { "role": "neutral", "displayName": "Bezel", "canonical": "oklch(37.2% 0.017 251.8)", "tonalRamp": ["oklch(15.0% 0.017 251.8)", "oklch(26.4% 0.017 251.8)", "oklch(37.9% 0.017 251.8)", "oklch(49.3% 0.017 251.8)", "oklch(60.7% 0.017 251.8)", "oklch(72.1% 0.017 251.8)", "oklch(83.6% 0.017 251.8)", "oklch(95.0% 0.017 251.8)"] },
-      "hairline": { "role": "neutral", "displayName": "Etched Hairline", "canonical": "rgba(233,229,218,.10)", "note": "Alpha overlay of ink; no tonal ramp — vary alpha (.10 regular, .18 strong), not lightness." },
-      "hairline-strong": { "role": "neutral", "displayName": "Etched Hairline Strong", "canonical": "rgba(233,229,218,.18)", "note": "Alpha overlay of ink; outer borders and link underlines." },
-      "ink": { "role": "neutral", "displayName": "Silkscreen Ivory", "canonical": "oklch(92.2% 0.015 90.2)", "tonalRamp": ["oklch(15.0% 0.015 90.2)", "oklch(26.4% 0.015 90.2)", "oklch(37.9% 0.015 90.2)", "oklch(49.3% 0.015 90.2)", "oklch(60.7% 0.015 90.2)", "oklch(72.1% 0.015 90.2)", "oklch(83.6% 0.015 90.2)", "oklch(95.0% 0.015 90.2)"] },
-      "ink-bright": { "role": "neutral", "displayName": "Silkscreen Bright", "canonical": "oklch(96.5% 0.010 87.5)", "tonalRamp": ["oklch(15.0% 0.010 87.5)", "oklch(26.4% 0.010 87.5)", "oklch(37.9% 0.010 87.5)", "oklch(49.3% 0.010 87.5)", "oklch(60.7% 0.010 87.5)", "oklch(72.1% 0.010 87.5)", "oklch(83.6% 0.010 87.5)", "oklch(95.0% 0.010 87.5)"] },
-      "ink-dim": { "role": "neutral", "displayName": "Silkscreen Dim", "canonical": "oklch(74.5% 0.009 247.9)", "tonalRamp": ["oklch(15.0% 0.009 247.9)", "oklch(26.4% 0.009 247.9)", "oklch(37.9% 0.009 247.9)", "oklch(49.3% 0.009 247.9)", "oklch(60.7% 0.009 247.9)", "oklch(72.1% 0.009 247.9)", "oklch(83.6% 0.009 247.9)", "oklch(95.0% 0.009 247.9)"] },
-      "ink-faint": { "role": "neutral", "displayName": "Silkscreen Faint", "canonical": "oklch(60.6% 0.013 248.1)", "tonalRamp": ["oklch(15.0% 0.013 248.1)", "oklch(26.4% 0.013 248.1)", "oklch(37.9% 0.013 248.1)", "oklch(49.3% 0.013 248.1)", "oklch(60.7% 0.013 248.1)", "oklch(72.1% 0.013 248.1)", "oklch(83.6% 0.013 248.1)", "oklch(95.0% 0.013 248.1)"] },
-      "go-lens": { "role": "signal-go", "displayName": "Lamp Green (Lens)", "canonical": "oklch(63.7% 0.155 146.0)", "tonalRamp": ["oklch(15.0% 0.155 146.0)", "oklch(26.4% 0.155 146.0)", "oklch(37.9% 0.155 146.0)", "oklch(49.3% 0.155 146.0)", "oklch(60.7% 0.155 146.0)", "oklch(72.1% 0.155 146.0)", "oklch(83.6% 0.155 146.0)", "oklch(95.0% 0.155 146.0)"] },
-      "go-ink": { "role": "signal-go", "displayName": "Lamp Green (Ink)", "canonical": "oklch(77.5% 0.144 146.0)", "tonalRamp": ["oklch(15.0% 0.144 146.0)", "oklch(26.4% 0.144 146.0)", "oklch(37.9% 0.144 146.0)", "oklch(49.3% 0.144 146.0)", "oklch(60.7% 0.144 146.0)", "oklch(72.1% 0.144 146.0)", "oklch(83.6% 0.144 146.0)", "oklch(95.0% 0.144 146.0)"] },
-      "go-glow": { "role": "signal-go", "displayName": "Lamp Green (Glow)", "canonical": "rgba(63,163,77,.55)", "note": "Alpha bloom of go-lens; lamp box-shadow only." },
-      "hold-lens": { "role": "signal-hold", "displayName": "Lamp Amber (Lens)", "canonical": "oklch(75.0% 0.141 76.2)", "tonalRamp": ["oklch(15.0% 0.141 76.2)", "oklch(26.4% 0.141 76.2)", "oklch(37.9% 0.141 76.2)", "oklch(49.3% 0.141 76.2)", "oklch(60.7% 0.141 76.2)", "oklch(72.1% 0.141 76.2)", "oklch(83.6% 0.141 76.2)", "oklch(95.0% 0.141 76.2)"] },
-      "hold-ink": { "role": "signal-hold", "displayName": "Lamp Amber (Ink)", "canonical": "oklch(82.3% 0.122 78.4)", "tonalRamp": ["oklch(15.0% 0.122 78.4)", "oklch(26.4% 0.122 78.4)", "oklch(37.9% 0.122 78.4)", "oklch(49.3% 0.122 78.4)", "oklch(60.7% 0.122 78.4)", "oklch(72.1% 0.122 78.4)", "oklch(83.6% 0.122 78.4)", "oklch(95.0% 0.122 78.4)"] },
-      "hold-glow": { "role": "signal-hold", "displayName": "Lamp Amber (Glow)", "canonical": "rgba(224,160,50,.55)", "note": "Alpha bloom of hold-lens; lamp box-shadow only." },
-      "spend-lens": { "role": "signal-spend", "displayName": "Lamp Red (Lens)", "canonical": "oklch(58.8% 0.170 31.6)", "tonalRamp": ["oklch(15.0% 0.170 31.6)", "oklch(26.4% 0.170 31.6)", "oklch(37.9% 0.170 31.6)", "oklch(49.3% 0.170 31.6)", "oklch(60.7% 0.170 31.6)", "oklch(72.1% 0.170 31.6)", "oklch(83.6% 0.170 31.6)", "oklch(95.0% 0.170 31.6)"] },
-      "spend-ink": { "role": "signal-spend", "displayName": "Lamp Red (Ink)", "canonical": "oklch(72.5% 0.139 33.0)", "tonalRamp": ["oklch(15.0% 0.139 33.0)", "oklch(26.4% 0.139 33.0)", "oklch(37.9% 0.139 33.0)", "oklch(49.3% 0.139 33.0)", "oklch(60.7% 0.139 33.0)", "oklch(72.1% 0.139 33.0)", "oklch(83.6% 0.139 33.0)", "oklch(95.0% 0.139 33.0)"] },
-      "spend-glow": { "role": "signal-spend", "displayName": "Lamp Red (Glow)", "canonical": "rgba(206,75,54,.55)", "note": "Alpha bloom of spend-lens; lamp box-shadow only." }
+      "housing-deep": {
+        "role": "neutral",
+        "displayName": "Housing Deep",
+        "canonical": "#15181C",
+        "purpose": "The page ground and the inside of recessed code wells; the darkest metal.",
+        "tonalRamp": [
+          "#21252C",
+          "#3A424D",
+          "#535F6E",
+          "#6C7B90",
+          "#8D99A9",
+          "#AEB7C2",
+          "#CFD4DB",
+          "#F0F2F4"
+        ]
+      },
+      "housing": {
+        "role": "neutral",
+        "displayName": "Housing",
+        "canonical": "#1B1F24",
+        "purpose": "Inset fittings one step up: driver chips, inline code, checklists.",
+        "tonalRamp": [
+          "#21262C",
+          "#3A424D",
+          "#535F6E",
+          "#6C7C90",
+          "#8D99A9",
+          "#AEB7C2",
+          "#CFD4DB",
+          "#F0F2F4"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#242930",
+        "purpose": "The standard raised-panel surface: steps, readout, legend cells, list cells.",
+        "tonalRamp": [
+          "#21252C",
+          "#3A424D",
+          "#535E6E",
+          "#6C7B90",
+          "#8D98A9",
+          "#AEB6C2",
+          "#CFD4DB",
+          "#F0F2F4"
+        ]
+      },
+      "panel-hi": {
+        "role": "neutral",
+        "displayName": "Panel High",
+        "canonical": "#2E343C",
+        "purpose": "The lit top edge of a panel; always the light end of a vertical gradient, never a flat fill.",
+        "tonalRamp": [
+          "#21262B",
+          "#3A424C",
+          "#545F6D",
+          "#6D7B8E",
+          "#8E99A8",
+          "#AFB7C1",
+          "#D0D4DB",
+          "#F1F2F4"
+        ]
+      },
+      "bezel": {
+        "role": "neutral",
+        "displayName": "Bezel",
+        "canonical": "#3A4149",
+        "purpose": "The machined ring around every lamp, and the lens colour of an unlit lamp.",
+        "tonalRamp": [
+          "#22262B",
+          "#3C434B",
+          "#55606C",
+          "#6F7D8C",
+          "#8F9AA6",
+          "#B0B7C0",
+          "#D0D5DA",
+          "#F1F2F4"
+        ]
+      },
+      "frame-hi": {
+        "role": "neutral",
+        "displayName": "Frame High",
+        "canonical": "#333942",
+        "purpose": "Top of the console frame gradient behind the six station plates.",
+        "tonalRamp": [
+          "#21252B",
+          "#3B424C",
+          "#545E6D",
+          "#6E7A8E",
+          "#8E98A8",
+          "#AFB6C1",
+          "#D0D4DA",
+          "#F1F2F4"
+        ]
+      },
+      "frame-lo": {
+        "role": "neutral",
+        "displayName": "Frame Low",
+        "canonical": "#22272E",
+        "purpose": "Bottom of the console frame gradient.",
+        "tonalRamp": [
+          "#21252C",
+          "#39424E",
+          "#525E6F",
+          "#6B7B91",
+          "#8C98AA",
+          "#ADB6C3",
+          "#CFD4DB",
+          "#F0F2F4"
+        ]
+      },
+      "frame-edge": {
+        "role": "neutral",
+        "displayName": "Frame Edge",
+        "canonical": "#11141A",
+        "purpose": "The 1px outer border of the rail; darker than the page ground so the frame reads as a discrete object.",
+        "tonalRamp": [
+          "#1E242E",
+          "#353F51",
+          "#4C5A75",
+          "#637598",
+          "#8694B0",
+          "#A9B3C7",
+          "#CCD2DE",
+          "#F0F1F5"
+        ]
+      },
+      "plate-lo": {
+        "role": "neutral",
+        "displayName": "Plate Low",
+        "canonical": "#1F242A",
+        "purpose": "Bottom of a station plate's rest gradient.",
+        "tonalRamp": [
+          "#20262C",
+          "#39424E",
+          "#525F6F",
+          "#6B7C91",
+          "#8C99AA",
+          "#ADB7C3",
+          "#CFD5DB",
+          "#F0F2F4"
+        ]
+      },
+      "plate-hover-hi": {
+        "role": "neutral",
+        "displayName": "Plate Hover High",
+        "canonical": "#3A424C",
+        "purpose": "Top of a station plate's hover gradient; hover changes finish, never height.",
+        "tonalRamp": [
+          "#21262B",
+          "#3A424C",
+          "#545F6E",
+          "#6D7C8F",
+          "#8D99A8",
+          "#AEB7C2",
+          "#CFD4DB",
+          "#F1F2F4"
+        ]
+      },
+      "plate-hover-lo": {
+        "role": "neutral",
+        "displayName": "Plate Hover Low",
+        "canonical": "#242A31",
+        "purpose": "Bottom of a station plate's hover gradient.",
+        "tonalRamp": [
+          "#20262C",
+          "#39434E",
+          "#525F6F",
+          "#6A7C91",
+          "#8B9AAA",
+          "#ADB7C3",
+          "#CFD5DC",
+          "#F0F2F4"
+        ]
+      },
+      "fastener": {
+        "role": "neutral",
+        "displayName": "Fastener Steel",
+        "canonical": "#666E79",
+        "purpose": "The screw heads in the station fastener strips; the only place this metal appears.",
+        "tonalRamp": [
+          "#23262A",
+          "#3E4249",
+          "#585F69",
+          "#737C88",
+          "#9299A3",
+          "#B2B7BE",
+          "#D2D5D9",
+          "#F1F2F3"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgba(233,229,218,.10)",
+        "purpose": "Internal etched dividers: ivory at low alpha, so rules feel scribed into the metal rather than drawn on top."
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "canonical": "rgba(233,229,218,.18)",
+        "purpose": "Outer borders and underlines; the stronger of the two etch weights."
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#E9E5DA",
+        "purpose": "Primary text and headings: warm ivory, never pure white. Also the focus-ring colour.",
+        "tonalRamp": [
+          "#302B1D",
+          "#554B32",
+          "#796C48",
+          "#9E8D5E",
+          "#B4A781",
+          "#CAC0A6",
+          "#E0DACA",
+          "#F5F4EF"
+        ]
+      },
+      "ink-bright": {
+        "role": "neutral",
+        "displayName": "Ink Bright",
+        "canonical": "#F6F3EC",
+        "purpose": "strong emphasis only; the brightest value on the page.",
+        "tonalRamp": [
+          "#342C19",
+          "#5B4D2B",
+          "#836E3E",
+          "#AB9051",
+          "#BFA977",
+          "#D1C29F",
+          "#E4DBC6",
+          "#F7F4EE"
+        ]
+      },
+      "ink-dim": {
+        "role": "neutral",
+        "displayName": "Ink Dim",
+        "canonical": "#A8ADB2",
+        "purpose": "Secondary prose: ledes, legend copy, step explanations (6.47:1 on panel).",
+        "tonalRamp": [
+          "#242629",
+          "#3F4348",
+          "#5B6166",
+          "#767E85",
+          "#959BA1",
+          "#B4B8BC",
+          "#D3D5D8",
+          "#F1F2F3"
+        ]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Ink Faint",
+        "canonical": "#959DA5",
+        "purpose": "Tertiary but content-carrying: plate labels, captions, costs, table headers, footer. Tuned to 5.33:1 on panel; the previous #7C838A failed at 3.81:1.",
+        "tonalRamp": [
+          "#232629",
+          "#3E4349",
+          "#596168",
+          "#737E88",
+          "#939BA3",
+          "#B2B8BE",
+          "#D2D5D9",
+          "#F1F2F3"
+        ]
+      },
+      "ink-stamp": {
+        "role": "neutral",
+        "displayName": "Ink Stamp",
+        "canonical": "rgba(233,229,218,.3)",
+        "purpose": "Stamped station ordinals only. Measures 2.39:1 and is the page's only sub-AA text, licensed because each ordinal repeats at ink-faint in its step head."
+      },
+      "code-ink": {
+        "role": "neutral",
+        "displayName": "Code Ink",
+        "canonical": "#D5D9DC",
+        "purpose": "Code-block text inside recessed wells.",
+        "tonalRamp": [
+          "#23272A",
+          "#3D444A",
+          "#586269",
+          "#727F89",
+          "#929CA4",
+          "#B2B9BE",
+          "#D1D6D9",
+          "#F1F2F3"
+        ]
+      },
+      "inline-code-ink": {
+        "role": "neutral",
+        "displayName": "Inline Code Ink",
+        "canonical": "#DCE0E3",
+        "purpose": "Inline code, one step brighter to survive the smaller size on lighter fittings.",
+        "tonalRamp": [
+          "#22272A",
+          "#3C444B",
+          "#56626B",
+          "#70808C",
+          "#909CA6",
+          "#B0B9C0",
+          "#D0D6DA",
+          "#F1F2F4"
+        ]
+      },
+      "warn-ink": {
+        "role": "neutral",
+        "displayName": "Warn Ink",
+        "canonical": "#EBD5CF",
+        "purpose": "Warn-callout body text: a red-warmed ivory that appears nowhere else.",
+        "tonalRamp": [
+          "#361D17",
+          "#5F3428",
+          "#884A39",
+          "#B1604A",
+          "#C48372",
+          "#D5A79B",
+          "#E6CBC4",
+          "#F8EFED"
+        ]
+      },
+      "spend-lens": {
+        "role": "primary",
+        "displayName": "Lamp Red",
+        "canonical": "#CE4B36",
+        "purpose": "The protagonist state: costs money, unrepeatable, untrustworthy with text. Lamp glass and tinted surfaces only, never type.",
+        "tonalRamp": [
+          "#3E150F",
+          "#6C261A",
+          "#9B3626",
+          "#CA4631",
+          "#D86F5E",
+          "#E3998D",
+          "#EFC3BC",
+          "#FAEDEA"
+        ]
+      },
+      "spend-ink": {
+        "role": "primary",
+        "displayName": "Spend Ink",
+        "canonical": "#F0836C",
+        "purpose": "Type colour for the spend state, including the display headline's charged second line.",
+        "tonalRamp": [
+          "#451207",
+          "#7A200C",
+          "#AF2D12",
+          "#E43B17",
+          "#EC6649",
+          "#F2927E",
+          "#F7BFB3",
+          "#FDEBE8"
+        ]
+      },
+      "spend-glow": {
+        "role": "primary",
+        "displayName": "Spend Glow",
+        "canonical": "rgba(206,75,54,.55)",
+        "purpose": "The red lamp's 14px bloom."
+      },
+      "spend-border": {
+        "role": "primary",
+        "displayName": "Spend Border",
+        "canonical": "rgba(206,75,54,.42)",
+        "purpose": "The hazard border on the one credit-spending step panel."
+      },
+      "spend-head-hi": {
+        "role": "primary",
+        "displayName": "Spend Head High",
+        "canonical": "rgba(206,75,54,.20)",
+        "purpose": "Top stop of the spend step's tinted head gradient; the tightest contrast surface on the page."
+      },
+      "spend-head-lo": {
+        "role": "primary",
+        "displayName": "Spend Head Low",
+        "canonical": "rgba(206,75,54,.05)",
+        "purpose": "Bottom stop of the spend step's head gradient."
+      },
+      "spend-fill": {
+        "role": "primary",
+        "displayName": "Spend Fill",
+        "canonical": "rgba(206,75,54,.09)",
+        "purpose": "Warn-callout background."
+      },
+      "spend-edge": {
+        "role": "primary",
+        "displayName": "Spend Edge",
+        "canonical": "rgba(206,75,54,.32)",
+        "purpose": "Warn-callout border."
+      },
+      "go-lens": {
+        "role": "secondary",
+        "displayName": "Lamp Green",
+        "canonical": "#3FA34D",
+        "purpose": "Free, deterministic, repeatable steps. Lamp glass and glow only.",
+        "tonalRamp": [
+          "#15371A",
+          "#26612E",
+          "#368B42",
+          "#46B556",
+          "#6EC77B",
+          "#99D7A1",
+          "#C3E8C8",
+          "#EDF8EE"
+        ]
+      },
+      "go-ink": {
+        "role": "secondary",
+        "displayName": "Go Ink",
+        "canonical": "#74CE7C",
+        "purpose": "Type for the go state; also code-block string highlights and checklist checkmarks.",
+        "tonalRamp": [
+          "#143917",
+          "#236429",
+          "#328F3B",
+          "#42BA4C",
+          "#6BCB73",
+          "#96DA9C",
+          "#C1E9C5",
+          "#ECF8ED"
+        ]
+      },
+      "go-glow": {
+        "role": "secondary",
+        "displayName": "Go Glow",
+        "canonical": "rgba(63,163,77,.55)",
+        "purpose": "The green lamp's bloom."
+      },
+      "hold-lens": {
+        "role": "tertiary",
+        "displayName": "Lamp Amber",
+        "canonical": "#E0A032",
+        "purpose": "Human verification required. Lamp glass and glow only.",
+        "tonalRamp": [
+          "#422E0A",
+          "#755112",
+          "#A87319",
+          "#DA9621",
+          "#E5AE51",
+          "#ECC684",
+          "#F4DDB6",
+          "#FCF5E9"
+        ]
+      },
+      "hold-ink": {
+        "role": "tertiary",
+        "displayName": "Hold Ink",
+        "canonical": "#F0BB63",
+        "purpose": "Type for the hold state; also timeline timestamps and clearance-list checkmarks.",
+        "tonalRamp": [
+          "#462E07",
+          "#7B510C",
+          "#B07411",
+          "#E59716",
+          "#EDAF48",
+          "#F3C77D",
+          "#F8DEB3",
+          "#FDF5E8"
+        ]
+      },
+      "hold-glow": {
+        "role": "tertiary",
+        "displayName": "Hold Glow",
+        "canonical": "rgba(224,160,50,.55)",
+        "purpose": "The amber lamp's bloom."
+      },
+      "overhead-glow": {
+        "role": "neutral",
+        "displayName": "Overhead Glow",
+        "canonical": "rgba(120,140,160,.10)",
+        "purpose": "The cool radial wash at the top of the page ground: the room's single light source, and the only cool tint on the page."
+      },
+      "light-014": {
+        "role": "neutral",
+        "displayName": "Light 014",
+        "canonical": "rgba(255,255,255,.14)",
+        "purpose": "Light ramp: .014 ground brush texture."
+      },
+      "light-045": {
+        "role": "neutral",
+        "displayName": "Light 045",
+        "canonical": "rgba(255,255,255,.45)",
+        "purpose": "Light ramp: .045 panel top-light."
+      },
+      "light-075": {
+        "role": "neutral",
+        "displayName": "Light 075",
+        "canonical": "rgba(255,255,255,.75)",
+        "purpose": "Light ramp: .075 plate top-light."
+      },
+      "light-10": {
+        "role": "neutral",
+        "displayName": "Light 10",
+        "canonical": "rgba(255,255,255,.10)",
+        "purpose": "Light ramp: .10 fresnel ring."
+      },
+      "light-11": {
+        "role": "neutral",
+        "displayName": "Light 11",
+        "canonical": "rgba(255,255,255,.11)",
+        "purpose": "Light ramp: .11 frame top-light."
+      },
+      "light-22": {
+        "role": "neutral",
+        "displayName": "Light 22",
+        "canonical": "rgba(255,255,255,.22)",
+        "purpose": "Light ramp: .22 lamp glass highlight."
+      },
+      "light-55": {
+        "role": "neutral",
+        "displayName": "Light 55",
+        "canonical": "rgba(255,255,255,.55)",
+        "purpose": "Light ramp: .55 lens specular."
+      },
+      "shade-28": {
+        "role": "neutral",
+        "displayName": "Shade 28",
+        "canonical": "rgba(0,0,0,.28)",
+        "purpose": "Shade ramp: plate inner shade."
+      },
+      "shade-38": {
+        "role": "neutral",
+        "displayName": "Shade 38",
+        "canonical": "rgba(0,0,0,.38)",
+        "purpose": "Shade ramp: panel ambient."
+      },
+      "shade-45": {
+        "role": "neutral",
+        "displayName": "Shade 45",
+        "canonical": "rgba(0,0,0,.45)",
+        "purpose": "Shade ramp: panel contact."
+      },
+      "shade-50": {
+        "role": "neutral",
+        "displayName": "Shade 50",
+        "canonical": "rgba(0,0,0,.50)",
+        "purpose": "Shade ramp: frame ambient / well inset / seat borders."
+      },
+      "shade-55": {
+        "role": "neutral",
+        "displayName": "Shade 55",
+        "canonical": "rgba(0,0,0,.55)",
+        "purpose": "Shade ramp: frame contact / lamp seat / fastener seats."
+      },
+      "shade-70": {
+        "role": "neutral",
+        "displayName": "Shade 70",
+        "canonical": "rgba(0,0,0,.70)",
+        "purpose": "Shade ramp: lamp contact."
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Masthead headline only. Archivo compressed to wdth 78; stacked spans, one line per thought; the charged line takes spend-ink." },
-      "headline": { "displayName": "Headline", "purpose": "Section heads, wdth 92." },
-      "title": { "displayName": "Title", "purpose": "Step and panel titles." },
-      "lede": { "displayName": "Lede", "purpose": "Masthead standfirst in ink-dim, max 56ch; bold runs get ink at weight 600." },
-      "body": { "displayName": "Body", "purpose": "Prose at wdth 100, held to the 68ch measure." },
-      "label": { "displayName": "Silkscreen Plate", "purpose": "Uppercase equipment labels: wdth 84, tracked 0.17em, ink-faint. State words/badges are the same voice at 0.62-0.63rem / 0.15em tracking in state ink; table headers at 0.66rem / 0.15em." },
-      "code": { "displayName": "Code", "purpose": "JetBrains Mono for anything executable: blocks at 0.82rem/1.72, inline at 0.88em, station numbers 0.78rem, timestamps 0.73rem, costs 0.68rem." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The masthead only. Stacked spans, one line per thought; the charged line takes spend-ink."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section heads."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Step and panel titles."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "The masthead standfirst at 56ch. Its proof paragraph steps down to 64ch and a smaller size: promise first, then proof."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose, held to the 68ch measure in every container that carries sentences."
+      },
+      "label": {
+        "displayName": "Label / Plate",
+        "purpose": "Silkscreened equipment labels. Uppercase, wdth 84, tracked 0.15-0.17em."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Anything executable: commands, filenames, config values, station numbers, timestamps, credit costs."
+      }
     },
     "shadows": [
-      { "name": "console-frame", "value": "inset 0 1px 0 rgba(255,255,255,.11), 0 16px 44px rgba(0,0,0,.5), 0 3px 8px rgba(0,0,0,.55)", "purpose": "The signal rail only — the heaviest object on the page." },
-      { "name": "raised-panel", "value": "inset 0 1px 0 rgba(255,255,255,.045), 0 8px 26px rgba(0,0,0,.38), 0 2px 5px rgba(0,0,0,.45)", "purpose": "Step panels and the timeline readout. Inset top-light + deep soft shadow + tight contact shadow, always all three." },
-      { "name": "bolted-plate", "value": "inset 0 1px 0 rgba(255,255,255,.075), inset 0 -8px 18px rgba(0,0,0,.28)", "purpose": "Rail stations — no drop shadow, a plate is fastened to the frame, not floating." },
-      { "name": "recessed-well", "value": "inset 0 1px 3px rgba(0,0,0,.5)", "purpose": "Code blocks, sunk into the housing." },
-      { "name": "lens-stack", "value": "inset 0 0 0 1px rgba(0,0,0,.55), inset 0 1px 2px rgba(255,255,255,.22), 0 0 0 3px #3A4149, 0 1px 1px rgba(0,0,0,.7), 0 0 14px var(--glow)", "purpose": "Lamps only: dark seat ring, glass highlight, machined bezel, contact shadow, coloured bloom. --glow swaps per state (go/hold/spend glow tokens); transparent when unlit." }
+      {
+        "name": "console-frame",
+        "value": "inset 0 1px 0 rgba(255,255,255,.11), 0 16px 44px rgba(0,0,0,.5), 0 3px 8px rgba(0,0,0,.55)",
+        "purpose": "The signal rail only; the heaviest object on the page."
+      },
+      {
+        "name": "raised-panel",
+        "value": "inset 0 1px 0 rgba(255,255,255,.045), 0 8px 26px rgba(0,0,0,.38), 0 2px 5px rgba(0,0,0,.45)",
+        "purpose": "Step panels and the timeline readout."
+      },
+      {
+        "name": "bolted-plate",
+        "value": "inset 0 1px 0 rgba(255,255,255,.075), inset 0 -8px 18px rgba(0,0,0,.28)",
+        "purpose": "Rail stations. No drop shadow, because a plate is fastened to the frame rather than floating above it."
+      },
+      {
+        "name": "recessed-well",
+        "value": "inset 0 1px 3px rgba(0,0,0,.5)",
+        "purpose": "Code blocks, sunk into the housing."
+      },
+      {
+        "name": "lens-stack",
+        "value": "inset 0 0 0 1px rgba(0,0,0,.55), inset 0 1px 2px rgba(255,255,255,.22), 0 0 0 3px var(--bezel), 0 1px 1px rgba(0,0,0,.7), 0 0 14px var(--glow)",
+        "purpose": "Lamps only: dark seat ring, glass highlight, machined bezel, contact shadow, coloured bloom."
+      }
     ],
     "motion": [
-      { "name": "ease-mechanical", "value": "cubic-bezier(.16,1,.3,1)", "purpose": "The only easing on the page; used by every transition and the energize animation." },
-      { "name": "energize", "value": "energize 1.05s cubic-bezier(.16,1,.3,1) both", "purpose": "The one authored moment. Keyframes on filter: 0% saturate(.28) brightness(.42) -> 38% saturate(1.35) brightness(1.5) -> 100% saturate(1.18) brightness(1.06). Fired by adding .is-lit when the group scrolls into view (IntersectionObserver, threshold .35). Lamps are lit by default in CSS; this only adds the warm-up." },
-      { "name": "stagger-rail", "value": "110ms", "purpose": "Per-station delay when the rail energizes." },
-      { "name": "stagger-legend", "value": "140ms", "purpose": "Per-cell delay when the legend energizes." },
-      { "name": "lamp-transition", "value": "filter .5s, box-shadow .5s", "purpose": "Lamp state settling, on ease-mechanical." },
-      { "name": "surface-transition", "value": "background .3s", "purpose": "Station hover: the metal's finish changes, never its position or shadow. No transform animation exists anywhere. prefers-reduced-motion disables all motion." }
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "The only easing on the page; exponential ease-out."
+      },
+      {
+        "name": "energize",
+        "value": "1.05s: saturate(.28) brightness(.42) to saturate(1.35) brightness(1.5) at 38%, settling at saturate(1.18) brightness(1.06)",
+        "purpose": "The one authored moment. An incandescent warm-up that overshoots, then settles. The page's only keyframe animation."
+      },
+      {
+        "name": "lamp-transition",
+        "value": "filter .5s var(--ease), box-shadow .5s var(--ease)",
+        "purpose": "Lamp state changes."
+      },
+      {
+        "name": "station-transition",
+        "value": "background .3s var(--ease)",
+        "purpose": "Plate hover. Finish changes; height never does."
+      },
+      {
+        "name": "stagger-rail",
+        "value": "110ms per station",
+        "purpose": "IntersectionObserver stagger across the six-lamp rail."
+      },
+      {
+        "name": "stagger-legend",
+        "value": "140ms per cell",
+        "purpose": "IntersectionObserver stagger across the legend."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation and transition durations collapsed to .01ms; .is-lit animation none",
+        "purpose": "Lamps are lit by default in pure CSS, so disabling motion loses no state."
+      }
     ],
     "breakpoints": [
-      { "name": "rail-collapse", "value": "860px", "purpose": "Signal rail 6->2 columns; timeline 4->2." },
-      { "name": "single-column", "value": "560px", "purpose": "Rail and timeline to 1 column; fault table drops its header row and reflows rows as blocks." }
+      {
+        "name": "rail-collapse",
+        "value": "860px",
+        "purpose": "Rail drops from 6 columns to 2; the timeline readout drops from 4 to 2."
+      },
+      {
+        "name": "single-column",
+        "value": "560px",
+        "purpose": "Rail and timeline go to 1 column; the fault table drops its header row and reflows each row as a block."
+      }
     ]
   },
   "components": [
@@ -59,61 +667,70 @@
       "name": "Signal Lamp",
       "kind": "custom",
       "refersTo": "lamp",
-      "description": "The atom of the system: a lens in a machined bezel built from two radial gradients on one element. Shown in go, hold, spend, and unlit states; state classes swap --lens and --glow.",
-      "html": "<div class=\"ds-lamp-row\"><span class=\"ds-lamp ds-lamp-go\"></span><span class=\"ds-lamp ds-lamp-hold\"></span><span class=\"ds-lamp ds-lamp-spend\"></span><span class=\"ds-lamp\"></span></div>",
-      "css": ".ds-lamp-row{display:flex;gap:18px;align-items:center;padding:14px}.ds-lamp{--lens:#3A4149;--glow:transparent;position:relative;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.22),0 0 0 3px #3A4149,0 1px 1px rgba(0,0,0,.7),0 0 14px var(--glow);filter:saturate(1.18) brightness(1.06);transition:filter .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1)}.ds-lamp::after{content:'';position:absolute;inset:12%;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}.ds-lamp-go{--lens:#3FA34D;--glow:rgba(63,163,77,.55)}.ds-lamp-hold{--lens:#E0A032;--glow:rgba(224,160,50,.55)}.ds-lamp-spend{--lens:#CE4B36;--glow:rgba(206,75,54,.55)}"
+      "description": "The atom of the system: a circular lens in a machined bezel, built entirely from CSS gradients on one element. Lit by default so it never depends on JavaScript to read correctly.",
+      "html": "<span class=\"ds-lamp ds-lamp--go\"></span> <span class=\"ds-lamp ds-lamp--hold\"></span> <span class=\"ds-lamp ds-lamp--spend\"></span> <span class=\"ds-lamp\"></span>",
+      "css": ".ds-lamp{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);}\n.ds-lamp{--lens:var(--bezel);--glow:transparent;--d:22px;position:relative;flex:none;\ndisplay:inline-block;width:var(--d);height:var(--d);border-radius:50%;\nbackground:radial-gradient(circle at 34% 30%,var(--light-55),rgba(255,255,255,0) 42%),\nradial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);\nbox-shadow:inset 0 0 0 1px var(--shade-55),inset 0 1px 2px var(--light-22),0 0 0 3px var(--bezel),\n0 1px 1px var(--shade-70),0 0 14px var(--glow);\nfilter:saturate(1.18) brightness(1.06);transition:filter .5s var(--ease),box-shadow .5s var(--ease)}\n.ds-lamp::after{content:'';position:absolute;inset:12%;border-radius:50%;\nbox-shadow:inset 0 0 0 1px var(--light-10)}\n.ds-lamp--go{--lens:var(--go-lens);--glow:var(--go-glow)}\n.ds-lamp--hold{--lens:var(--hold-lens);--glow:var(--hold-glow)}\n.ds-lamp--spend{--lens:var(--spend-lens);--glow:var(--spend-glow)}"
     },
     {
       "name": "Rail Station",
       "kind": "nav",
       "refersTo": "station",
-      "description": "A bolted plate on the signal rail; an anchor link and the page's only navigation. Fastener strips top and bottom, 40px lamp, silkscreen state word, mono cost. Spend variant shown.",
-      "html": "<a class=\"ds-station ds-station-spend\" href=\"#\"><span class=\"ds-station-num\">02</span><span class=\"ds-station-lamp\"></span><span class=\"ds-station-state\">Spend</span><span class=\"ds-station-name\">Generate background</span><span class=\"ds-station-cost\">~12 credits</span></a>",
-      "css": ".ds-station{--lens:#CE4B36;--glow:rgba(206,75,54,.55);--state-ink:#F0836C;position:relative;display:flex;flex-direction:column;align-items:center;gap:.5rem;width:190px;padding:1.7rem .8rem 1.15rem;border-radius:4px;background:linear-gradient(180deg,#2E343C,#1F242A);border:1px solid rgba(0,0,0,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.075),inset 0 -8px 18px rgba(0,0,0,.28);color:#E9E5DA;font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif;text-decoration:none;cursor:pointer;transition:background .3s cubic-bezier(.16,1,.3,1)}.ds-station:hover,.ds-station:focus-visible{background:linear-gradient(180deg,#3A424C,#242A31)}.ds-station:focus-visible{outline:2px solid #E9E5DA;outline-offset:2px}.ds-station::before,.ds-station::after{content:'';position:absolute;left:7px;right:7px;height:4px;pointer-events:none;background:radial-gradient(circle at 2px 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px),radial-gradient(circle at calc(100% - 2px) 50%,#666E79 0 1.8px,rgba(0,0,0,.55) 2px 2.6px,transparent 2.7px)}.ds-station::before{top:6px}.ds-station::after{bottom:6px}.ds-station-num{position:absolute;top:.5rem;left:.75rem;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.78rem;font-weight:500;color:rgba(233,229,218,.3)}.ds-station-lamp{position:relative;width:40px;height:40px;margin:.2rem 0 .35rem;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.22),0 0 0 3px #3A4149,0 1px 1px rgba(0,0,0,.7),0 0 14px var(--glow);filter:saturate(1.18) brightness(1.06)}.ds-station-lamp::after{content:'';position:absolute;inset:12%;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}.ds-station-state{font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84;color:var(--state-ink)}.ds-station-name{font-weight:700;font-size:.88rem;line-height:1.24;letter-spacing:-.01em;text-align:center}.ds-station-cost{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.68rem;color:#7C838A;margin-top:.5rem;text-align:center}"
+      "description": "One of the six bolted plates that form the page's only navigation. Fastener strips top and bottom; hover changes the metal's finish, never its height.",
+      "html": "<a class=\"ds-station ds-station--spend\" href=\"#\"><span class=\"ds-station__num\">02</span><span class=\"ds-lamp ds-lamp--spend\"></span><span class=\"ds-station__state\">Spend</span><span class=\"ds-station__name\">Generate background</span><span class=\"ds-station__cost\">~12 credits</span></a>",
+      "css": ".ds-lamp{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);}\n.ds-lamp{--lens:var(--bezel);--glow:transparent;--d:22px;position:relative;flex:none;\ndisplay:inline-block;width:var(--d);height:var(--d);border-radius:50%;\nbackground:radial-gradient(circle at 34% 30%,var(--light-55),rgba(255,255,255,0) 42%),\nradial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);\nbox-shadow:inset 0 0 0 1px var(--shade-55),inset 0 1px 2px var(--light-22),0 0 0 3px var(--bezel),\n0 1px 1px var(--shade-70),0 0 14px var(--glow);\nfilter:saturate(1.18) brightness(1.06);transition:filter .5s var(--ease),box-shadow .5s var(--ease)}\n.ds-lamp::after{content:'';position:absolute;inset:12%;border-radius:50%;\nbox-shadow:inset 0 0 0 1px var(--light-10)}\n.ds-lamp--go{--lens:var(--go-lens);--glow:var(--go-glow)}\n.ds-lamp--hold{--lens:var(--hold-lens);--glow:var(--hold-glow)}\n.ds-lamp--spend{--lens:var(--spend-lens);--glow:var(--spend-glow)}\n.ds-station{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);position:relative;display:flex;flex-direction:column;align-items:center;gap:.5rem;\nwidth:11rem;padding:1.7rem .8rem 1.15rem;border-radius:4px;text-decoration:none;cursor:pointer;\nfont-family:var(--sans);color:var(--ink);\nbackground:linear-gradient(180deg,var(--panel-hi),var(--plate-lo));border:1px solid var(--shade-50);\nbox-shadow:inset 0 1px 0 var(--light-075),inset 0 -8px 18px var(--shade-28);\ntransition:background .3s var(--ease)}\n.ds-station:hover,.ds-station:focus-visible{background:linear-gradient(180deg,var(--plate-hover-hi),var(--plate-hover-lo))}\n.ds-station:focus-visible{outline:2px solid var(--ink);outline-offset:2px}\n.ds-station::before,.ds-station::after{content:'';position:absolute;left:7px;right:7px;height:4px;pointer-events:none;\nbackground:radial-gradient(circle at 2px 50%,var(--fastener) 0 1.8px,var(--shade-55) 2px 2.6px,transparent 2.7px),\nradial-gradient(circle at calc(100% - 2px) 50%,var(--fastener) 0 1.8px,var(--shade-55) 2px 2.6px,transparent 2.7px)}\n.ds-station::before{top:6px}.ds-station::after{bottom:6px}\n.ds-station .ds-lamp{--d:40px;margin:.2rem 0 .35rem}\n.ds-station__num{position:absolute;top:.5rem;left:.75rem;font-family:var(--mono);font-size:.78rem;font-weight:500;color:var(--ink-stamp)}\n.ds-station__state{font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84;color:var(--spend-ink)}\n.ds-station__name{font-weight:700;font-size:.88rem;line-height:1.24;letter-spacing:-.01em;text-align:center}\n.ds-station__cost{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);margin-top:auto;padding-top:.5rem}"
     },
     {
-      "name": "Step Panel",
+      "name": "Step Panel (spend variant)",
       "kind": "card",
       "refersTo": "step-panel",
-      "description": "A raised console with a lit header strip: lamp, mono number, title, and a bordered state badge. Hold variant shown; only the spend variant may add the tinted border and head gradient.",
-      "html": "<article class=\"ds-step\"><div class=\"ds-step-head\"><span class=\"ds-step-lamp\"></span><span class=\"ds-step-num\">06</span><h3 class=\"ds-step-title\">Verify &amp; clear</h3><span class=\"ds-step-state\">Hold</span></div><div class=\"ds-step-body\"><p class=\"ds-step-p\">The amber lamp is not a formality. Everything upstream is a machine that cannot read, and this is where a person reads.</p></div></article>",
-      "css": ".ds-step{--lens:#E0A032;--glow:rgba(224,160,50,.55);--state-ink:#F0BB63;max-width:560px;border:1px solid rgba(233,229,218,.18);border-radius:12px;overflow:hidden;background:#242930;box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 8px 26px rgba(0,0,0,.38),0 2px 5px rgba(0,0,0,.45);font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E9E5DA}.ds-step-head{display:flex;align-items:center;gap:1rem;padding:1.15rem 1.4rem;background:linear-gradient(180deg,#2E343C,#242930);border-bottom:1px solid rgba(233,229,218,.10)}.ds-step-lamp{position:relative;flex:none;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.55),rgba(255,255,255,0) 42%),radial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 1px 2px rgba(255,255,255,.22),0 0 0 3px #3A4149,0 1px 1px rgba(0,0,0,.7),0 0 14px var(--glow);filter:saturate(1.18) brightness(1.06)}.ds-step-num{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.78rem;color:#7C838A;font-weight:500}.ds-step-title{flex:1;margin:0;font-size:1.3rem;font-weight:800;line-height:1.08;letter-spacing:-.012em}.ds-step-state{font-size:.63rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84;padding:.32rem .6rem;border-radius:3px;border:1px solid currentColor;color:var(--state-ink)}.ds-step-body{padding:1.5rem 1.4rem}.ds-step-p{margin:0;font-size:1rem;line-height:1.62;max-width:68ch}"
+      "description": "A raised console with a lit header strip. Only the one credit-spending step earns the tinted border and head gradient; that rarity is the argument.",
+      "html": "<article class=\"ds-step ds-step--spend\"><div class=\"ds-step__head\"><span class=\"ds-lamp ds-lamp--spend\"></span><span class=\"ds-step__num\">02</span><h3 class=\"ds-step__title\">Generate the background</h3><span class=\"ds-step__badge\">Spend</span></div><div class=\"ds-step__body\"><p>Flow produces exactly one file: an 8-second clip of abstract moving light with a music bed and nothing else in it.</p></div></article>",
+      "css": ".ds-lamp{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);}\n.ds-lamp{--lens:var(--bezel);--glow:transparent;--d:22px;position:relative;flex:none;\ndisplay:inline-block;width:var(--d);height:var(--d);border-radius:50%;\nbackground:radial-gradient(circle at 34% 30%,var(--light-55),rgba(255,255,255,0) 42%),\nradial-gradient(circle at 50% 58%,var(--lens),color-mix(in srgb,var(--lens) 45%,#000) 78%);\nbox-shadow:inset 0 0 0 1px var(--shade-55),inset 0 1px 2px var(--light-22),0 0 0 3px var(--bezel),\n0 1px 1px var(--shade-70),0 0 14px var(--glow);\nfilter:saturate(1.18) brightness(1.06);transition:filter .5s var(--ease),box-shadow .5s var(--ease)}\n.ds-lamp::after{content:'';position:absolute;inset:12%;border-radius:50%;\nbox-shadow:inset 0 0 0 1px var(--light-10)}\n.ds-lamp--go{--lens:var(--go-lens);--glow:var(--go-glow)}\n.ds-lamp--hold{--lens:var(--hold-lens);--glow:var(--hold-glow)}\n.ds-lamp--spend{--lens:var(--spend-lens);--glow:var(--spend-glow)}\n.ds-step{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);max-width:36rem;font-family:var(--sans);border-radius:12px;overflow:hidden;background:var(--panel);\nborder:1px solid var(--hairline-strong);\nbox-shadow:0 1px 0 var(--light-045) inset,0 8px 26px var(--shade-38),0 2px 5px var(--shade-45)}\n.ds-step--spend{border-color:var(--spend-border)}\n.ds-step__head{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:1.15rem 1.5rem;\nbackground:linear-gradient(180deg,var(--panel-hi),var(--panel));border-bottom:1px solid var(--hairline)}\n.ds-step--spend .ds-step__head{background:linear-gradient(180deg,var(--spend-head-hi),var(--spend-head-lo))}\n.ds-step__num{font-family:var(--mono);font-size:.78rem;font-weight:500;color:var(--ink-faint)}\n.ds-step__title{flex:1 1 12rem;margin:0;font-size:1.35rem;font-weight:800;line-height:1.08;letter-spacing:-.012em;color:var(--ink)}\n.ds-step__badge{font-size:.63rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;\nfont-variation-settings:'wdth' 84;padding:.32rem .6rem;border-radius:3px;border:1px solid currentColor;color:var(--spend-ink)}\n.ds-step__body{padding:1.6rem;color:var(--ink)}\n.ds-step__body p{margin:0;max-width:68ch;font-size:17px;line-height:1.62}"
     },
     {
       "name": "Warn Callout",
       "kind": "custom",
       "refersTo": "warn-callout",
-      "description": "The hazard voice, used only inside the spend step: triangle icon in spend-ink on a red-tinted well, body text in a red-warmed ivory used nowhere else.",
-      "html": "<div class=\"ds-warn\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg><p class=\"ds-warn-p\"><strong>This is the only step that costs money and the only one you cannot repeat for free.</strong> Read the confirmation dialog before approving it.</p></div>",
-      "css": ".ds-warn{display:flex;gap:.9rem;align-items:flex-start;max-width:520px;padding:1rem 1.15rem;border-radius:8px;background:rgba(206,75,54,.09);border:1px solid rgba(206,75,54,.32);font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif}.ds-warn svg{width:19px;height:19px;flex:none;margin-top:.15rem;color:#F0836C}.ds-warn-p{margin:0;font-size:.92rem;line-height:1.55;color:#EBD5CF}.ds-warn-p strong{font-weight:700;color:#F0836C}"
+      "description": "The hazard notice that leads the spend step. The only tinted fill on the page outside lamp glass.",
+      "html": "<div class=\"ds-warn\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg><p><strong>This is the only step that costs money.</strong> About 12 credits per 8-second clip. Read the confirmation dialog before approving it.</p></div>",
+      "css": "\n.ds-warn{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);display:flex;gap:.9rem;align-items:flex-start;max-width:36rem;\npadding:1rem 1.15rem;border-radius:8px;font-family:var(--sans);\nbackground:var(--spend-fill);border:1px solid var(--spend-edge)}\n.ds-warn svg{width:19px;height:19px;flex:none;margin-top:.15rem;color:var(--spend-ink)}\n.ds-warn p{margin:0;max-width:68ch;font-size:.92rem;line-height:1.55;color:var(--warn-ink)}\n.ds-warn strong{color:var(--spend-ink);font-weight:700}"
     },
     {
       "name": "Driver Chip",
       "kind": "chip",
       "refersTo": "driver-chip",
-      "description": "Names the tool that drives a step: mono label with a 14px inline stroke icon, on an inset housing fitting. Non-interactive.",
-      "html": "<ul class=\"ds-driver\"><li class=\"ds-driver-chip\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 17l6-6-6-6\"/><path d=\"M12 19h8\"/></svg>templates/build.sh</li><li class=\"ds-driver-chip\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2a10 10 0 100 20 10 10 0 000-20z\"/><path d=\"M12 8v4l3 2\"/></svg>tm-meeting-recap</li></ul>",
-      "css": ".ds-driver{display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none}.ds-driver-chip{display:inline-flex;align-items:center;gap:.45rem;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:.775rem;color:#A8ADB2;background:#1B1F24;border:1px solid rgba(233,229,218,.10);border-radius:5px;padding:.34rem .6rem}.ds-driver-chip svg{width:14px;height:14px;flex:none;color:#7C838A}"
+      "description": "Inline tool label naming what drives a step. Mono, because the label is a real tool name.",
+      "html": "<ul class=\"ds-driver\"><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2a10 10 0 100 20 10 10 0 000-20z\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15 15 0 010 20 15 15 0 010-20z\"/></svg>google-flow</li><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"14\" rx=\"2\"/><path d=\"M8 21h8\"/><path d=\"M12 18v3\"/></svg>claude-in-chrome</li></ul>",
+      "css": "\n.ds-driver{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none}\n.ds-driver li{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.775rem;\ncolor:var(--ink-dim);background:var(--housing);border:1px solid var(--hairline);border-radius:5px;padding:.34rem .6rem}\n.ds-driver svg{width:14px;height:14px;flex:none;color:var(--ink-faint)}"
     },
     {
       "name": "Code Block",
       "kind": "custom",
       "refersTo": "code-block",
-      "description": "A recessed well sunk into the housing. Exactly two highlight voices: comments in ink-faint, strings/parameters in go-ink.",
-      "html": "<pre class=\"ds-pre\"><span class=\"ds-pre-c\"># meeting.conf — the only file edited per meeting</span>\nCLUB_NAME=<span class=\"ds-pre-p\">\"YOUR CLUB TOASTMASTERS\"</span>\nMEETING_DATE=<span class=\"ds-pre-p\">\"AUGUST 5, 2026\"</span></pre>",
-      "css": ".ds-pre{margin:0;padding:1.05rem 1.15rem;overflow-x:auto;max-width:520px;background:#15181C;border:1px solid rgba(233,229,218,.10);border-radius:8px;font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.82rem;line-height:1.72;color:#D5D9DC;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}.ds-pre-c{color:#7C838A}.ds-pre-p{color:#74CE7C}"
+      "description": "A recessed well sunk into the housing. Exactly two highlight voices: comments in ink-faint, strings in go-ink.",
+      "html": "<pre class=\"ds-pre\"><span class=\"ds-c\"># macOS; on Debian/Ubuntu use apt</span>\\nbrew install ffmpeg\\nPHRASE=<span class=\"ds-p\">\"Find Your Voice\"</span></pre>",
+      "css": "\n.ds-pre{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);max-width:36rem;margin:0;padding:1.05rem 1.15rem;overflow-x:auto;\nbackground:var(--housing-deep);border:1px solid var(--hairline);border-radius:8px;\nfont-family:var(--mono);font-size:.82rem;line-height:1.72;color:var(--code-ink);\nbox-shadow:inset 0 1px 3px var(--shade-50)}\n.ds-pre .ds-c{color:var(--ink-faint)}\n.ds-pre .ds-p{color:var(--go-ink)}"
     },
     {
       "name": "Checklist",
       "kind": "custom",
-      "description": "An inset fitting opened by a silkscreen plate label, items led by go-ink check icons (hold-ink inside a hold context).",
-      "html": "<ul class=\"ds-check\"><span class=\"ds-check-plate\">Read before posting</span><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg><span>Every name spelled the way its owner spells it.</span></li><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg><span>No Zoom name label survived into a winner crop.</span></li></ul>",
-      "css": ".ds-check{margin:0;padding:1.05rem 1.2rem;list-style:none;max-width:520px;background:#1B1F24;border:1px solid rgba(233,229,218,.10);border-radius:8px;font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif}.ds-check-plate{display:block;margin-bottom:.7rem;font-size:.685rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;font-variation-settings:'wdth' 84;color:#7C838A}.ds-check li{display:flex;gap:.65rem;align-items:flex-start;font-size:.92rem;color:#A8ADB2;line-height:1.52}.ds-check li+li{margin-top:.5rem}.ds-check svg{width:15px;height:15px;flex:none;margin-top:.32rem;color:#74CE7C}"
+      "refersTo": "checklist",
+      "description": "An inset fitting opened by a silkscreen plate label. Checkmarks take the state ink of their context.",
+      "html": "<div class=\"ds-check\"><span class=\"ds-plate\">Read before posting</span><ul><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg><span>Every name spelled the way its owner spells it.</span></li><li><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6L9 17l-5-5\"/></svg><span>No Zoom name label survived into a winner crop.</span></li></ul></div>",
+      "css": "\n.ds-check{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);max-width:36rem;padding:1.05rem 1.2rem;font-family:var(--sans);\nbackground:var(--housing);border:1px solid var(--hairline);border-radius:8px}\n.ds-plate{display:block;margin-bottom:.7rem;font-size:.685rem;font-weight:700;letter-spacing:.17em;\ntext-transform:uppercase;font-variation-settings:'wdth' 84;color:var(--ink-faint)}\n.ds-check ul{list-style:none;margin:0;padding:0}\n.ds-check li{display:flex;gap:.65rem;align-items:flex-start;font-size:.92rem;color:var(--ink-dim);line-height:1.52}\n.ds-check li + li{margin-top:.5rem}\n.ds-check li > span{max-width:68ch}\n.ds-check svg{width:15px;height:15px;flex:none;margin-top:.32rem;color:var(--go-ink)}"
+    },
+    {
+      "name": "Text Link",
+      "kind": "custom",
+      "refersTo": "link",
+      "description": "Ink with a hairline underline that sharpens to currentColor on hover. Focus is the ink ring, declared on bare a:focus-visible so it reaches every link rather than only the stations.",
+      "html": "<p class=\"ds-linkdemo\">Full reference in the <a class=\"ds-link\" href=\"#\">repository README</a>, or press Tab to see the focus ring.</p>",
+      "css": "\n.ds-linkdemo{--housing-deep:#15181C;--housing:#1B1F24;--panel:#242930;--panel-hi:#2E343C;--bezel:#3A4149;--frame-hi:#333942;--frame-lo:#22272E;--frame-edge:#11141A;--plate-lo:#1F242A;--plate-hover-hi:#3A424C;--plate-hover-lo:#242A31;--fastener:#666E79;--hairline:rgba(233,229,218,.10);--hairline-strong:rgba(233,229,218,.18);--ink:#E9E5DA;--ink-bright:#F6F3EC;--ink-dim:#A8ADB2;--ink-faint:#959DA5;--ink-stamp:rgba(233,229,218,.3);--code-ink:#D5D9DC;--inline-code-ink:#DCE0E3;--warn-ink:#EBD5CF;--go-lens:#3FA34D;--go-ink:#74CE7C;--go-glow:rgba(63,163,77,.55);--hold-lens:#E0A032;--hold-ink:#F0BB63;--hold-glow:rgba(224,160,50,.55);--spend-lens:#CE4B36;--spend-ink:#F0836C;--spend-glow:rgba(206,75,54,.55);--spend-border:rgba(206,75,54,.42);--spend-head-hi:rgba(206,75,54,.20);--spend-head-lo:rgba(206,75,54,.05);--spend-fill:rgba(206,75,54,.09);--spend-edge:rgba(206,75,54,.32);--shade-28:rgba(0,0,0,.28);--shade-38:rgba(0,0,0,.38);--shade-45:rgba(0,0,0,.45);--shade-50:rgba(0,0,0,.5);--shade-55:rgba(0,0,0,.55);--shade-70:rgba(0,0,0,.7);--light-045:rgba(255,255,255,.045);--light-075:rgba(255,255,255,.075);--light-10:rgba(255,255,255,.10);--light-11:rgba(255,255,255,.11);--light-22:rgba(255,255,255,.22);--light-55:rgba(255,255,255,.55);--sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;--ease:cubic-bezier(.16,1,.3,1);max-width:68ch;margin:0;font-family:var(--sans);font-size:17px;line-height:1.62;color:var(--ink)}\n.ds-link{color:var(--ink);text-decoration-color:var(--hairline-strong);text-underline-offset:.22em;text-decoration-thickness:1px}\n.ds-link:hover{text-decoration-color:currentColor}\n.ds-link:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:3px}"
     }
   ],
   "narrative": {
     "northStar": "The Signal Lamp Console",
-    "overview": "The walkthrough page (walkthrough.html) is built as a piece of club equipment: the Toastmasters timing light reimagined as a documentation grammar. The world is a machined instrument console — warm graphite housing, panels bolted to a frame, ivory lettering silkscreened onto metal — and the only colour on it comes from three lamp lenses. Green means a step is free and deterministic, amber means a person must look before anything ships, red means real credits are spent on an untrustworthy generator. Colour is never decoration; every coloured element is a literal claim about what a step costs.\n\nScope boundary, and it is load-bearing: this system governs walkthrough.html only. The card templates in templates/ are a separate, deliberately different visual system that follows Toastmasters International brand rules (Loyal Blue, Happy Yellow, Montserrat) because the video output must. The walkthrough page deliberately does not, so the page cannot be mistaken for an official TI property — the repo's non-affiliation notice depends on the two systems never merging. Do not carry tokens in either direction.\n\nThe atmosphere is calm, dense with information but generous with rhythm: fluid clamp() spacing throughout, prose held to a strict measure, and depth rendered as physical machining (inset top-lights, offset drop shadows, screw-head fasteners) rather than as floating cards. Motion is a single authored moment — lamps energizing like incandescent bulbs — and everything else holds still.",
+    "overview": "The walkthrough page (`index.html`) is built as a piece of club equipment: the\nToastmasters timing light reimagined as a documentation grammar. The world is a machined\ninstrument console: warm graphite housing, panels bolted to a frame, ivory lettering\nsilkscreened onto metal. The only colour on it comes from three lamp lenses. Green\nmeans a step is free and deterministic, amber means a person must look before anything\nships, red means real credits are spent on an untrustworthy generator. Colour is never\ndecoration; every coloured element is a literal claim about what a step costs.\n\n**Scope boundary, and it is load-bearing:** this system governs `index.html` only.\nThe card templates in `templates/` are a separate, deliberately different visual system\nthat follows Toastmasters International brand rules (Loyal Blue, Happy Yellow, Montserrat)\nbecause the *video output* must. The walkthrough page deliberately does not, so the page\ncannot be mistaken for an official TI property, and the repo's non-affiliation notice depends\non the two systems never merging. Do not carry tokens in either direction.\n\nThe atmosphere is calm, dense with information but generous with rhythm: fluid `clamp()`\nspacing throughout, prose held to a strict measure, and depth rendered as physical\nmachining (inset top-lights, offset drop shadows, screw-head fasteners) rather than as\nfloating cards. Motion is a single authored moment, lamps energizing like incandescent\nbulbs, and everything else holds still.",
     "keyCharacteristics": [
       "Three signal colours (green / amber / red) carrying literal go / hold / spend states; everything else is desaturated graphite and ivory",
       "Machined-hardware depth: inset edge highlights, paired drop shadows, bolted plates, recessed wells",
@@ -122,30 +739,81 @@
       "One keyframe animation on the whole page; layout never moves"
     ],
     "rules": [
-      { "name": "The Three Lamps Rule", "body": "Green, amber, and red are the page's only chromatic colours, and each is a literal state. Never add a fourth signal colour, and never use a signal tint decoratively — a coloured element is a claim about what a step costs.", "section": "colors" },
-      { "name": "The Lens-and-Ink Rule", "body": "Every state has a lens value and a lightened ink value. Lenses go on lamp glass, glows, and tinted surfaces; inks go on type against graphite (the lightening is what keeps small text legible on dark panels). Never set text in a lens colour.", "section": "colors" },
-      { "name": "The No-Pure-White Rule", "body": "#FFF never appears as a fill or text colour; the brightest ink is #F6F3EC. Pure white exists only inside gradients and inset highlights at low alpha (specular glints on lenses and panel edges).", "section": "colors" },
-      { "name": "The Silkscreen Rule", "body": "Anything that labels hardware — plates, state words, column headers — is uppercase, weight 700, compressed to wdth 84, and tracked wide (0.15–0.17em) at under 0.7rem. Headings run the opposite direction: as size grows, the width axis narrows (headline 92 → display 78) and letter-spacing tightens. Width and tracking always move together.", "section": "typography" },
-      { "name": "The Mono-Means-Executable Rule", "body": "JetBrains Mono is reserved for the machine register: commands, filenames, config values, station numbers, timestamps, credit costs. It is never used for emphasis or decoration.", "section": "typography" },
-      { "name": "The Machined Edge Rule", "body": "A raised surface always carries all three parts: 1px inset top-light, a deep soft shadow, and a tight contact shadow. A recessed surface uses inset shadows only. Nothing floats with a single ambient shadow, and shadows never respond to hover — hover changes the metal's finish (background gradient), not its height.", "section": "elevation" },
-      { "name": "The Nesting Radius Rule", "body": "Radius steps down with depth: 12px console → 8px well → 4–5px cell → 3px badge. A child surface never has a larger radius than its parent.", "section": "shapes" },
-      { "name": "The Lit-By-Default Rule", "body": "Lamps render fully lit in pure CSS (filter: saturate(1.18) brightness(1.06)). JavaScript only adds the warm-up; a lamp must never depend on script to read correctly.", "section": "components" }
+      {
+        "name": "The Three Lamps Rule",
+        "body": "Green, amber, and red are the page's only chromatic colours, and each is a literal state. Never add a fourth signal colour, and never use a signal tint decoratively. A coloured element is a claim about what a step costs.",
+        "section": "colors"
+      },
+      {
+        "name": "The Lens-and-Ink Rule",
+        "body": "Every state has a lens value and a lightened ink value, and the split is load-bearing: the lens colours fail WCAG AA as body text on the housing (spend-lens measures 3.26:1 on panel, go-lens 4.57:1), so lenses go only on lamp glass, glows, and tinted surfaces, and type always takes the ink tint (which measures 5.69–8.36:1 on panel). Never set text in a lens colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The spend head is the tightest surface on the page",
+        "body": "Its `rgba(206,75,54,.20)` to `.05` gradient lightens the metal under `ink-faint`: the step ordinal measures 4.78:1 where it actually sits (mid-gradient) but only 4.43:1 against the .20 top stop. Deepening that tint, or moving type toward the top edge of the head, drops it below AA. Measure before changing either.",
+        "section": "colors"
+      },
+      {
+        "name": "The Content-Contrast Rule",
+        "body": "Any ink that carries content must clear WCAG AA (4.5:1) on the surface it sits on. Ink-faint is #959DA5 precisely to measure 5.33:1 on panel. Deliberate sub-AA engraving (ink-stamp) is permitted only for ornament-grade text whose information is duplicated at AA contrast elsewhere, like the station ordinal repeated in its step head.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Pure-White Rule",
+        "body": "#FFF never appears as a fill or text colour; the brightest ink is #F6F3EC. Pure white exists only inside the light ramp: low-alpha gradient glints and inset highlights on lenses and panel edges.",
+        "section": "colors"
+      },
+      {
+        "name": "The Four Registers Rule",
+        "body": "New small type takes a register centre: 0.62, 0.685, 0.78, or 0.92rem. The in-between values are per-context optical tunings recorded in `typography.scale`; stay inside the register's band, never mint a size outside it, and nothing sits between note (0.95rem) and body.",
+        "section": "typography"
+      },
+      {
+        "name": "The Silkscreen Rule",
+        "body": "Anything that labels hardware (plates, state words, column headers) is uppercase, weight 700, compressed to `wdth` 84, and tracked wide (0.15–0.17em) at under 0.7rem. Headings run the opposite direction: as size grows, the width axis narrows (headline 92 → display 78) and letter-spacing tightens. Width and tracking always move together.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono-Means-Executable Rule",
+        "body": "JetBrains Mono is reserved for the machine register: commands, filenames, config values, station numbers, timestamps, credit costs. It is never used for emphasis or decoration.",
+        "section": "typography"
+      },
+      {
+        "name": "The Machined Edge Rule",
+        "body": "A raised surface always carries all three parts: a 1px inset top-light scaled to its prominence (light-045 on panels, light-075 on plates, light-11 on the frame, light-22 on lamp glass), a deep soft shadow, and a tight contact shadow. A recessed surface uses inset shadows only. Nothing floats with a single ambient shadow, and shadows never respond to hover. Hover changes the metal's finish (background gradient), not its height.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Offset Shadow Rule",
+        "body": "Every dark shadow carries a vertical offset and a blur; light always comes from above. The only zero-offset box-shadow forms on the page are the lamp's bezel ring (a spread ring, not a shadow) and its glow bloom.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Nesting Radius Rule",
+        "body": "Radius steps down with depth: 12px console → 8px well → 4–5px cell → 3px badge. A child surface never has a larger radius than its parent.",
+        "section": "shapes"
+      }
     ],
     "dos": [
-      "Do assign every step, station, and badge exactly one state class (go / hold / spend) and let the class colour lamp, word, and badge together — never colour those pieces individually.",
-      "Do keep lamps legible without JavaScript; script may only add the energize warm-up and stagger.",
-      "Do hold prose to the 68ch measure even inside wide panels, and keep all page-level spacing fluid (clamp()), reserving exact pixels for hardware details (fasteners, rail gaps, hairlines).",
-      "Do build dividers as etched hairlines — ivory at .10/.18 alpha, or 1px grid gaps over the hairline colour — rather than opaque borders.",
-      "Do set anything executable (commands, filenames, config values, numbers on plates) in JetBrains Mono, and every hardware label in the compressed silkscreen voice (uppercase, wdth 84, 0.15–0.17em tracking).",
-      "Do honour prefers-reduced-motion by disabling the energize animation and transitions entirely, as the page already does."
+      "**Do** assign every step, station, and badge exactly one state class (`go` / `hold` / `spend`) and let the class colour lamp, word, and badge together, never colouring those pieces individually.",
+      "**Do** keep content-carrying ink at WCAG AA on its surface (ink-faint is #959DA5 precisely because #7C838A measured 3.81:1 on panel) and reserve sub-AA engraving (`ink-stamp`) for ornament whose information is duplicated at full contrast elsewhere.",
+      "**Do** keep lamps legible without JavaScript; script may only add the energize warm-up and stagger.",
+      "**Do** put anything read as sentences in `--column` and cap *every* container that holds them at `--measure`, list items and callouts included, not just `<p>`. Keep page-level spacing fluid (`clamp()`), reserving exact pixels for hardware details (fasteners, rail gaps, hairlines).",
+      "**Do** check that the whole six-lamp rail still clears a 900px fold after changing anything in the masthead. Seeing all six lamps at once, five green and one red, is the page's entire argument, so the masthead's top padding is tuned to that and not to taste.",
+      "**Do** build dividers as etched hairlines (ivory at .10/.18 alpha, or 1px grid gaps over the hairline colour) rather than opaque borders.",
+      "**Do** set anything executable (commands, filenames, config values, numbers on plates) in JetBrains Mono, and every hardware label in the compressed silkscreen voice (uppercase, `wdth` 84, 0.15–0.17em tracking).",
+      "**Do** honour `prefers-reduced-motion` by disabling the energize animation and transitions entirely, as the page already does."
     ],
     "donts": [
-      "Don't use Toastmasters International brand elements on this page — no Loyal Blue #004165, no Happy Yellow #F2DF74, no Montserrat, no TI logo. Those bind the video templates in templates/; the walkthrough page must stay visually independent or the non-affiliation notice stops being credible.",
-      "Don't add a fourth signal colour, use go/hold/spend tints decoratively, or set text in a lens value — type takes the lightened ink variant only.",
-      "Don't give the spend treatment (tinted border, tinted head gradient, warn callout) to anything that is not the credit-spending hazard; its rarity is the argument.",
-      "Don't move layout: no transform animations, no hover lifts, no parallax. Hover changes a surface's finish (background), never its position or shadow, and the energize filter is the only keyframe animation allowed.",
-      "Don't use pure #FFF or pure #000 as fills or text; the extremes are ink-bright #F6F3EC and housing-deep #15181C, with white/black reserved for low-alpha gradient light and shade.",
-      "Don't introduce a docs sidebar or sticky table of contents; the signal rail's anchor stations are the navigation, and the single-column shell is a thesis decision, not a gap."
+      "**Don't** use Toastmasters International brand elements on this page: no Loyal Blue #004165, no Happy Yellow #F2DF74, no Montserrat, no TI logo. Those bind the video templates in `templates/`; the walkthrough page must stay visually independent or the non-affiliation notice stops being credible.",
+      "**Don't** add a fourth signal colour, use go/hold/spend tints decoratively, or set text in a lens value. Type takes the lightened ink variant only.",
+      "**Don't** give the spend treatment (tinted border, tinted head gradient, warn callout) to anything that is not the credit-spending hazard; its rarity is the argument.",
+      "**Don't** move layout: no transform animations, no hover lifts, no parallax. Hover changes a surface's finish (background), never its position or shadow, and the energize filter is the only keyframe animation allowed.",
+      "**Don't** use pure #FFF or pure #000 as fills or text; the extremes are `ink-bright` #F6F3EC and `housing-deep` #15181C, with white/black reserved for the light and shade alpha ramps.",
+      "**Don't** introduce a docs sidebar or sticky table of contents; the signal rail's anchor stations are the navigation, and the single-column shell is a thesis decision, not a gap.",
+      "**Don't** leave a prose container uncapped because it is a list item, a table cell, or a callout rather than a paragraph. One uncapped 125ch checklist beside a capped 68ch paragraph is what makes the capped one look like a rendering bug, and it is the exact defect this system shipped with before.",
+      "**Don't** write a colour literal into a rule. Every colour on the page resolves from `:root`; the only exceptions are `#000` inside the lens `color-mix` and the transparent gradient terminator."
     ]
   }
 }

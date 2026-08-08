@@ -1,16 +1,16 @@
 # Toastmasters Brand Cheatsheet (for video)
 
 Source: Toastmasters International Brand Manual v2.0, Rev. 07/2026
-(https://content.toastmasters.org/image/upload/02330-001-0001-brand-manual.pdf)
+(<https://content.toastmasters.org/image/upload/02330-001-0001-brand-manual.pdf>)
 
 ## Colors
 
 | Name | Hex | Role |
 |---|---|---|
-| Loyal Blue | `#004165` | Primary — headers, backgrounds |
-| True Maroon | `#772432` | Primary — headers, backgrounds |
+| Loyal Blue | `#004165` | Primary: headers, backgrounds |
+| True Maroon | `#772432` | Primary: headers, backgrounds |
 | Cool Gray | `#A9B2B1` | Backgrounds |
-| Happy Yellow | `#F2DF74` | **Accent only** — highlights, make elements stand out |
+| Happy Yellow | `#F2DF74` | **Accent only**: highlights, make elements stand out |
 | Blissful Blue | `#006094` | Gradient partner for Loyal Blue |
 | Rich/Deep Maroon | `#781327` / `#3B0104` | Gradient partners for True Maroon |
 | Fair Gray | `#F5F5F5` | Gradient partner for Cool Gray |
@@ -20,8 +20,8 @@ Black and white are also permitted. Clubs may use whichever primary they prefer
 
 ## Typography
 
-- **Gotham** — primary typeface (headlines/subheads). Paid.
-- **Montserrat** — official *free* alternate to Gotham. Get static TTFs from
+- **Gotham**: primary typeface (headlines/subheads). Paid.
+- **Montserrat**: official *free* alternate to Gotham. Get static TTFs from
   github.com/JulietaUla/Montserrat (OFL).
 - **Myriad Pro** (body, collateral); free alternates: Source Sans 3, Arial/Segoe UI.
 - **No word art, no drop shadows,** no manipulation that radically alters the typeface.
@@ -47,7 +47,7 @@ Black and white are also permitted. Clubs may use whichever primary they prefer
    > opinion of the creator and is independent of Toastmasters International. It is not
    > authorized by, endorsed by, sponsored by, affiliated with, or otherwise approved by
    > Toastmasters International."
-5. Submit finished video to **brand@toastmasters.org** for approval.
+5. Submit finished video to **<brand@toastmasters.org>** for approval.
 
 ## Approved phrases (use ONE per piece)
 
@@ -65,6 +65,6 @@ respectful, warm, friendly, internationally friendly, succinct.
 
 ## Photography style
 
-People engaged, empowered, supported — meetings, speeches, contests. Avoid images
+People engaged, empowered, supported: meetings, speeches, contests. Avoid images
 unconnected to Toastmasters (landscapes, animals, food...). Cartoons/clip art only as
 secondary elements.

@@ -14,8 +14,8 @@ page committed alongside them and viewable from a clone or GitHub Pages.
 
 ## Users
 
-Claude Code users who belong to a Toastmasters club — often the VP of Public Relations or
-the club's most technical member — producing a recap video after a weekly meeting. They
+Claude Code users who belong to a Toastmasters club (often the VP of Public Relations or
+the club's most technical member) producing a recap video after a weekly meeting. They
 already have an agent CLI and are comfortable in a terminal. They are not video editors,
 they have limited time between the meeting and when the post should go up, and they are
 doing this as volunteers on top of a day job.
@@ -30,7 +30,7 @@ correctly, and passes Toastmasters International's brand review.
 
 The pipeline splits work by what can be verified rather than by what looks impressive:
 generative video handles only the abstract background, where nothing exists to misspell,
-and every pixel that must be exact — names, dates, the required legal disclaimer, faces —
+and every pixel that must be exact (names, dates, the required legal disclaimer, faces)
 is rendered locally from HTML and proofread as a still image before assembly. Most
 "AI video" workflows invert this and let the model render text it will garble.
 
@@ -41,7 +41,7 @@ is rendered locally from HTML and proofread as a still image before assembly. Mo
 - Google Flow is a browser-only consumer tool with no public API and no official MCP
   server, so the one generative step is driven through browser automation and costs real
   subscription credits (~12 per 8-second clip). Everything after it is free and local.
-- Finished club videos are meant to be submitted to brand@toastmasters.org for approval,
+- Finished club videos are meant to be submitted to <brand@toastmasters.org> for approval,
   and every person shown must give written permission.
 - The repo is public and MIT-licensed; contributors and users are strangers, not
   teammates.
@@ -54,7 +54,7 @@ is rendered locally from HTML and proofread as a still image before assembly. Mo
   placeholders, HTML-escaped at build time.
 - Requires ffmpeg, python3 + Pillow, and Chrome or Chromium. Tested on macOS; Linux
   should work; Windows via WSL.
-- No asset ships with the repo — the TI logo, Montserrat, the background clip, and all
+- No asset ships with the repo: the TI logo, Montserrat, the background clip, and all
   photos are supplied by the user.
 - Undecided: whether to add a scriptable Veo API path for the background clip as an
   alternative to Flow. Documented as out of scope for now.
@@ -64,8 +64,8 @@ is rendered locally from HTML and proofread as a still image before assembly. Mo
 - **The repo is not affiliated with Toastmasters International.** The walkthrough page
   must not read as an official TI property; adopting TI's logo, colors, or visual identity
   for the page itself would undercut the non-affiliation notice it carries.
-- Toastmasters brand rules — Loyal Blue `#004165`, Happy Yellow `#F2DF74` as accent only,
-  Montserrat, unaltered logo, required disclaimer — are binding on the **video output**,
+- Toastmasters brand rules (Loyal Blue `#004165`, Happy Yellow `#F2DF74` as accent only,
+  Montserrat, unaltered logo, required disclaimer) are binding on the **video output**,
   not on the tooling around it. That distinction is deliberate and load-bearing.
 - Repo name: `toastmasters-flow-promos`. MIT licensed, © Rex Lorenzo.
 
@@ -73,7 +73,7 @@ is rendered locally from HTML and proofread as a still image before assembly. Mo
 
 - Working, tested pipeline: `templates/build.sh`, three card templates, `meeting.conf`.
 - Four playbook documents, including seven failed Veo generations' worth of recorded
-  failure modes in `flow-prompts.md` — real evidence, including a gold ribbon that
+  failure modes in `flow-prompts.md`: real evidence, including a gold ribbon that
   rendered as "Best #2DF74".
 - No demo video, no screenshots of real output, and no sample assets may be published:
   the footage shows real club members who consented to a club post, not to a public repo.

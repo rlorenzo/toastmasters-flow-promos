@@ -1,0 +1,130 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install linters
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y shellcheck
+          npm install --no-save markdownlint-cli html-validate
+
+      - name: Run the full suite
+        run: |
+          export PATH="$PWD/node_modules/.bin:$PATH"
+          ./scripts/lint.sh
+
+  build:
+    name: Build a video end to end
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ffmpeg, Pillow and Chromium
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg chromium-browser || sudo apt-get install -y ffmpeg chromium
+          pip3 install Pillow
+
+      # Nothing under assets/ may live in this repo: the TI logo is TI's property
+      # and the photos are of real people. CI synthesises stand-ins instead, so
+      # this job proves the pipeline runs, not that the output looks right.
+      - name: Synthesise placeholder assets
+        run: |
+          mkdir -p assets
+          python3 - <<'PY'
+          from PIL import Image, ImageDraw
+          Image.new('RGBA', (600, 300), (0, 65, 101, 255)).save('assets/ToastmastersLogoWhite.png')
+          g = Image.new('RGB', (1920, 1080), (40, 44, 52))
+          ImageDraw.Draw(g).rectangle([100, 100, 900, 600], fill=(90, 100, 120))
+          g.save('assets/group_photo.png')
+          for n in (1, 2, 3):
+              Image.new('RGB', (760, 402), (70 + n * 20, 80, 95)).save(f'assets/winner{n}_crop.png')
+          PY
+          # A silent 8s 16:9 clip with a tone, standing in for the Veo background.
+          ffmpeg -y -v error -f lavfi -i "color=c=0x0d1b2a:s=1280x720:d=8:r=24" \
+                 -f lavfi -i "sine=frequency=220:duration=8" \
+                 -shortest -pix_fmt yuv420p assets/bg.mp4
+
+      # Montserrat is SIL OFL, so CI fetches it from the same upstream the README
+      # sends users to. build.sh hard-fails on a missing font rather than letting
+      # Chrome render blank text, so this step is required, not cosmetic.
+      - name: Fetch Montserrat (SIL OFL)
+        run: |
+          mkdir -p fonts
+          base=https://raw.githubusercontent.com/JulietaUla/Montserrat/master/fonts/ttf
+          for w in Regular Medium SemiBold Bold ExtraBold; do
+            curl -sSfL "$base/Montserrat-$w.ttf" -o "fonts/Montserrat-$w.ttf"
+          done
+          ls -l fonts/
+
+      - name: Build
+        env:
+          CHROME: chromium-browser
+        run: |
+          command -v chromium-browser >/dev/null || export CHROME=chromium
+          templates/build.sh
+
+      - name: Assert the output is a real 15s video with audio
+        run: |
+          # Resolve OUTPUT the way build.sh does, by sourcing the config, rather
+          # than by cutting on double quotes. build.sh sources this file, so a
+          # single-quoted or bare OUTPUT is a valid config that builds fine while
+          # a quote-cutting pipeline derives the wrong path and fails the
+          # assertion instead of the video.
+          OUT=$(set -a; . ./meeting.conf; set +a; echo "${OUTPUT:-Meeting_Recap.mp4}")
+          echo "asserting on: $OUT"
+          test -s "$OUT" || { echo "no output file"; exit 1; }
+          dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT")
+          echo "duration: ${dur}s"
+          python3 -c "import sys; d=float('${dur}'); sys.exit(0 if 14.5 < d < 15.5 else 1)" \
+            || { echo "expected ~15s, got ${dur}"; exit 1; }
+          ffprobe -v error -select_streams a -show_entries stream=codec_type -of csv=p=0 "$OUT" \
+            | grep -q audio || { echo "no audio stream"; exit 1; }
+          # Silence reads about -91 dB; the Veo bed should sit far above that.
+          mean=$(ffmpeg -i "$OUT" -af volumedetect -f null - 2>&1 | grep mean_volume | awk '{print $5}')
+          echo "mean volume: ${mean} dB"
+          python3 -c "import sys; sys.exit(0 if float('${mean}') > -60 else 1)" \
+            || { echo "audio track is silent"; exit 1; }
+
+      # The build just wrote assets/, fonts/, cards/ and an .mp4 into the tree.
+      # If .gitignore ever stops covering them, this turns a licensing and privacy
+      # mistake into a red build instead of a public commit of someone's face.
+      - name: Assert the build left nothing committable behind
+        run: |
+          untracked=$(git status --porcelain)
+          if [ -n "$untracked" ]; then
+            echo "Build output is visible to git; .gitignore is not covering it:"
+            echo "$untracked"
+            exit 1
+          fi
+          echo "Working tree clean: every build artifact is ignored."
