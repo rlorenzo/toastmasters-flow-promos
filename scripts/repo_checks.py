@@ -387,16 +387,32 @@ def bg_mood_carries_no_text():
             "it, update bg_mood_stopwords() in scripts/repo_checks.py.",
         )
         return
+    # Two conditions, matching templates/build.sh. Either alone gets it wrong in
+    # a different direction: flagging any shared word rejects "light rising from
+    # below" for a theme of "FROM THE ASHES", and forgiving every ordinary word
+    # lets "golden glow" through for a theme of "GOLDEN GLOW", which is the theme
+    # in full. A distinctive word is a leak alone; an ordinary one only when the
+    # rest of its theme line came with it.
     mood_words = set(re.findall(r"[a-z0-9]+", mood.lower()))
     for key in ("THEME_LINE1", "THEME_LINE2", "WORD_OF_DAY"):
-        for word in re.findall(r"[a-z0-9]+", conf_value(conf, key).lower()):
-            if len(word) >= 4 and word not in stops and word in mood_words:
-                fail(
-                    "bg-mood-carries-no-text",
-                    f'meeting.conf BG_MOOD contains "{word}", which is part of {key}. '
-                    "BG_MOOD becomes a Veo prompt and Veo renders words it is given; "
-                    "describe light and colour instead.",
-                )
+        value = conf_value(conf, key)
+        words = [w for w in re.findall(r"[a-z0-9]+", value.lower()) if len(w) >= 4]
+        if not words:
+            continue
+        leaked = next((w for w in words if w not in stops and w in mood_words), None)
+        if leaked:
+            fail(
+                "bg-mood-carries-no-text",
+                f'meeting.conf BG_MOOD contains "{leaked}", which is part of {key}. '
+                "BG_MOOD becomes a Veo prompt and Veo renders words it is given; "
+                "describe light and colour instead.",
+            )
+        elif all(w in mood_words for w in words):
+            fail(
+                "bg-mood-carries-no-text",
+                f'meeting.conf BG_MOOD repeats all of {key} ("{value}"), so the prompt '
+                "would carry it in full. Describe light and colour instead.",
+            )
 
 
 def main() -> int:

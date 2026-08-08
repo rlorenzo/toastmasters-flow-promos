@@ -129,6 +129,21 @@ def allow_documented_mood_example(repo):
          'BG_MOOD="deep teal base, soft vertical light shafts brightening toward the top"')
 
 
+# An ordinary word is forgiven only as an incidental overlap. When the rest of
+# the theme line comes with it, the prompt carries the theme in full, and every
+# word being ordinary is no defence: a theme of "GOLDEN GLOW" and a mood of
+# "golden glow" is the theme typed out.
+def break_bg_mood_whole_theme_of_ordinary_words(repo):
+    edit(repo / "meeting.conf", 'THEME_LINE1="YOUR"', 'THEME_LINE1="GOLDEN"')
+    edit(repo / "meeting.conf", 'THEME_LINE2="THEME"', 'THEME_LINE2="GLOW"')
+    edit(repo / "meeting.conf", 'BG_MOOD=""', 'BG_MOOD="golden glow, slow drift"')
+
+
+def break_bg_mood_repeats_word_of_day(repo):
+    edit(repo / "meeting.conf", 'WORD_OF_DAY="ELOQUENT"', 'WORD_OF_DAY="LIGHT"')
+    edit(repo / "meeting.conf", 'BG_MOOD=""', 'BG_MOOD="soft light rays"')
+
+
 ALLOWED_CASES = {
     "ordinary word shared with theme": allow_ordinary_word_shared_with_theme,
     "documented mood example": allow_documented_mood_example,
@@ -151,6 +166,8 @@ EXTRA_CASES = {
     "meeting-conf-generic (single-quoted)": break_meeting_conf_generic_single_quoted,
     "bg-mood-carries-no-text (single-quoted)": break_bg_mood_single_quoted,
     "bg-mood-carries-no-text (partial theme word)": break_bg_mood_partial_theme_word,
+    "bg-mood-carries-no-text (whole theme, ordinary words)": break_bg_mood_whole_theme_of_ordinary_words,
+    "bg-mood-carries-no-text (repeats word of the day)": break_bg_mood_repeats_word_of_day,
 }
 
 

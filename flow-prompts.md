@@ -79,13 +79,20 @@ repeats a *distinctive* word from `THEME_LINE1`, `THEME_LINE2` or `WORD_OF_DAY`.
 check is cheap and it runs before the spend, which is the only place it is worth
 anything.
 
-Distinctive is the operative word. The comparison is per word, so a theme of
-`FRESH START` catches a mood of "a fresh dawn palette" even though the whole phrase is
-absent. It skips the ordinary vocabulary these examples are written in, so a theme of
-`FROM THE ASHES` does not reject "light rising from below": sharing "from" is a
-coincidence, sharing "ashes" is not. That list lives in `BG_MOOD_STOPWORDS` in
-`build.sh`, and `scripts/repo_checks.py` reads it from there rather than keeping a
-second copy.
+Distinctive is the operative word, and it cuts two ways.
+
+A distinctive theme word is a leak on its own, so a theme of `FRESH START` catches a
+mood of "a fresh dawn palette" even though the whole phrase never appears. Ordinary
+words are forgiven as coincidence, so `FROM THE ASHES` does not reject "light rising
+from below": sharing "from" means nothing, sharing "ashes" means everything. That list
+of ordinary words lives in `BG_MOOD_STOPWORDS` in `build.sh`, and
+`scripts/repo_checks.py` reads it from there rather than keeping a second copy.
+
+Being ordinary is no defence when the whole line comes along, though. A theme of
+`GOLDEN GLOW` with a mood of "golden glow" is the theme typed out in full, so it fails
+even though both words are ordinary on their own. The same applies to a one-word theme
+or word of the day: if `WORD_OF_DAY` is `LIGHT`, a mood saying "light" repeats it
+whole, and you want "rays" or "glow" instead.
 
 One restraint worth keeping: the clip is wallpaper. Four text cards sit on top of it for
 the whole fifteen seconds, so if a generated background is interesting enough to look at

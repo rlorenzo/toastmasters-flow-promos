@@ -87,25 +87,45 @@ reject_text_in_bg_mood() {
   # of them, so matching whole fields let a mood of "a fresh dawn palette" past
   # a theme of "FRESH START". Both sides are lowercased and reduced to their
   # alphanumeric runs first, so "gold, pale-green." tokenises like the theme.
-  local themed word mood_words stops
+  # Two conditions, because either one alone gets it wrong in a different
+  # direction. Flagging any shared word rejected "light rising from below" for a
+  # theme of "FROM THE ASHES". Forgiving every ordinary word let a mood of
+  # "golden glow" through for a theme of "GOLDEN GLOW", which is the theme typed
+  # out in full. So: a distinctive word is a leak on its own, and an ordinary one
+  # is a leak only when the rest of its theme line came with it.
+  local themed word mood_words stops leaked whole all_present significant
   mood_words=" $(printf '%s' "$BG_MOOD" | tr '[:upper:]' '[:lower:]' | tr -c '[:alnum:]' ' ') "
   stops=" ${BG_MOOD_STOPWORDS[*]} "
   for themed in "${THEME_LINE1:-}" "${THEME_LINE2:-}" "${WORD_OF_DAY:-}"; do
     [[ -n "$themed" ]] || continue
+    leaked="" all_present=1 significant=0
     # Deliberate word splitting: each token is checked on its own.
     # shellcheck disable=SC2013
     for word in $(printf '%s' "$themed" | tr '[:upper:]' '[:lower:]' | tr -c '[:alnum:]' ' '); do
       # Short words are articles and conjunctions far more often than they are
       # theme words, and blocking "a" or "of" would fail every honest mood.
       [[ ${#word} -ge 4 ]] || continue
-      [[ "$stops" == *" $word "* ]] && continue
+      significant=1
       if [[ "$mood_words" == *" $word "* ]]; then
-        echo "$CONFIG: BG_MOOD contains \"$word\", which is part of your theme or word" >&2
-        echo "         of the day. BG_MOOD becomes a Veo prompt, and Veo renders words" >&2
-        echo "         it is given. Describe light and colour instead." >&2
-        exit 1
+        [[ "$stops" == *" $word "* ]] || { leaked="$word"; break; }
+      else
+        all_present=0
       fi
     done
+    whole=""
+    [[ -n "$leaked" ]] || { (( significant && all_present )) && whole="$themed"; }
+    if [[ -n "$leaked" || -n "$whole" ]]; then
+      if [[ -n "$leaked" ]]; then
+        echo "$CONFIG: BG_MOOD contains \"$leaked\", which is part of your theme or" >&2
+        echo "         word of the day." >&2
+      else
+        echo "$CONFIG: BG_MOOD repeats all of \"$whole\", your theme or word of the day," >&2
+        echo "         so the prompt would carry it in full." >&2
+      fi
+      echo "         BG_MOOD becomes a Veo prompt, and Veo renders words it is given." >&2
+      echo "         Describe light and colour instead." >&2
+      exit 1
+    fi
   done
 }
 
