@@ -96,7 +96,13 @@ jobs:
 
       - name: Assert the output is a real 15s video with audio
         run: |
-          OUT=$(grep -E '^OUTPUT=' meeting.conf | cut -d'"' -f2)
+          # Resolve OUTPUT the way build.sh does, by sourcing the config, rather
+          # than by cutting on double quotes. build.sh sources this file, so a
+          # single-quoted or bare OUTPUT is a valid config that builds fine while
+          # a quote-cutting pipeline derives the wrong path and fails the
+          # assertion instead of the video.
+          OUT=$(set -a; . ./meeting.conf; set +a; echo "${OUTPUT:-Meeting_Recap.mp4}")
+          echo "asserting on: $OUT"
           test -s "$OUT" || { echo "no output file"; exit 1; }
           dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT")
           echo "duration: ${dur}s"

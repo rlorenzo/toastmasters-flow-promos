@@ -105,6 +105,14 @@ def break_bg_mood_single_quoted(repo):
     edit(repo / "meeting.conf", 'BG_MOOD=""', "BG_MOOD='warm gold, #F2DF74'")
 
 
+# A theme field usually holds several words, and Veo renders any one of them.
+# Comparing whole fields let a mood of "a fresh dawn palette" past a theme of
+# "FRESH START", so the leaked word here is only part of the theme line.
+def break_bg_mood_partial_theme_word(repo):
+    edit(repo / "meeting.conf", 'THEME_LINE1="YOUR"', 'THEME_LINE1="FRESH START"')
+    edit(repo / "meeting.conf", 'BG_MOOD=""', 'BG_MOOD="a fresh dawn palette"')
+
+
 CASES = {
     "phrase-list-drift": break_phrase_list_drift,
     "no-private-assets": break_no_private_assets,
@@ -121,6 +129,7 @@ CASES = {
 EXTRA_CASES = {
     "meeting-conf-generic (single-quoted)": break_meeting_conf_generic_single_quoted,
     "bg-mood-carries-no-text (single-quoted)": break_bg_mood_single_quoted,
+    "bg-mood-carries-no-text (partial theme word)": break_bg_mood_partial_theme_word,
 }
 
 

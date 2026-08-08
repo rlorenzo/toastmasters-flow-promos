@@ -58,18 +58,29 @@ reject_text_in_bg_mood() {
     echo "         prompt once came back rendered as \"Best #2DF74\"." >&2
     exit 1
   fi
-  local themed
-  shopt -s nocasematch
+  # Compared word by word, not field by field. A theme is often one field
+  # holding several words ("FRESH START"), and Veo will happily render any one
+  # of them, so matching whole fields let a mood of "a fresh dawn palette" past
+  # a theme of "FRESH START". Both sides are lowercased and reduced to their
+  # alphanumeric runs first, so "gold, pale-green." tokenises like the theme.
+  local themed word mood_words
+  mood_words=" $(printf '%s' "$BG_MOOD" | tr '[:upper:]' '[:lower:]' | tr -c '[:alnum:]' ' ') "
   for themed in "${THEME_LINE1:-}" "${THEME_LINE2:-}" "${WORD_OF_DAY:-}"; do
     [[ -n "$themed" ]] || continue
-    if [[ "$BG_MOOD" == *"$themed"* ]]; then
-      echo "$CONFIG: BG_MOOD contains the word \"$themed\", which also appears in your" >&2
-      echo "         theme or word of the day. BG_MOOD becomes a Veo prompt, and Veo" >&2
-      echo "         renders words it is given. Describe light and colour instead." >&2
-      exit 1
-    fi
+    # Deliberate word splitting: each token is checked on its own.
+    # shellcheck disable=SC2013
+    for word in $(printf '%s' "$themed" | tr '[:upper:]' '[:lower:]' | tr -c '[:alnum:]' ' '); do
+      # Words this short are articles and conjunctions far more often than they
+      # are theme words, and blocking "a" or "of" would fail every honest mood.
+      [[ ${#word} -ge 4 ]] || continue
+      if [[ "$mood_words" == *" $word "* ]]; then
+        echo "$CONFIG: BG_MOOD contains \"$word\", which is part of your theme or word" >&2
+        echo "         of the day. BG_MOOD becomes a Veo prompt, and Veo renders words" >&2
+        echo "         it is given. Describe light and colour instead." >&2
+        exit 1
+      fi
+    done
   done
-  shopt -u nocasematch
 }
 
 # The background policy is validated here but never acted on: Flow is a browser

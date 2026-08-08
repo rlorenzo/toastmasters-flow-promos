@@ -357,14 +357,22 @@ def bg_mood_carries_no_text():
             "meeting.conf BG_MOOD contains '#'. Describe colour in words; a hex code "
             'in a prompt once came back rendered as "Best #2DF74".',
         )
+    # Word by word, matching templates/build.sh. A theme field often holds
+    # several words ("FRESH START") and Veo will render any one of them, so
+    # comparing whole fields lets a mood of "a fresh dawn palette" through.
+    # Words under four characters are articles and conjunctions far more often
+    # than they are theme words, and blocking "a" or "of" would fail every
+    # honest mood string.
+    mood_words = set(re.findall(r"[a-z0-9]+", mood.lower()))
     for key in ("THEME_LINE1", "THEME_LINE2", "WORD_OF_DAY"):
-        word = conf_value(conf, key)
-        if word and word.lower() in mood.lower():
-            fail(
-                "bg-mood-carries-no-text",
-                f'meeting.conf BG_MOOD repeats {key} ("{word}"). BG_MOOD becomes a Veo '
-                "prompt and Veo renders words it is given; describe light and colour.",
-            )
+        for word in re.findall(r"[a-z0-9]+", conf_value(conf, key).lower()):
+            if len(word) >= 4 and word in mood_words:
+                fail(
+                    "bg-mood-carries-no-text",
+                    f'meeting.conf BG_MOOD contains "{word}", which is part of {key}. '
+                    "BG_MOOD becomes a Veo prompt and Veo renders words it is given; "
+                    "describe light and colour instead.",
+                )
 
 
 def main() -> int:
