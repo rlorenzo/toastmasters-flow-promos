@@ -113,6 +113,27 @@ def break_bg_mood_partial_theme_word(repo):
     edit(repo / "meeting.conf", 'BG_MOOD=""', 'BG_MOOD="a fresh dawn palette"')
 
 
+# Mutations that must NOT trip a check. A guard that over-fires blocks honest
+# configs, which is its own defect: "light rising from below" is a documented
+# mood in flow-prompts.md, and a length-only rule rejected it whenever a theme
+# happened to contain "from". Proving a guard stays quiet matters as much as
+# proving it fires.
+def allow_ordinary_word_shared_with_theme(repo):
+    edit(repo / "meeting.conf", 'THEME_LINE1="YOUR"', 'THEME_LINE1="FROM THE ASHES"')
+    edit(repo / "meeting.conf", 'BG_MOOD=""', 'BG_MOOD="warm gold, light rising from below"')
+
+
+def allow_documented_mood_example(repo):
+    edit(repo / "meeting.conf", 'THEME_LINE1="YOUR"', 'THEME_LINE1="GROWTH"')
+    edit(repo / "meeting.conf", 'BG_MOOD=""',
+         'BG_MOOD="deep teal base, soft vertical light shafts brightening toward the top"')
+
+
+ALLOWED_CASES = {
+    "ordinary word shared with theme": allow_ordinary_word_shared_with_theme,
+    "documented mood example": allow_documented_mood_example,
+}
+
 CASES = {
     "phrase-list-drift": break_phrase_list_drift,
     "no-private-assets": break_no_private_assets,
@@ -198,6 +219,13 @@ def main() -> int:
             # by some *other* check firing, which would leave this one unproven.
             ok = rc != 0 and check_name in output
             results.append((ok, label, "" if ok else f"rc={rc}\n{output}"))
+
+        for label, mutate in ALLOWED_CASES.items():
+            repo = fresh_clone(pathlib.Path(tmp) / f"allow_{label.replace(' ', '_')}")
+            mutate(repo)
+            rc, output = run_checks(repo)
+            ok = rc == 0
+            results.append((ok, f"allowed: {label}", "" if ok else output))
 
     for ok, name, detail in results:
         print(f"  {'ok  ' if ok else 'FAIL'}  {name}")

@@ -46,6 +46,30 @@ done
 [[ -n "${WINNER1_NAME:-}${WINNER2_NAME:-}${WINNER3_NAME:-}" ]] \
   || { echo "$CONFIG: set at least one WINNERn_NAME" >&2; exit 1; }
 
+# Words that carry no theme on their own: English joining words, and the mood
+# vocabulary this project's own examples are written in. A theme sharing one of
+# these with a mood is a coincidence, not a leak, and treating it as one blocks
+# honest configs: "light rising from below" is a documented example in
+# flow-prompts.md, and a theme of "FROM THE ASHES" would otherwise reject it.
+# What the guard is actually for is a distinctive theme word ("ASHES", "FRESH",
+# "MILESTONES") being pasted into the prompt, and those are not in here.
+#
+# This array is the single source of truth. scripts/repo_checks.py parses it out
+# of this file rather than keeping a second copy, the same way it reads the
+# approved-phrase list, so the two cannot drift.
+BG_MOOD_STOPWORDS=(
+  "from" "the" "and" "with" "into" "over" "your" "this" "that" "then" "than"
+  "when" "what" "will" "have" "been" "were" "their" "there" "they" "upon"
+  "onto" "under" "above" "below" "toward" "towards" "across" "through" "between"
+  "around" "outward" "inward" "cool" "cold" "warm" "dark" "pale" "deep"
+  "soft" "slow" "gentle" "bright" "brightening" "dawn" "dusk" "light" "lights"
+  "glow" "glowing" "shadow" "contrast" "colour" "color" "gold" "golden"
+  "amber" "rose" "teal" "blue" "green" "white" "indigo" "silver" "gradient"
+  "palette" "base" "vertical" "horizontal" "diagonal" "centre" "center"
+  "rising" "drift" "drifting" "spreading" "sparkle" "sparks" "particles"
+  "bokeh" "ripples" "shafts" "density" "higher" "lower" "upward" "top" "bottom"
+)
+
 # Under BG_MODE="generate" the mood string becomes a Veo prompt, and Veo renders
 # text it is given. A theme word or a hex code in there is the one mistake this
 # feature can make, and the failure is expensive, so it is caught before the
@@ -63,16 +87,18 @@ reject_text_in_bg_mood() {
   # of them, so matching whole fields let a mood of "a fresh dawn palette" past
   # a theme of "FRESH START". Both sides are lowercased and reduced to their
   # alphanumeric runs first, so "gold, pale-green." tokenises like the theme.
-  local themed word mood_words
+  local themed word mood_words stops
   mood_words=" $(printf '%s' "$BG_MOOD" | tr '[:upper:]' '[:lower:]' | tr -c '[:alnum:]' ' ') "
+  stops=" ${BG_MOOD_STOPWORDS[*]} "
   for themed in "${THEME_LINE1:-}" "${THEME_LINE2:-}" "${WORD_OF_DAY:-}"; do
     [[ -n "$themed" ]] || continue
     # Deliberate word splitting: each token is checked on its own.
     # shellcheck disable=SC2013
     for word in $(printf '%s' "$themed" | tr '[:upper:]' '[:lower:]' | tr -c '[:alnum:]' ' '); do
-      # Words this short are articles and conjunctions far more often than they
-      # are theme words, and blocking "a" or "of" would fail every honest mood.
+      # Short words are articles and conjunctions far more often than they are
+      # theme words, and blocking "a" or "of" would fail every honest mood.
       [[ ${#word} -ge 4 ]] || continue
+      [[ "$stops" == *" $word "* ]] && continue
       if [[ "$mood_words" == *" $word "* ]]; then
         echo "$CONFIG: BG_MOOD contains \"$word\", which is part of your theme or word" >&2
         echo "         of the day. BG_MOOD becomes a Veo prompt, and Veo renders words" >&2

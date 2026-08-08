@@ -78,6 +78,21 @@ def read(rel: str) -> str:
     return (ROOT / rel).read_text(encoding="utf-8")
 
 
+@functools.cache
+def bg_mood_stopwords() -> frozenset[str] | None:
+    """The BG_MOOD_STOPWORDS array from build.sh, or None if it has moved.
+
+    Parsed rather than duplicated. Two copies of this list would be exactly the
+    drift that phrase-list-drift exists to catch, and a stopword present in one
+    place and not the other means the build and this check disagree about which
+    configs are valid.
+    """
+    m = re.search(r"^BG_MOOD_STOPWORDS=\((.*?)^\)", read("templates/build.sh"), re.S | re.M)
+    if not m:
+        return None
+    return frozenset(re.findall(r"[a-z0-9]+", m.group(1).lower()))
+
+
 def conf_value(conf: str, key: str) -> str:
     """The value assigned to KEY in meeting.conf, or "" if it has none.
 
@@ -362,11 +377,20 @@ def bg_mood_carries_no_text():
     # comparing whole fields lets a mood of "a fresh dawn palette" through.
     # Words under four characters are articles and conjunctions far more often
     # than they are theme words, and blocking "a" or "of" would fail every
-    # honest mood string.
+    # honest mood string. The stopword list is read out of build.sh rather than
+    # copied, so this check and the build cannot disagree about what counts.
+    stops = bg_mood_stopwords()
+    if stops is None:
+        fail(
+            "bg-mood-carries-no-text",
+            "could not find BG_MOOD_STOPWORDS in templates/build.sh. If you moved "
+            "it, update bg_mood_stopwords() in scripts/repo_checks.py.",
+        )
+        return
     mood_words = set(re.findall(r"[a-z0-9]+", mood.lower()))
     for key in ("THEME_LINE1", "THEME_LINE2", "WORD_OF_DAY"):
         for word in re.findall(r"[a-z0-9]+", conf_value(conf, key).lower()):
-            if len(word) >= 4 and word in mood_words:
+            if len(word) >= 4 and word not in stops and word in mood_words:
                 fail(
                     "bg-mood-carries-no-text",
                     f'meeting.conf BG_MOOD contains "{word}", which is part of {key}. '

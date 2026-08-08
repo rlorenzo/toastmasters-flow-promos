@@ -75,8 +75,17 @@ Good mood strings name **colour, light direction, and movement speed** and nothi
 If a phrase could be read aloud as a slogan, it does not belong here.
 
 `build.sh` refuses to build when `BG_MODE="generate"` and `BG_MOOD` contains a `#` or
-repeats a word from `THEME_LINE1`, `THEME_LINE2` or `WORD_OF_DAY`. That check is cheap
-and it runs before the spend, which is the only place it is worth anything.
+repeats a *distinctive* word from `THEME_LINE1`, `THEME_LINE2` or `WORD_OF_DAY`. That
+check is cheap and it runs before the spend, which is the only place it is worth
+anything.
+
+Distinctive is the operative word. The comparison is per word, so a theme of
+`FRESH START` catches a mood of "a fresh dawn palette" even though the whole phrase is
+absent. It skips the ordinary vocabulary these examples are written in, so a theme of
+`FROM THE ASHES` does not reject "light rising from below": sharing "from" is a
+coincidence, sharing "ashes" is not. That list lives in `BG_MOOD_STOPWORDS` in
+`build.sh`, and `scripts/repo_checks.py` reads it from there rather than keeping a
+second copy.
 
 One restraint worth keeping: the clip is wallpaper. Four text cards sit on top of it for
 the whole fifteen seconds, so if a generated background is interesting enough to look at
