@@ -25,7 +25,8 @@ Core rule: **no AI-generated text, no AI-animated faces.** All type renders loca
    the still is the default and stays fully supported
 6. Anything else changing this week: credit line, club URL, background clip
 
-Club identity (name, URL, credit line, approved phrase) is set once in `meeting.conf` and
+Club identity (name, URL, credit line, approved phrase, standing meeting time) is set
+once in `meeting.conf` and
 should already be filled in. Confirm rather than re-ask. `PHRASE` must be one of the eight
 approved phrases listed in `meeting.conf`; the build rejects anything else, and picks one
 at random when it is left empty.

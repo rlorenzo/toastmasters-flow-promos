@@ -283,6 +283,7 @@ tokens = {
     'LOGO': html.escape('../' + os.environ['LOGO'], quote=True),
     'CLUB_NAME': esc('CLUB_NAME'),
     'CLUB_URL': esc('CLUB_URL'),
+    'MEETING_TIME': esc('MEETING_TIME'),
     'CREDIT': esc('CREDIT'),
     'PHRASE': esc('PHRASE'),
     'MEETING_DATE': esc('MEETING_DATE'),

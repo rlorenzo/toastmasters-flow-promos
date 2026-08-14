@@ -97,7 +97,7 @@ continuous canvas under four timed overlays:
 | 0.0–3.6s | Title | Theme, word of the day, club name under logo, **TI disclaimer** (required in first frames) |
 | 3.6–8.2s | Meeting | Group photo, or a silent 4.6s clip, in a white rounded card |
 | 8.2–12.0s | Winners | 1–3 winners with photo crops; the row resizes to fit |
-| 12.0–15.0s | Close | Logo, club name, one approved phrase, URL, credit line |
+| 12.0–15.0s | Close | Logo, club name, one approved phrase, URL, optional meeting time, credit line |
 
 Each overlay alpha-fades in/out over 0.4s; the final 0.6s fades to black; audio fades out.
 
