@@ -109,5 +109,10 @@ quietly ship as coverage.
   meeting's mood and must describe **light only**. Never let `THEME_LINE1`,
   `THEME_LINE2` or `WORD_OF_DAY` reach a Veo prompt; that is prime directive 1 at its
   sharpest, and both `build.sh` and `repo_checks.py` enforce it.
+- `MEETING_TIME` is club identity, not a per-meeting value: a short standing
+  day/time on the closing card. It is empty by default and `.meet:empty` hides the
+  line, so an unset value renders the card exactly as it was before the token
+  existed. Join links belong in the post caption, not on a card; a meeting ID
+  cannot be read off a three-second frame.
 - `PHRASE` is validated against the eight approved phrases (the list lives in `build.sh`,
   `meeting.conf`, `brand-cheatsheet.md` and the `tm-brand` skill; update all four).
