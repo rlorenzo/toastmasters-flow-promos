@@ -50,6 +50,17 @@ Constraints on the copy:
 - Include the club URL from `CLUB_URL`.
 - Hashtags: a short, sane set. `#Toastmasters #PublicSpeaking` plus the club's city is
   usually enough.
+- **Name the speaker, the evaluator and the winners, then tag them.** A tag notifies the
+  person, and their reply carries the post into a network the club cannot reach on its
+  own. This is the highest-leverage line in this file for reach, and it costs nothing.
+  See "Tagging" below, because it is easy to get wrong.
+- **Close on one specific question.** A recap that only reports is a recap nobody
+  answers, and distribution on both platforms is driven by replies rather than by views.
+  Ask something the meeting itself already asked, so the question reads as a continuation
+  rather than as engagement bait: a "Back to School" meeting that opened by asking people
+  about a favourite teacher ends its caption by asking the reader the same thing. Name
+  the action plainly ("tell us in the comments"), and ask for a comment rather than a
+  like, because a comment travels and a like mostly does not.
 
 Write one caption per platform, not one shared caption:
 
@@ -62,7 +73,29 @@ Write one caption per platform, not one shared caption:
 Show both drafts to the user as text in chat and let them edit before any browser work.
 Do not paste an unapproved draft into a composer "so they can see it in place."
 
-## 2. Facebook Page
+## 2. Tagging
+
+Tags do more for reach than anything else here, and a wrong one is a public mistake about
+someone else's achievement, so they get their own step.
+
+- **Collect profile URLs before opening a composer.** Ask the user for the profile of
+  every person about to be tagged. Never search a name and take the top hit.
+- **Verify every pick against the URL the user gave you.** Autocomplete shows a name and
+  a headline, never a URL, so when several candidates share a name, screenshot the list
+  and ask the user which one. Ranking is not a shortcut: on LinkedIn a 1st degree
+  connection can sit below three strangers with the same name.
+- **Tag while composing, never by editing afterwards.** A mention added in an edit often
+  fails to notify the person, which buys the link and loses the notification, and the
+  notification is the part that does the work. If the post is already live, put the tags
+  in a comment instead. Mentions in comments notify reliably, and the comment is itself a
+  distribution signal.
+- **Someone does not have to be a connection to be tagged.** Mentions resolve against any
+  public profile. People can switch off being tagged in their privacy settings, so a name
+  that will not resolve is usually a setting rather than a typo. Move on and say so.
+- The same consent that covers appearing in the video does not automatically cover being
+  tagged by name. If the user has not said who to tag, ask.
+
+## 3. Facebook Page
 
 1. Open a new tab to the Page, or to business.facebook.com if they use Business Suite.
 2. Confirm the composer is posting **as the Page**, not as the user's personal profile.
@@ -75,14 +108,17 @@ Do not paste an unapproved draft into a composer "so they can see it in place."
 6. **Screenshot the composer and show the user exactly what will go out. Ask for explicit
    confirmation. Only then click Post.**
 
-## 3. Personal LinkedIn
+## 4. Personal LinkedIn
 
 1. New tab to linkedin.com, start a post, choose the video option.
 2. Attach the same `.mp4`.
 3. Paste the LinkedIn caption.
-4. Check the audience selector: "Anyone" for a club promo, unless the user says otherwise.
-5. LinkedIn re-encodes; wait for the preview thumbnail before continuing.
-6. **Screenshot, confirm with the user, then post.**
+4. Insert the mentions now, not later: type `@` and the full name, check the candidate
+   against the profile URL, then select it. Confirm each one rendered as a blue mention
+   and not as plain text before moving on.
+5. Check the audience selector: "Anyone" for a club promo, unless the user says otherwise.
+6. LinkedIn re-encodes; wait for the preview thumbnail before continuing.
+7. **Screenshot, confirm with the user, then post.**
 
 ## Hard rules
 
@@ -103,3 +139,8 @@ Do not paste an unapproved draft into a composer "so they can see it in place."
 Remind the user that the video should also be submitted to <brand@toastmasters.org> if the
 club has not already done so, and note anything worth changing next week: a caption that
 ran long, a thumbnail frame that landed badly, a winner tile that read poorly at feed size.
+
+Engagement is the number worth watching, not views. Views mean the platform showed the
+post to someone; comments and reposts are what make it show the post to anyone new. If a
+recap pulls hundreds of views and single-digit engagement week after week, the fix is in
+the caption, the tags and the question, not in the video.
