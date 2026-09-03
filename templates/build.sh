@@ -155,6 +155,7 @@ esac
 need() { [[ -f "$2" ]] || { echo "$CONFIG: $1 not found: $2" >&2; exit 1; }; }
 need BG_VIDEO "$BG_VIDEO"
 need LOGO "$LOGO"
+[[ -z "${MUSIC:-}" ]] || need MUSIC "$MUSIC"
 for i in 1 2 3; do
   name="WINNER${i}_NAME"; img="WINNER${i}_IMG"
   [[ -n "${!name:-}" ]] || continue
@@ -385,6 +386,34 @@ read -r FIT_W FIT_H MEDIA_X MEDIA_Y <<< "$GEOM"
 # same chain serves a still and a clip. Its audio is never mapped; the Veo
 # music track is the only sound in the piece.
 
+# --- Soundtrack ---------------------------------------------------------------
+# Empty MUSIC (the default) keeps the piece on the background clip's own Veo
+# audio, crossfaded against a second copy of itself to reach 15s. Set MUSIC and
+# that track takes over instead: it enters as input 8, so every existing input
+# index above stays put. A generated track runs minutes, so MUSIC_START picks
+# which 15 seconds earn the spot; apad covers a track that ends early and the
+# 0.3s fade-in stops a mid-waveform in-point from clicking. loudnorm is what
+# keeps a soundtrack from arriving at whatever level its generator felt like:
+# the piece has always sat near -15 dB mean and a chosen 15 seconds can land
+# several dB under that, so the build normalises rather than making every config
+# carry a hand-tuned gain. aresample undoes loudnorm's internal 192kHz before
+# the AAC encoder sees it.
+
+# MUSIC_INPUT is empty on the default path, and bash 3.2 (macOS's stock bash)
+# treats an empty array as unbound under set -u. The ${arr[@]+...} form is the
+# portable way to expand an array that may hold nothing.
+MUSIC_INPUT=()
+AUDIO_CHAIN="[0:a][1:a]acrossfade=d=1[aa];[aa]afade=t=out:st=13.6:d=1.4[aout]"
+if [[ -n "${MUSIC:-}" ]]; then
+  MUSIC_INPUT=(-ss "${MUSIC_START:-0}" -i "$MUSIC")
+  AUDIO_CHAIN="[8:a]apad,atrim=duration=15,asetpts=PTS-STARTPTS,\
+loudnorm=I=-13:TP=-1.0:LRA=11,aresample=48000,\
+afade=t=in:st=0:d=0.3,afade=t=out:st=13.6:d=1.4[aout]"
+  echo "Soundtrack: $MUSIC from ${MUSIC_START:-0}s (background audio dropped)"
+else
+  echo "Soundtrack: $BG_VIDEO's own audio, looped"
+fi
+
 ffmpeg -y -v error -i "$BG_VIDEO" -i "$BG_VIDEO" \
  -loop 1 -t 15 -i cards/title_overlay.png \
  -loop 1 -t "$SCENE_LEN" -i cards/photo_frame.png \
@@ -392,6 +421,7 @@ ffmpeg -y -v error -i "$BG_VIDEO" -i "$BG_VIDEO" \
  -loop 1 -t 15 -i cards/close_overlay.png \
  "${MEDIA_INPUT[@]}" \
  -loop 1 -t "$SCENE_LEN" -i cards/photo_mask.png \
+ ${MUSIC_INPUT[@]+"${MUSIC_INPUT[@]}"} \
  -filter_complex "\
 [0:v]scale=1920:1080:flags=lanczos,setsar=1[v0];\
 [1:v]scale=1920:1080:flags=lanczos,setsar=1[v1];\
@@ -411,7 +441,7 @@ fade=t=in:st=3.6:d=0.4:alpha=1,fade=t=out:st=7.8:d=0.4:alpha=1[p];\
 [a1][p]overlay=0:0:eof_action=pass:repeatlast=0[a2];\
 [a2][w]overlay=0:0[a3];\
 [a3][c]overlay=0:0,fade=t=out:st=14.4:d=0.6[vout];\
-[0:a][1:a]acrossfade=d=1[aa];[aa]afade=t=out:st=13.6:d=1.4[aout]" \
+$AUDIO_CHAIN" \
  -map "[vout]" -map "[aout]" -t 15 -r "$FPS" \
  -c:v libx264 -crf 18 -preset medium -pix_fmt yuv420p -c:a aac -b:a 192k "$OUT"
 

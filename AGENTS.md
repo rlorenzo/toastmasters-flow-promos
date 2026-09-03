@@ -114,5 +114,13 @@ quietly ship as coverage.
   line, so an unset value renders the card exactly as it was before the token
   existed. Join links belong in the post caption, not on a card; a meeting ID
   cannot be read off a three-second frame.
+- `MUSIC` is optional and empty by default, so a config that never mentions it builds
+  exactly as before: the soundtrack stays the background clip's own Veo audio, crossfaded
+  against itself to reach 15s. Set it and that track takes over, with `MUSIC_START`
+  choosing which 15 seconds are used, because generated music comes back minutes long and
+  usually only one stretch of it is worth the spot. Keep it **instrumental**: a sung lyric
+  is AI-generated words, which is prime directive 1 arriving through the speakers instead
+  of the screen, so prompt for "no vocals, no lyrics, no vocal chops" and listen to what
+  comes back before shipping it.
 - `PHRASE` is validated against the eight approved phrases (the list lives in `build.sh`,
   `meeting.conf`, `brand-cheatsheet.md` and the `tm-brand` skill; update all four).

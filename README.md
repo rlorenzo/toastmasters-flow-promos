@@ -59,6 +59,7 @@ because the logo is TI's property and the photos are of real people.
 | `assets/bg.mp4` | An 8s, 16:9 background clip with **no text and no people**. Generate in Flow with the prompt in [flow-prompts.md](flow-prompts.md), or bring your own |
 | `assets/group_photo.png` | Your meeting photo, untouched |
 | *(optional)* a meeting clip | A Zoom recording (the gallery, or someone mid-speech) for a moving meeting scene instead of the still. Point `GROUP_VIDEO` at it; any length works. Played **silent**, so a room of overlapping voices can't muddy the music |
+| *(optional)* a soundtrack | An **instrumental** audio file (no vocals, no lyrics). Point `MUSIC` at it and `MUSIC_START` at the second its best 15s begin; leave it unset and the background clip's own audio is used |
 | `assets/winner1_crop.png`, … | Landscape crops of each winner, taken from the group photo |
 | `assets/ToastmastersLogoWhite.png` | The official **white** logo from the TI brand portal (members' area). Use the white variant on dark backgrounds; never a recolored or redrawn one |
 | `fonts/Montserrat-{Regular,Medium,SemiBold,Bold,ExtraBold}.ttf` | [github.com/JulietaUla/Montserrat](https://github.com/JulietaUla/Montserrat) (SIL OFL). Montserrat is the Brand Manual's official free alternate to Gotham |
@@ -125,6 +126,8 @@ Each overlay alpha-fades in/out over 0.4s; the final 0.6s fades to black; audio 
    *Optional:* set `GROUP_VIDEO` to a meeting recording for a moving meeting scene, and
    `GROUP_VIDEO_START` to the second it should start at. Zoom gallery view reflows when
    people join or leave, so spotlight the speaker if the framing has to hold.
+   *Optional:* set `MUSIC` to an instrumental track to replace the background clip's own
+   audio, and `MUSIC_START` to the second its best stretch begins.
 5. **Run `templates/build.sh`.** This renders the cards, frames the photo or clip, assembles
    the video.
 6. **Verify.** Proofread the PNGs in `cards/`, then extract a contact sheet and check
