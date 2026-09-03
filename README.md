@@ -56,7 +56,7 @@ because the logo is TI's property and the photos are of real people.
 
 | File | Where to get it |
 |---|---|
-| `assets/bg.mp4` | An 8s, 16:9 background clip with **no text and no people**. Generate in Flow with the prompt in [flow-prompts.md](flow-prompts.md), or bring your own |
+| `assets/bg.mp4` | An 8s background clip with **no text and no people**, matching `ASPECT` (portrait 9:16 by default, or landscape 16:9). A reused 16:9 clip still works in a portrait build via a centre crop, at 0 credits; a clip generated at 9:16 is sharper. Generate in Flow with the prompt in [flow-prompts.md](flow-prompts.md), or bring your own |
 | `assets/group_photo.png` | Your meeting photo, untouched |
 | *(optional)* a meeting clip | A Zoom recording (the gallery, or someone mid-speech) for a moving meeting scene instead of the still. Point `GROUP_VIDEO` at it; any length works. Played **silent**, so a room of overlapping voices can't muddy the music |
 | *(optional)* a soundtrack | An **instrumental** audio file (no vocals, no lyrics). Point `MUSIC` at it and `MUSIC_START` at the second its best 15s begin; leave it unset and the background clip's own audio is used |
@@ -95,7 +95,7 @@ continuous canvas under four timed overlays:
 
 | Time | Scene | Overlay |
 |---|---|---|
-| 0.0–3.6s | Title | Theme, word of the day, club name under logo, **TI disclaimer** (required in first frames) |
+| 0.0–3.6s | Title | Theme, word of the day (with an optional definition), club name under logo, **TI disclaimer** (required in first frames) |
 | 3.6–8.2s | Meeting | Group photo, or a silent 4.6s clip, in a white rounded card |
 | 8.2–12.0s | Winners | 1–3 winners with photo crops; the row resizes to fit |
 | 12.0–15.0s | Close | Logo, club name, one approved phrase, URL, optional meeting time, credit line |
@@ -114,11 +114,16 @@ Each overlay alpha-fades in/out over 0.4s; the final 0.6s fades to black; audio 
    it.** A theme is text, Veo renders text it is given, and the theme already reaches the
    video through `THEME_LINE1`/`THEME_LINE2` where Chrome renders it locally and you
    proofread it. `build.sh` refuses to build if `BG_MOOD` repeats a theme word or
-   contains a `#`. Either way you want exactly one 8s, 16:9 clip on the cheapest model
-   (Veo 3.1 Lite, ~12 credits, 720p/24fps + audio). Prompt patterns and failure modes in
-   [flow-prompts.md](flow-prompts.md). Verify the confirmation says **16:9 landscape**
-   before approving; the assistant has misread "16:9" as "9:16".
-3. **Fill in `meeting.conf`.** Club identity once, then theme/date/word/winners per meeting.
+   contains a `#`. Either way you want exactly one 8s clip matching `ASPECT` on the
+   cheapest model (Veo 3.1 Lite, ~12 credits, 720p/24fps + audio). Prompt patterns and
+   failure modes in [flow-prompts.md](flow-prompts.md). Verify the confirmation says
+   **9:16 portrait** for a portrait build or **16:9 landscape** for a landscape one
+   before approving; the assistant has misread one aspect ratio for the other.
+3. **Fill in `meeting.conf`.** Club identity once, then theme/date/word/winners per
+   meeting. `ASPECT` picks the output shape: `portrait` (1080x1920, the default, for
+   Reels/Shorts/TikTok and the vertical feed) or `landscape` (1920x1080, for YouTube or
+   embedding on a club site); `build.sh` validates it the same way it validates
+   `BG_MODE`, rejecting a typo instead of building the wrong shape.
    `PHRASE` must be one of the eight approved phrases listed there; leave it empty and the
    build picks one at random and prints which.
 4. **Crop winner portraits** from the group photo: landscape "Zoom tile" crops, positioned

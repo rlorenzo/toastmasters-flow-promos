@@ -7,6 +7,12 @@ fonts/
 # page keeps its typography when a clone is opened offline. The rule above is
 # about licensing and privacy, not about file type.
 
+# Per-meeting configs. meeting.conf ships placeholders and is tracked; the dated
+# ones are a real club name, real member names and local asset paths, which is
+# exactly what prime directive 5 keeps out of a public repo. They were untracked
+# by discipline alone until one `git add -A` was all that stood in the way.
+[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].conf
+
 # Build output
 cards/
 templates/*.rendered.html

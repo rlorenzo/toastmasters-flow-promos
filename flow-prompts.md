@@ -11,7 +11,7 @@ generations worth of evidence.
 | Quoting text you want on screen | Sometimes works (a short "Best Speaker" ribbon came out clean once), sometimes garbles; a coin flip you can't afford |
 | Animating a photo containing text | Zoom name labels and backdrop slogans re-drawn as gibberish |
 | Animating faces | People "look off"; identity drift |
-| "16:9" in a chat-assistant prompt | Assistant read it as **9:16 portrait**; had to correct before approving |
+| "16:9" in a chat-assistant prompt | Assistant read it as **9:16 portrait**; had to correct before approving. Applies either direction: ask for whichever ratio `ASPECT` needs and read the confirmation dialog back regardless |
 | Trusting an old approval dialog | Consumed dialogs linger in chat and look clickable but are inert; only a *fresh* dialog spends credits |
 
 ## Rules
@@ -23,12 +23,16 @@ generations worth of evidence.
 4. **Static camera** for anything that will sit under overlays.
 5. **Ask for the audio you want.** Veo clips ship with a usable music bed.
 6. **Read the assistant's confirmation before approving the credit spend** (model,
-   aspect ratio, duration, count). 12 credits per 8s Veo 3.1 Lite clip (720p, 24fps).
+   aspect ratio, duration, count). Ask for **"9:16 PORTRAIT (vertical)"** when `ASPECT`
+   is `portrait` (the default) or **"16:9 LANDSCAPE (widescreen horizontal)"** when it's
+   `landscape`, and read the confirmation back either way; the assistant has misread one
+   for the other. 12 credits per 8s Veo 3.1 Lite clip (720p, 24fps).
 7. **Draft at 360p, upscale only the keeper.** Flow renders a low-resolution draft for a
    fraction of the credits (Aug 2026), so trying four moods no longer costs four full
    renders. Settle the palette and the light direction at 360p, then spend once.
-8. **Export the final at 1080p.** The pipeline composites at 1920x1080, so a 1080p source
-   drops the upscale a 720p clip needs. 4K buys nothing at this output size.
+8. **Export the final at 1080p.** The pipeline composites at 1080x1920 or 1920x1080
+   (whichever `ASPECT` picks), so a 1080p source drops the upscale a 720p clip needs.
+   4K buys nothing at this output size.
 9. One good 8s background loops to 15s with a 1s crossfade, so you rarely need more
    than one clip. Matching start and end frames make that loop seamless without the
    crossfade, but the frame you hand Flow must be abstract light only, never a photo and
@@ -48,6 +52,10 @@ generations worth of evidence.
 
 Result: dark navy gradient, golden light rays upper-left, particle swirls lower-right,
 gentle music. Zero text across all 8 seconds (verified frame-by-frame).
+
+Recorded at `ASPECT="landscape"`. For a portrait build (the default), swap only the
+`16:9` for `9:16` in the first sentence; every `NO` and the audio line stay exactly as
+written.
 
 Variations to taste: swap "navy blue" for "deep maroon" (True Maroon world), or
 "slow-drifting soft bokeh" for the particles. Keep every NO.

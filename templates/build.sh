@@ -152,6 +152,21 @@ case "${BG_MODE:-reuse}" in
     ;;
 esac
 
+# The output shape. Portrait is the default because every feed a club promo lands
+# in favours vertical. Both shapes share one set of templates and one filtergraph;
+# these four numbers are the only thing that forks, and everything downstream
+# (timing, layer reveals, overlays at 0:0, audio) is already resolution-agnostic.
+case "${ASPECT:=portrait}" in
+  portrait)  W_OUT=1080 H_OUT=1920 FIT_W_BOX=1000 FIT_H_BOX=900 ;;
+  landscape) W_OUT=1920 H_OUT=1080 FIT_W_BOX=1600 FIT_H_BOX=900 ;;
+  *)
+    echo "$CONFIG: ASPECT must be \"portrait\" or \"landscape\", not \"$ASPECT\"" >&2
+    exit 1
+    ;;
+esac
+export ASPECT W_OUT H_OUT FIT_W_BOX FIT_H_BOX
+echo "Aspect: $ASPECT (${W_OUT}x${H_OUT})"
+
 need() { [[ -f "$2" ]] || { echo "$CONFIG: $1 not found: $2" >&2; exit 1; }; }
 need BG_VIDEO "$BG_VIDEO"
 need LOGO "$LOGO"
@@ -275,7 +290,7 @@ for i in (1, 2, 3):
     count += 1
     src = html.escape('../' + os.environ[f'WINNER{i}_IMG'], quote=True)
     cards.append(
-        f'<div class="card"><img src="{src}" alt="">'
+        f'<div class="card" data-layer="{count + 1}"><img src="{src}" alt="">'
         f'<div class="name">{esc(f"WINNER{i}_NAME")}</div>'
         f'<div class="award">{esc(f"WINNER{i}_AWARD")}</div></div>'
     )
@@ -289,6 +304,8 @@ tokens = {
     'PHRASE': esc('PHRASE'),
     'MEETING_DATE': esc('MEETING_DATE'),
     'WORD_OF_DAY': esc('WORD_OF_DAY'),
+    'WORD_DEF': esc('WORD_DEF'),
+    'ASPECT': os.environ['ASPECT'],
     'THEME_HTML': f'{line1}<br>{line2}' if line2 else line1,
     'WINNER_COUNT': str(count),
     'WINNER_CARDS': '\n    '.join(cards),
@@ -312,14 +329,41 @@ while read -r ref; do
   [[ -f "${ref#../}" ]] || { echo "Missing ${ref#../} (referenced in templates/)" >&2; exit 1; }
 done < <(grep -Eoh '\.\./[A-Za-z0-9_./-]+' templates/*.rendered.html templates/card.css | sort -u)
 
-# --- 2) Text cards -> transparent 1920x1080 PNGs (proofread these!) -----------
+# --- 2) Text cards -> transparent stage-sized PNGs, one per layer (proofread!) -
+#
+# Elements in a template carry data-layer="N". Each layer is screenshotted on
+# its own with the others hidden (visibility, not display, so nothing reflows),
+# and step 4 brings the layers in one after another with a short rise: that is
+# the whole motion-graphics system, and it lives in the templates as markup
+# rather than in ffmpeg as coordinates. A template with no data-layer at all is
+# one layer, which is exactly the old single-fade behaviour.
 
+LAYER_COUNT=()   # per card, in the order below; read by step 4
 for c in title winners close; do
-  rm -f "cards/${c}_overlay.png"
-  "$CHROME" --headless=new --disable-gpu --screenshot="cards/${c}_overlay.png" \
-    --window-size=1920,1080 --default-background-color=00000000 --hide-scrollbars \
-    "file://$PWD/templates/${c}.rendered.html" 2>/dev/null
-  [[ -s "cards/${c}_overlay.png" ]] || { echo "Chrome wrote no cards/${c}_overlay.png" >&2; exit 1; }
+  rm -f cards/${c}_layer*.png
+  # A template with no data-layer at all is one layer, the old single-fade
+  # behaviour. A template that has them but whose values will not parse is a
+  # bug, and so is a gap in the numbering: both would quietly change the motion
+  # rather than fail, which is the one thing nothing else in this script does.
+  layers=$(grep -oE 'data-layer=.[0-9]+' "templates/${c}.rendered.html" | grep -oE '[0-9]+$' | sort -nu)
+  if [[ -z "$layers" ]]; then
+    grep -q 'data-layer' "templates/${c}.rendered.html" \
+      && { echo "templates/${c}.html: data-layer present but no value could be read" >&2; exit 1; }
+    layers=1
+  fi
+  n=$(tail -1 <<< "$layers")
+  [[ "$layers" == "$(seq 1 "$n")" ]] \
+    || { echo "templates/${c}.html: data-layer must run 1..N with no gaps; got $(tr '\n' ' ' <<< "$layers")" >&2; exit 1; }
+  for ((k = 1; k <= n; k++)); do
+    layer="templates/${c}.${k}.rendered.html"
+    sed "s#</head>#<style>[data-layer]:not([data-layer=\"$k\"]){visibility:hidden}</style></head>#" \
+      "templates/${c}.rendered.html" > "$layer"
+    "$CHROME" --headless=new --disable-gpu --screenshot="cards/${c}_layer${k}.png" \
+      --window-size=$W_OUT,$H_OUT --default-background-color=00000000 --hide-scrollbars \
+      "file://$PWD/$layer" 2>/dev/null
+    [[ -s "cards/${c}_layer${k}.png" ]] || { echo "Chrome wrote no cards/${c}_layer${k}.png" >&2; exit 1; }
+  done
+  LAYER_COUNT+=("$n")
 done
 
 # --- 3) Meeting scene: rounded card + border + shadow (media pixels untouched) -
@@ -339,11 +383,15 @@ if clip:
 else:
     with Image.open(os.environ['GROUP_PHOTO']) as im:
         W, H = im.size
-# Fit inside 1600x900 preserving aspect ratio; a fixed width would push
-# 4:3 sources past 1080px and the card would run off the frame.
-scale = min(1600 / W, 900 / H)
+# Fit inside the box for this aspect preserving the source ratio; a fixed width
+# would push 4:3 sources past the box and the card would run off the frame. The
+# card floats on the background rather than filling it, so a landscape group
+# photo drops into a portrait frame with no crop and no lost faces.
+OUT_W, OUT_H = int(os.environ['W_OUT']), int(os.environ['H_OUT'])
+BOX_W, BOX_H = int(os.environ['FIT_W_BOX']), int(os.environ['FIT_H_BOX'])
+scale = min(BOX_W / W, BOX_H / H)
 w, h = round(W * scale), round(H * scale)
-px, py = (1920 - w)//2, (1080 - h)//2
+px, py = (OUT_W - w)//2, (OUT_H - h)//2
 
 # Alpha for the media itself: ffmpeg alphamerges this onto the scaled source, so
 # the corners are rounded there rather than baked into the card.
@@ -351,8 +399,8 @@ mask = Image.new('L', (w, h), 0)
 ImageDraw.Draw(mask).rounded_rectangle([0, 0, w, h], radius=22, fill=255)
 mask.save('cards/photo_mask.png')
 
-frame = Image.new('RGBA', (1920, 1080), (0, 0, 0, 0))
-sh = Image.new('RGBA', (1920, 1080), (0, 0, 0, 0))
+frame = Image.new('RGBA', (OUT_W, OUT_H), (0, 0, 0, 0))
+sh = Image.new('RGBA', (OUT_W, OUT_H), (0, 0, 0, 0))
 ImageDraw.Draw(sh).rounded_rectangle([px-6, py+8, px+w+6, py+h+26], radius=30, fill=(0, 0, 0, 150))
 frame.alpha_composite(sh.filter(ImageFilter.GaussianBlur(22)))
 ImageDraw.Draw(frame).rounded_rectangle([px-5, py-5, px+w+5, py+h+5], radius=27, fill=(255, 255, 255, 235))
@@ -362,7 +410,7 @@ ImageDraw.Draw(frame).rounded_rectangle([px-5, py-5, px+w+5, py+h+5], radius=27,
 # the two fade as one unit -- a translucent card behind a translucent photo would
 # bloom white through it for the 0.4s the scene spends fading. The hole is cut
 # with the media's own mask so the two edges cannot disagree by a pixel.
-eraser = Image.new('L', (1920, 1080), 0)
+eraser = Image.new('L', (OUT_W, OUT_H), 0)
 eraser.paste(mask, (px, py))
 frame.putalpha(ImageChops.subtract(frame.getchannel('A'), eraser))
 frame.save('cards/photo_frame.png')
@@ -381,17 +429,46 @@ read -r FIT_W FIT_H MEDIA_X MEDIA_Y <<< "$GEOM"
 
 # --- 4) Assemble: bg looped 8+8-1=15s, overlays alpha-faded, end fade, audio --
 #
-# Inputs 6 and 7 are the meeting-scene media and its corner mask. The media is
-# alphamerged, held or trimmed to the scene length, then shifted to 3.6s so the
-# same chain serves a still and a clip. Its audio is never mapped; the Veo
-# music track is the only sound in the piece.
+# Inputs: 0-1 the background twice, 2 the photo frame, 3 the meeting-scene
+# media, 4 its corner mask, then one input per card layer, then MUSIC last if
+# set. The media is alphamerged, held or trimmed to the scene length, then
+# shifted to 3.6s so the same chain serves a still and a clip. Its audio is
+# never mapped; the soundtrack is the only sound in the piece.
+#
+# The background is scaled with force_original_aspect_ratio=increase plus a crop,
+# which is a no-op when the clip and the stage already share an aspect and a
+# centre crop when they do not. So a 9:16 clip in a portrait build is untouched,
+# and a 16:9 bg.mp4 reused in one keeps its middle for free.
+
+# --- Card layers -------------------------------------------------------------
+# Each card starts at CARD_IN and (except the closing card, which the final
+# fade takes out) fades out at CARD_OUT; those are the scene boundaries. Within
+# a card, layer k arrives STAGGER seconds after layer k-1, fading in over RISE_D
+# while rising RISE pixels on an ease-out curve. Timing is here; what belongs
+# to which layer is in the templates.
+STAGGER=0.2 RISE_D=0.5 RISE=28
+CARD_IN=(0 8.2 12) CARD_OUT=(3.2 11.6 "")
+CARDS=(title winners close)
+LAYER_INPUTS=() LAYER_CHAIN="" prev=a0 idx=5
+for ci in 0 1 2; do
+  c=${CARDS[ci]}
+  for ((k = 1; k <= LAYER_COUNT[ci]; k++)); do
+    at=$(awk -v s="${CARD_IN[ci]}" -v k="$k" -v st="$STAGGER" 'BEGIN { print s + (k - 1) * st }')
+    LAYER_INPUTS+=(-loop 1 -t 15 -i "cards/${c}_layer${k}.png")
+    out=""
+    [[ -z "${CARD_OUT[ci]}" ]] || out=",fade=t=out:st=${CARD_OUT[ci]}:d=0.4:alpha=1"
+    LAYER_CHAIN+="[$idx:v]format=rgba,fade=t=in:st=$at:d=$RISE_D:alpha=1${out}[L$idx];"
+    LAYER_CHAIN+="[$prev][L$idx]overlay=0:'$RISE*pow(1-clip((t-$at)/$RISE_D,0,1),2)'[a$idx];"
+    prev="a$idx"; idx=$((idx + 1))
+  done
+done
 
 # --- Soundtrack ---------------------------------------------------------------
 # Empty MUSIC (the default) keeps the piece on the background clip's own Veo
 # audio, crossfaded against a second copy of itself to reach 15s. Set MUSIC and
-# that track takes over instead: it enters as input 8, so every existing input
-# index above stays put. A generated track runs minutes, so MUSIC_START picks
-# which 15 seconds earn the spot; apad covers a track that ends early and the
+# that track takes over instead: it enters as the last input, after the card
+# layers, so every fixed input index above stays put. A generated track runs
+# minutes, so MUSIC_START picks which 15 seconds earn the spot; apad covers a track that ends early and the
 # 0.3s fade-in stops a mid-waveform in-point from clicking. loudnorm is what
 # keeps a soundtrack from arriving at whatever level its generator felt like:
 # the piece has always sat near -15 dB mean and a chosen 15 seconds can land
@@ -406,7 +483,7 @@ MUSIC_INPUT=()
 AUDIO_CHAIN="[0:a][1:a]acrossfade=d=1[aa];[aa]afade=t=out:st=13.6:d=1.4[aout]"
 if [[ -n "${MUSIC:-}" ]]; then
   MUSIC_INPUT=(-ss "${MUSIC_START:-0}" -i "$MUSIC")
-  AUDIO_CHAIN="[8:a]apad,atrim=duration=15,asetpts=PTS-STARTPTS,\
+  AUDIO_CHAIN="[$idx:a]apad,atrim=duration=15,asetpts=PTS-STARTPTS,\
 loudnorm=I=-13:TP=-1.0:LRA=11,aresample=48000,\
 afade=t=in:st=0:d=0.3,afade=t=out:st=13.6:d=1.4[aout]"
   echo "Soundtrack: $MUSIC from ${MUSIC_START:-0}s (background audio dropped)"
@@ -415,32 +492,26 @@ else
 fi
 
 ffmpeg -y -v error -i "$BG_VIDEO" -i "$BG_VIDEO" \
- -loop 1 -t 15 -i cards/title_overlay.png \
  -loop 1 -t "$SCENE_LEN" -i cards/photo_frame.png \
- -loop 1 -t 15 -i cards/winners_overlay.png \
- -loop 1 -t 15 -i cards/close_overlay.png \
  "${MEDIA_INPUT[@]}" \
  -loop 1 -t "$SCENE_LEN" -i cards/photo_mask.png \
+ ${LAYER_INPUTS[@]+"${LAYER_INPUTS[@]}"} \
  ${MUSIC_INPUT[@]+"${MUSIC_INPUT[@]}"} \
  -filter_complex "\
-[0:v]scale=1920:1080:flags=lanczos,setsar=1[v0];\
-[1:v]scale=1920:1080:flags=lanczos,setsar=1[v1];\
+[0:v]scale=$W_OUT:$H_OUT:force_original_aspect_ratio=increase:flags=lanczos,crop=$W_OUT:$H_OUT,setsar=1[v0];\
+[1:v]scale=$W_OUT:$H_OUT:force_original_aspect_ratio=increase:flags=lanczos,crop=$W_OUT:$H_OUT,setsar=1[v1];\
 [v0][v1]xfade=transition=fade:duration=1:offset=7[bg];\
-[2:v]format=rgba,fade=t=in:st=0:d=0.4:alpha=1,fade=t=out:st=3.2:d=0.4:alpha=1[t];\
-[3:v]fps=$FPS,format=rgba[pfr];\
-[4:v]format=rgba,fade=t=in:st=8.2:d=0.4:alpha=1,fade=t=out:st=11.6:d=0.4:alpha=1[w];\
-[5:v]format=rgba,fade=t=in:st=12:d=0.4:alpha=1[c];\
-[6:v]setpts=PTS-STARTPTS,fps=$FPS,scale=$FIT_W:$FIT_H:flags=lanczos,setsar=1,format=rgba[pm];\
-[7:v]format=gray[pmk];\
+[2:v]fps=$FPS,format=rgba[pfr];\
+[3:v]setpts=PTS-STARTPTS,fps=$FPS,scale=$FIT_W:$FIT_H:flags=lanczos,setsar=1,format=rgba[pm];\
+[4:v]format=gray[pmk];\
 [pm][pmk]alphamerge,tpad=stop_mode=clone:stop_duration=$SCENE_LEN,\
 trim=duration=$SCENE_LEN,setpts=PTS-STARTPTS[pmv];\
 [pfr][pmv]overlay=$MEDIA_X:$MEDIA_Y:format=auto:shortest=1[scene];\
 [scene]setpts=PTS-STARTPTS+3.6/TB,\
 fade=t=in:st=3.6:d=0.4:alpha=1,fade=t=out:st=7.8:d=0.4:alpha=1[p];\
-[bg][t]overlay=0:0[a1];\
-[a1][p]overlay=0:0:eof_action=pass:repeatlast=0[a2];\
-[a2][w]overlay=0:0[a3];\
-[a3][c]overlay=0:0,fade=t=out:st=14.4:d=0.6[vout];\
+[bg][p]overlay=0:0:eof_action=pass:repeatlast=0[a0];\
+$LAYER_CHAIN\
+[$prev]fade=t=out:st=14.4:d=0.6[vout];\
 $AUDIO_CHAIN" \
  -map "[vout]" -map "[aout]" -t 15 -r "$FPS" \
  -c:v libx264 -crf 18 -preset medium -pix_fmt yuv420p -c:a aac -b:a 192k "$OUT"

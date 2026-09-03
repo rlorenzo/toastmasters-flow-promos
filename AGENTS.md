@@ -21,8 +21,9 @@ affiliated with Toastmasters International; see the notice at the top of README.
    overused), unaltered logo with club name below it, TI disclaimer in the first
    frames, one approved phrase max, no drop shadows on type.
 3. **Spend credits only with explicit user approval.** Veo generations cost real
-   credits (~12 per 8s Lite clip). Confirm model, aspect ratio (16:9; the Flow
-   assistant has misread this as 9:16), duration, and count before approving. Prefer
+   credits (~12 per 8s Lite clip). Confirm model, aspect ratio (whichever `ASPECT` in
+   `meeting.conf` calls for; the Flow assistant has misread one for the other), duration,
+   and count before approving. Prefer
    reusing an existing `assets/bg.mp4`; iterate locally for free.
 4. **Verify before delivering:** contact sheet + per-scene stills (spelling, faces,
    contrast) and `volumedetect` for audio. See [ffmpeg-pipeline.md](ffmpeg-pipeline.md).
@@ -70,9 +71,9 @@ quietly ship as coverage.
   and `build.sh` (expects `assets/` and `fonts/`, writes `cards/` and
   `templates/*.rendered.html`; all of those stay untracked/local). The local
   `.htmlvalidate.json` inherits the root one and turns off `element-required-content`
-  only: the cards are 1920x1080 fragments Chrome screenshots, never pages a browser
-  navigates to, so requiring a `<title>` in `<head>` would be noise. Every other rule
-  applies, so put new exceptions somewhere they can be justified rather than here.
+  only: the cards are 1920x1080 or 1080x1920 fragments Chrome screenshots, never pages a
+  browser navigates to, so requiring a `<title>` in `<head>` would be noise. Every other
+  rule applies, so put new exceptions somewhere they can be justified rather than here.
 - `.claude/skills/`: `tm-meeting-recap`, `google-flow`, `tm-brand`, `tm-social-post`;
   they ship with the repo so a clone gets them, and they must stay club-agnostic like
   everything else here
@@ -85,7 +86,13 @@ quietly ship as coverage.
 
 ## Editing conventions
 
-- Cards are plain HTML/CSS, 1920×1080, transparent body; keep text ≥14px at 1080p.
+- Cards are plain HTML/CSS, 1920×1080 or 1080×1920 (chosen by `ASPECT`), transparent
+  body; keep text ≥14px at 1080p.
+- Motion is `data-layer="N"` on card elements: `build.sh` screenshots each layer on its
+  own and reveals them in order, 0.2s apart, with a short rise. Group elements that
+  should land together under one number, and give every visible element one: an
+  element without a layer is drawn into every layer's PNG and stacks on itself. The
+  stagger, rise and card timings are constants in `build.sh`, never per-template.
 - **Content comes from `meeting.conf`**, substituted into `{{DOUBLE_BRACE}}` tokens at
   build time and HTML-escaped on the way in. Never hardcode a club name, member name,
   date, or theme into a template.
@@ -99,6 +106,10 @@ quietly ship as coverage.
   date (use the full date, e.g. "AUGUST 5, 2026"; month alone can't tell weekly recaps
   apart), winner names/awards, crop coordinates for winner tiles (exclude Zoom name
   labels), credit line, and the output filename.
+- `ASPECT` (`portrait` | `landscape`) picks the output shape; it defaults to `portrait`
+  (1080x1920, for Reels/Shorts/TikTok and the vertical feed) and is validated in
+  `build.sh` the same way as `BG_MODE`, a `case` that exits 1 on a typo rather than
+  building the wrong shape.
 - The meeting scene takes either a still (`GROUP_PHOTO`) or a silent clip (`GROUP_VIDEO`
   and `GROUP_VIDEO_START`); both feed one filter chain, so keep them that way rather than
   branching the filtergraph. Winner tiles are stills only.
@@ -122,5 +133,9 @@ quietly ship as coverage.
   is AI-generated words, which is prime directive 1 arriving through the speakers instead
   of the screen, so prompt for "no vocals, no lyrics, no vocal chops" and listen to what
   comes back before shipping it.
+- `WORD_DEF` is an optional one-line definition under the word of the day. It is
+  empty by default and `.def:empty` hides the line, so an unset value renders the
+  title card exactly as it did before the token existed. Keep it to one line; it
+  sits below the word at 26px and a second line would crowd the disclaimer.
 - `PHRASE` is validated against the eight approved phrases (the list lives in `build.sh`,
   `meeting.conf`, `brand-cheatsheet.md` and the `tm-brand` skill; update all four).

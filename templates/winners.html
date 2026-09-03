@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- The winner tiles are generated from meeting.conf by build.sh. The row gets
-     an .n1/.n2/.n3 class so tile size is chosen here in CSS, not in the script. -->
+     an .n1/.n2/.n3 class so tile size is chosen here in CSS, not in the script.
+     Each tile is its own data-layer (2, 3, 4) so they arrive one after another. -->
 <html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="card.css"><style>
 .wrap{text-align:center}
 .eyebrow{padding-top:74px;color:#F2DF74;font-weight:600;font-size:25px;letter-spacing:8px}
@@ -17,10 +18,27 @@ h1{color:#fff;font-weight:700;font-size:78px;letter-spacing:2px;margin-top:18px}
 .n2 .card img{height:392px;max-width:740px}
 .n3 .card img{height:297px;max-width:560px}
 .n3 .name{font-size:38px;letter-spacing:4px} .n3 .award{font-size:24px}
-</style></head><body>
+
+/* Portrait: the one real layout change in the kit. Three tiles do not fit
+   across 1080px, so the row becomes a column and tiles take a width with the
+   height following the source aspect, which is the mirror of the landscape
+   rule above. Sizes are chosen so three tiles plus the header still land inside
+   the 1080x1350 safe zone; a feed crop keeps every winner, which is exactly
+   what a centre-cropped 16:9 winners card failed to do. */
+body[data-aspect="portrait"] .eyebrow{padding-top:calc(var(--safe-y) + 20px)}
+body[data-aspect="portrait"] h1{font-size:58px}
+body[data-aspect="portrait"] .row{flex-direction:column;align-items:center;gap:44px;margin-top:34px}
+body[data-aspect="portrait"] .card img{height:auto}
+body[data-aspect="portrait"] .n1 .card img{width:880px;max-width:none;max-height:640px}
+body[data-aspect="portrait"] .n2 .card img{width:700px;max-width:none;max-height:460px}
+body[data-aspect="portrait"] .n3 .card img{width:500px;max-width:none;max-height:290px}
+body[data-aspect="portrait"] .n3{gap:28px}
+body[data-aspect="portrait"] .n3 .name{margin-top:22px;font-size:30px;letter-spacing:3px}
+body[data-aspect="portrait"] .n3 .award{font-size:21px}
+</style></head><body data-aspect="{{ASPECT}}">
 <div class="wrap">
-  <div class="eyebrow">MEETING HIGHLIGHTS</div>
-  <h1>Congratulations!</h1>
+  <div class="eyebrow" data-layer="1">MEETING HIGHLIGHTS</div>
+  <h1 data-layer="1">Congratulations!</h1>
   <div class="row n{{WINNER_COUNT}}">{{WINNER_CARDS}}</div>
 </div>
 </body></html>

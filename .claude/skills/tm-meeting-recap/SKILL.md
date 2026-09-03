@@ -13,7 +13,8 @@ Core rule: **no AI-generated text, no AI-animated faces.** All type renders loca
 
 ## Inputs to collect from the user
 
-1. Meeting theme (e.g., "Fresh Start") and word of the day
+1. Meeting theme (e.g., "Fresh Start") and word of the day, plus a one-line definition
+   for `WORD_DEF` if they want it under the word (optional; empty hides the line)
 2. Meeting date: meetings are usually weekly, so use the full date ("August 5, 2026")
    or recaps from the same month become indistinguishable
 3. Winners and their awards, one to three of them (names may repeat across awards)
@@ -48,10 +49,14 @@ then do as they ask.
 2. **Winner crops.** View the photo, pick landscape ~1.89:1 crops of each winner's Zoom
    tile that **exclude the name-label pill** (bottom-left of every tile). Crop with Pillow
    to the paths `WINNER1_IMG` … `WINNER3_IMG` name. Open each crop and confirm the face is
-   centered and no label survived.
+   centered and no label survived. The same ~1.89:1 landscape crop works for both
+   `ASPECT` values: tiles stack vertically and are sized by width, not by the card's
+   own aspect ratio.
 3. **Config.** Edit `meeting.conf` only: `THEME_LINE1`/`THEME_LINE2`, `MEETING_DATE`,
    `WORD_OF_DAY`, the `WINNERn_*` triples, and `OUTPUT`. Leave a `WINNERn_NAME` empty to
    drop that tile; the row re-centers. Never hardcode content into the templates.
+   `ASPECT` (`portrait` | `landscape`) picks the output shape and defaults to `portrait`;
+   confirm it matches what the club wants rather than re-asking every week.
 4. **Background.** Read `BG_MODE` in `meeting.conf`. `reuse` (the default) means use the
    existing `BG_VIDEO` and spend nothing. `generate` means the club wants a fresh clip
    per meeting so no two recaps look alike; follow the `google-flow` skill and
