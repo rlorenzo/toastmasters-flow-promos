@@ -63,6 +63,16 @@ Inputs 6 and 7 are the meeting-scene media and its corner mask. For a still, inp
 `-loop 1 -t 4.6 -i cards/photo_media.png`; for a clip it is `-ss <start> -i <clip>` and
 nothing else changes. The clip's audio is never mapped.
 
+Input 8 exists only when `MUSIC` is set, which is why it sits last: every index above it
+stays put whether there is a soundtrack or not. Without it the audio is the background
+clip's own Veo bed, `[0:a][1:a]acrossfade=d=1`, looped against itself because an 8s clip
+has to cover 15s. With it, that whole chain is replaced by
+`[8:a]apad,atrim=duration=15,asetpts=PTS-STARTPTS,loudnorm=I=-13:TP=-1.0:LRA=11,aresample=48000,afade=t=in:st=0:d=0.3,afade=t=out:st=13.6:d=1.4`:
+`-ss $MUSIC_START` before the input picks the stretch to keep, `apad` covers a track that
+runs out early, `loudnorm` brings whatever level the generator chose up to the level the
+piece has always sat at (`aresample` undoes its internal 192kHz before AAC), and the 0.3s
+fade-in stops a mid-waveform in-point from clicking.
+
 ```bash
 ffmpeg -y -i assets/bg.mp4 -i assets/bg.mp4 \
  -loop 1 -t 15  -i cards/title_overlay.png \

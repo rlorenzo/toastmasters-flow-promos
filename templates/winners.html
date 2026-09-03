@@ -6,13 +6,16 @@
 .eyebrow{padding-top:74px;color:#F2DF74;font-weight:600;font-size:25px;letter-spacing:8px}
 h1{color:#fff;font-weight:700;font-size:78px;letter-spacing:2px;margin-top:18px}
 .row{display:flex;justify-content:center;gap:90px;margin-top:58px}
-.card img{width:100%;object-fit:cover;border-radius:18px;border:3px solid rgba(255,255,255,.9);box-shadow:0 18px 60px rgba(0,0,0,.45)}
+.card img{display:block;width:auto;object-fit:cover;border-radius:18px;border:3px solid rgba(255,255,255,.9);box-shadow:0 18px 60px rgba(0,0,0,.45)}
 .name{margin-top:30px;color:#fff;font-weight:700;font-size:44px;letter-spacing:5px}
 .award{margin-top:12px;color:#F2DF74;font-weight:500;font-size:27px;letter-spacing:1px}
-/* Tiles keep a ~1.89:1 landscape crop; 3 across is 1860px incl. gaps. */
-.n1 .card{width:900px} .n1 .card img{height:477px}
-.n2 .card{width:740px} .n2 .card img{height:392px}
-.n3 .card{width:560px} .n3 .card img{height:297px}
+/* Tiles share a height and take their width from the source aspect, so a
+   portrait Zoom tile sits beside landscape ones without being cropped to fit.
+   A landscape crop at ~1.89:1 still lands on the old widths; 3 across is
+   1860px incl. gaps. */
+.n1 .card img{height:477px;max-width:900px}
+.n2 .card img{height:392px;max-width:740px}
+.n3 .card img{height:297px;max-width:560px}
 .n3 .name{font-size:38px;letter-spacing:4px} .n3 .award{font-size:24px}
 </style></head><body>
 <div class="wrap">
