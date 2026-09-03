@@ -13,7 +13,7 @@ path, but this kit does not use it.
 
 ## UI map (assistant-driven projects)
 
-- **Omni Flash chat (right panel)** = where generation happens. It replies with intent,
+- **Gemini Omni Flash chat (right panel)** = where generation happens. It replies with intent,
   then raises an Approve/Reject credit dialog.
 - **`+` → Create Scene** = timeline assembly of *existing* clips only, no generation.
 - **Tools** = community tools gallery, not the core generator.
@@ -26,6 +26,11 @@ path, but this kit does not use it.
 
 - **Never approve a spend the user hasn't authorized.** Veo 3.1 Lite ≈ 12 credits per
   8s 720p/24fps clip (with audio).
+- **Draft at 360p first.** Flow drafts at a lower resolution for a fraction of the
+  credits, then upscales the version worth keeping (Aug 2026). Iterate on mood there and
+  spend the full render once, on the clip you have already looked at.
+- **Export the final at 1080p**, not 720p and not 4K: the recap composites at 1920x1080,
+  so 1080p removes an upscale and 4K is thrown away.
 - **Read the assistant's confirmation before approving**: model, count, duration, and
   aspect ratio. It has misread "16:9" as "9:16", so write "16:9 LANDSCAPE (widescreen
   horizontal)" and correct it if the confirmation disagrees.
@@ -33,6 +38,10 @@ path, but this kit does not use it.
   clickable but are inert. Only a freshly-raised dialog does anything. If clicks change
   nothing, the dialog is dead; check whether the generation already ran.
 - Prefer reusing existing clips (loop 8s → any length with a 1s crossfade) over generating.
+- **Start and end frame control** (Aug 2026) can make an 8s background loop seamlessly, so
+  the crossfade stops being load-bearing. Its headline use, holding a character consistent
+  across a cut, is the one thing this kit does not do: any frame you supply must be
+  abstract light only. A photo, a face or a rendered card as a start frame is rule 5.
 
 ## Prompt rules (learned from failures)
 

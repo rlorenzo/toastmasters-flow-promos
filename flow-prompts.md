@@ -24,8 +24,15 @@ generations worth of evidence.
 5. **Ask for the audio you want.** Veo clips ship with a usable music bed.
 6. **Read the assistant's confirmation before approving the credit spend** (model,
    aspect ratio, duration, count). 12 credits per 8s Veo 3.1 Lite clip (720p, 24fps).
-7. One good 8s background loops to 15s with a 1s crossfade, so you rarely need more
-   than one clip.
+7. **Draft at 360p, upscale only the keeper.** Flow renders a low-resolution draft for a
+   fraction of the credits (Aug 2026), so trying four moods no longer costs four full
+   renders. Settle the palette and the light direction at 360p, then spend once.
+8. **Export the final at 1080p.** The pipeline composites at 1920x1080, so a 1080p source
+   drops the upscale a 720p clip needs. 4K buys nothing at this output size.
+9. One good 8s background loops to 15s with a 1s crossfade, so you rarely need more
+   than one clip. Matching start and end frames make that loop seamless without the
+   crossfade, but the frame you hand Flow must be abstract light only, never a photo and
+   never a rendered card.
 
 ## The background prompt that worked (12 credits, first try)
 
