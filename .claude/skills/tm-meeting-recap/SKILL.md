@@ -31,6 +31,14 @@ should already be filled in. Confirm rather than re-ask. `PHRASE` must be one of
 approved phrases listed in `meeting.conf`; the build rejects anything else, and picks one
 at random when it is left empty.
 
+**Check the phrase against recent weeks before setting it.** The build validates that a
+phrase is approved, but nothing stops you repeating last week's, and the closing card is
+the one frame every recap ends on. Run `grep -H '^PHRASE=' *.conf | sort` and pick
+something the last two or three meetings did not use. This cannot be a repo check: the
+dated configs are local and untracked by design, so the history only exists on the user's
+machine. If the user asks for a repeat anyway, say which weeks already used it once and
+then do as they ask.
+
 ## Steps
 
 1. **Photo.** Copy to the path `GROUP_PHOTO` names in `meeting.conf`
