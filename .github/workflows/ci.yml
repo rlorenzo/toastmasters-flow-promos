@@ -115,6 +115,28 @@ jobs:
           echo "mean volume: ${mean} dB"
           python3 -c "import sys; sys.exit(0 if float('${mean}') > -60 else 1)" \
             || { echo "audio track is silent"; exit 1; }
+          # ASPECT defaults to portrait, so the shipped config must produce 9:16.
+          ffprobe -v error -select_streams v:0 -show_entries stream=width,height \
+            -of csv=p=0 "$OUT" | grep -qx '1080,1920' \
+            || { echo "expected a 1080x1920 portrait frame"; exit 1; }
+
+      # Landscape is still a supported shape, so it is built too rather than
+      # trusted to a shared filtergraph. Both go to /tmp, which keeps the
+      # "build left nothing committable behind" step below honest.
+      - name: Assert the landscape aspect builds too
+        env:
+          CHROME: chromium-browser
+        run: |
+          command -v chromium-browser >/dev/null || export CHROME=chromium
+          # Appended, not substituted: build.sh sources the config, so the last
+          # assignment wins. A sed on ^ASPECT= silently no-ops the day that line
+          # is reworded, and the job would then assert portrait against portrait.
+          cp meeting.conf /tmp/landscape.conf
+          printf 'ASPECT="landscape"\n' >> /tmp/landscape.conf
+          CONFIG=/tmp/landscape.conf templates/build.sh /tmp/landscape.mp4
+          ffprobe -v error -select_streams v:0 -show_entries stream=width,height \
+            -of csv=p=0 /tmp/landscape.mp4 | grep -qx '1920,1080' \
+            || { echo "expected a 1920x1080 landscape frame"; exit 1; }
 
       # The build just wrote assets/, fonts/, cards/ and an .mp4 into the tree.
       # If .gitignore ever stops covering them, this turns a licensing and privacy

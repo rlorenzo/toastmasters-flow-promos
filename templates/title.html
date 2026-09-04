@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <!-- The double-brace placeholders are filled in from meeting.conf by build.sh.
-     Edit values there, not here; edit here only to change the layout. -->
+     Edit values there, not here; edit here only to change the layout.
+     data-layer="N" groups elements into reveal steps: build.sh screenshots each
+     layer on its own and brings them in one after another with a short rise. -->
 <html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="card.css"><style>
 .brand{position:absolute;top:52px;left:60px;text-align:center}
 .brand img{height:120px;display:block;margin:0 auto}
@@ -11,20 +13,35 @@ h1{color:#fff;font-weight:800;font-size:136px;letter-spacing:10px;line-height:1.
 .rule{width:150px;height:3px;background:#F2DF74;margin:44px auto 40px}
 .wod{color:#fff;font-weight:500;font-size:36px;letter-spacing:1px}
 .wod b{color:#F2DF74;font-weight:700;letter-spacing:4px}
+.def{margin-top:16px;color:rgba(255,255,255,.8);font-weight:400;font-size:26px;letter-spacing:.5px}
+.def:empty{display:none}
 .disclaimer{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);width:1560px;color:rgba(255,255,255,.62);font-size:14.5px;font-weight:400;line-height:1.55;text-align:center}
-</style></head><body>
+
+/* Portrait: only what a 1080px stage genuinely changes. The headline cannot
+   survive at 136px, the brand mark moves from the top-left corner to the top of
+   the safe zone, and the disclaimer narrows. It stays at 14.5px: that is the
+   legibility floor and the brand manual wants it readable in the first frames. */
+body[data-aspect="portrait"] .brand{top:calc(var(--safe-y) + 44px);left:50%;transform:translateX(-50%)}
+body[data-aspect="portrait"] .brand img{height:104px}
+body[data-aspect="portrait"] .center{width:940px;transform:translate(-50%,-52%)}
+body[data-aspect="portrait"] .eyebrow{font-size:22px;letter-spacing:6px;margin-bottom:28px}
+body[data-aspect="portrait"] h1{font-size:76px;letter-spacing:5px}
+body[data-aspect="portrait"] .rule{margin:36px auto 32px}
+body[data-aspect="portrait"] .disclaimer{width:960px;bottom:calc(var(--safe-y) + 34px)}
+</style></head><body data-aspect="{{ASPECT}}">
 <div class="wrap">
-  <div class="brand">
+  <div class="brand" data-layer="1">
     <img src="{{LOGO}}" alt="">
     <div class="club">{{CLUB_NAME}}</div>
   </div>
   <div class="center">
-    <div class="eyebrow">MEETING RECAP &middot; {{MEETING_DATE}}</div>
-    <h1>{{THEME_HTML}}</h1>
-    <div class="rule"></div>
-    <div class="wod">Word of the Day: <b>{{WORD_OF_DAY}}</b></div>
+    <div class="eyebrow" data-layer="2">MEETING RECAP &middot; {{MEETING_DATE}}</div>
+    <h1 data-layer="3">{{THEME_HTML}}</h1>
+    <div class="rule" data-layer="4"></div>
+    <div class="wod" data-layer="4">Word of the Day: <b>{{WORD_OF_DAY}}</b></div>
+    <div class="def" data-layer="4">{{WORD_DEF}}</div>
   </div>
   <!-- Required by the Brand Manual in one of the first frames. Do not remove. -->
-  <div class="disclaimer">Toastmasters International and all other Toastmasters International trademarks and copyrights are the sole property of Toastmasters International. This video is the opinion of the creator and is independent of Toastmasters International. It is not authorized by, endorsed by, sponsored by, affiliated with, or otherwise approved by Toastmasters International.</div>
+  <div class="disclaimer" data-layer="1">Toastmasters International and all other Toastmasters International trademarks and copyrights are the sole property of Toastmasters International. This video is the opinion of the creator and is independent of Toastmasters International. It is not authorized by, endorsed by, sponsored by, affiliated with, or otherwise approved by Toastmasters International.</div>
 </div>
 </body></html>

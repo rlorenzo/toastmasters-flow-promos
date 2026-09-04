@@ -14,17 +14,24 @@
    included. Keep this rule if you add more optional lines. */
 .meet:empty{display:none}
 .credit{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font-size:15px;font-weight:400;letter-spacing:.5px;white-space:nowrap}
-</style></head><body>
+
+/* Portrait: the smallest fork. The stack is already a centred column and the
+   stage centre is the safe-zone centre, so only the logo, the club line (which
+   would otherwise run the full 1080px) and the credit's offset move. */
+body[data-aspect="portrait"] .stack img{height:190px}
+body[data-aspect="portrait"] .club{font-size:38px;letter-spacing:4px}
+body[data-aspect="portrait"] .credit{bottom:calc(var(--safe-y) + 36px)}
+</style></head><body data-aspect="{{ASPECT}}">
 <div class="wrap">
   <div class="stack">
-    <img src="{{LOGO}}" alt="">
-    <div class="club">{{CLUB_NAME}}</div>
-    <div class="rule"></div>
-    <div class="phrase">{{PHRASE}}</div>
-    <div class="url">{{CLUB_URL}}</div>
-    <div class="meet">{{MEETING_TIME}}</div>
+    <img src="{{LOGO}}" alt="" data-layer="1">
+    <div class="club" data-layer="1">{{CLUB_NAME}}</div>
+    <div class="rule" data-layer="2"></div>
+    <div class="phrase" data-layer="2">{{PHRASE}}</div>
+    <div class="url" data-layer="3">{{CLUB_URL}}</div>
+    <div class="meet" data-layer="3">{{MEETING_TIME}}</div>
   </div>
   <!-- Creator, club, District and © year are required end credits (p.35). -->
-  <div class="credit">{{CREDIT}}</div>
+  <div class="credit" data-layer="1">{{CREDIT}}</div>
 </div>
 </body></html>

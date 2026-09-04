@@ -29,11 +29,26 @@ path, but this kit does not use it.
 - **Draft at 360p first.** Flow drafts at a lower resolution for a fraction of the
   credits, then upscales the version worth keeping (Aug 2026). Iterate on mood there and
   spend the full render once, on the clip you have already looked at.
-- **Export the final at 1080p**, not 720p and not 4K: the recap composites at 1920x1080,
-  so 1080p removes an upscale and 4K is thrown away.
+  Note (Sep 2026): the assistant reports Veo 3.1 Lite as 720p-only at 10 credits; the
+  360p draft it offers is a different model (Omni 1.1 Flash, 6 credits). Ask for it by
+  name if a draft is what you want, and say so in the approval you collected.
+- **Omni 1.1 Flash (Sep 2026):** asked for ONE clip, the assistant proposed nine for 135
+  credits; reject and restate "exactly ONE video, 1 generation". It then quoted 12 credits
+  and the dialog charged 15. The clip came back 10s, 720p, with a near-silent audio bed,
+  so plan on `MUSIC`. The 1080p download is an upscale that runs a few minutes and lands
+  in `~/Downloads` on its own as a plain .mp4.
+- **Downloads arrive as a zip** whose inner filename carries a non-ASCII character;
+  `unzip` on macOS fails with "Illegal byte sequence". Extract with Python's `zipfile`.
+- **If the clip is brighter than the type can stand**, tint it locally before spending
+  again: a 65% navy `color` overlay in ffmpeg turned a cream highlight into a
+  mid-navy that white Montserrat reads on, for zero credits.
+- **Export the final at 1080p**, not 720p and not 4K: the recap composites at 1080x1920
+  or 1920x1080 depending on the project's `ASPECT`, so 1080p removes an upscale and 4K is
+  thrown away.
 - **Read the assistant's confirmation before approving**: model, count, duration, and
-  aspect ratio. It has misread "16:9" as "9:16", so write "16:9 LANDSCAPE (widescreen
-  horizontal)" and correct it if the confirmation disagrees.
+  aspect ratio. It has misread one ratio as the other, so ask for the one the project
+  needs by name, "9:16 PORTRAIT (vertical)" or "16:9 LANDSCAPE (widescreen horizontal)",
+  and correct it if the confirmation disagrees.
 - **Stale dialogs**: consumed Approve/Reject dialogs linger in chat history and look
   clickable but are inert. Only a freshly-raised dialog does anything. If clicks change
   nothing, the dialog is dead; check whether the generation already ran.

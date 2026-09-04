@@ -1,4 +1,4 @@
-/* Shared card boilerplate: fonts, reset, 1920x1080 transparent stage.
+/* Shared card boilerplate: fonts, reset, transparent stage.
    Unused weights are never fetched, so every card links this one file.
    Card-specific layout stays in each HTML file. */
 @font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-Regular.ttf');font-weight:400}
@@ -7,5 +7,14 @@
 @font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-Bold.ttf');font-weight:700}
 @font-face{font-family:'Montserrat';src:url('../fonts/Montserrat-ExtraBold.ttf');font-weight:800}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:1920px;height:1080px;background:transparent;font-family:'Montserrat',sans-serif;overflow:hidden}
-.wrap{position:relative;width:1920px;height:1080px}
+/* The stage is the viewport, which build.sh sizes with Chrome's --window-size
+   from ASPECT: 1080x1920 portrait or 1920x1080 landscape. Nothing here needs a
+   fork; each card carries its own short body[data-aspect="portrait"] block. */
+html,body{width:100vw;height:100vh;background:transparent;font-family:'Montserrat',sans-serif;overflow:hidden}
+.wrap{position:relative;width:100vw;height:100vh}
+/* --safe-y is the 4:5 crop margin. A portrait video shown in a Facebook or
+   LinkedIn feed is cropped to a centred 1080x1350, so 285px top and bottom is
+   dead space: nothing essential (logo, theme, disclaimer, credit) sits in it.
+   Landscape is never cropped that way and gets zero. */
+body{--safe-y:0px}
+body[data-aspect="portrait"]{--safe-y:285px}

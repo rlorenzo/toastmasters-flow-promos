@@ -432,7 +432,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       <span class="plate">Repository</span>
       <code>toastmasters-flow-promos</code>
       <span class="plate">Output</span>
-      <code>15s · 1920×1080 · 24fps</code>
+      <code>15s · 1080×1920 · 24fps</code>
     </div>
 
     <nav class="rail-wrap" aria-label="The six steps">
@@ -592,16 +592,20 @@ cd toastmasters-flow-promos</pre>
             model returns something new every run and will render text it is given, so
             nothing that has to be correct may enter the prompt. It also costs about 12
             credits per 8-second clip. Read the confirmation dialog before approving it:
-            model, duration, count, and especially aspect ratio. The Flow assistant has
-            read <code>16:9</code> as <code>9:16</code>; it was caught in the confirmation
-            dialog, which is the only reason a portrait clip was never paid for.</p>
+            model, duration, count, and especially aspect ratio. Ask for whichever
+            <code>ASPECT</code> the build needs, <code>9:16 PORTRAIT</code> by default or
+            <code>16:9 LANDSCAPE</code> for a landscape build, and read the dialog back
+            either way: the Flow assistant has misread one ratio as the other before, and
+            that misread was only caught in the confirmation dialog.</p>
           </div>
           <ul class="driver">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M2 12h20"/><path d="M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>google-flow</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 18v3"/></svg>claude-in-chrome</li>
           </ul>
-          <p>Flow produces exactly one file: <code>assets/bg.mp4</code>, an 8-second 16:9
-          clip of abstract moving light with a music bed and nothing else in it. No text,
+          <p>Flow produces exactly one file: <code>assets/bg.mp4</code>, an 8-second clip
+          matching the build's aspect (9:16 portrait by default, 16:9 landscape if you
+          asked for that instead) of abstract moving light with a music bed and nothing
+          else in it. No text,
           no people, no objects, nothing that could be wrong. That single file does two
           jobs in the finished video. It is the moving wallpaper under all four scenes,
           played twice with a one-second crossfade to fill the fifteen seconds, and its
@@ -646,6 +650,9 @@ objects, NO brush strokes forming shapes - purely abstract color
 and light only, edge to edge. Audio: soft uplifting instrumental
 corporate background music, warm and gentle, no vocals, no
 narration, no sound effects.</pre>
+          <p>Recorded at <code>ASPECT="landscape"</code>. For a portrait build (the
+          default), swap only the <code>16:9</code> for <code>9:16</code>; every
+          <code>NO</code> and the audio line stay exactly as written.</p>
           <p>Describe colour in words, never in hex. A prompt containing
           <code>#F2DF74</code> once produced a gold ribbon reading
           <span class="q">Best #2DF74</span>.</p>
@@ -736,8 +743,9 @@ im.crop((320, 96, 1080, 498)).save('assets/winner1_crop.png')
           <pre>templates/build.sh</pre>
           <p>Roughly thirty seconds later you have a finished video. The script fills the
           templates from your config, screenshots them through headless Chrome at
-          1920×1080 on a transparent background, frames the photo with a rounded white
-          card, and hands six layers to ffmpeg.</p>
+          1080×1920 or 1920×1080 (whichever <code>ASPECT</code> picks) on a transparent
+          background, frames the photo with a rounded white card, and hands the layers to
+          ffmpeg.</p>
           <p>It checks every input before rendering anything, and that check exists for a
           precise reason: <strong>Chrome draws a missing image or font as blank space
           rather than failing</strong>. A mistyped crop filename would otherwise sail
