@@ -74,6 +74,7 @@ def tracked_files() -> list[str] | None:
     return [f for f in out.stdout.splitlines() if f]
 
 
+@functools.cache
 def read(rel: str) -> str:
     return (ROOT / rel).read_text(encoding="utf-8")
 
@@ -109,6 +110,7 @@ def conf_value(conf: str, key: str) -> str:
     return m.group(2) if m.group(1) else (m.group(3) or "")
 
 
+@functools.cache
 def card_templates() -> list[str]:
     """The card sources under templates/, as repo-relative paths.
 
