@@ -338,8 +338,9 @@ done < <(grep -Eoh '\.\./[A-Za-z0-9_./-]+' templates/*.rendered.html templates/c
 # rather than in ffmpeg as coordinates. A template with no data-layer at all is
 # one layer, which is exactly the old single-fade behaviour.
 
-LAYER_COUNT=()   # per card, in the order below; read by step 4
-for c in title winners close; do
+CARDS=(title winners close)
+LAYER_COUNT=()   # per card, in CARDS order; read by step 4
+for c in "${CARDS[@]}"; do
   rm -f cards/${c}_layer*.png
   # A template with no data-layer at all is one layer, the old single-fade
   # behaviour. A template that has them but whose values will not parse is a
@@ -448,7 +449,6 @@ read -r FIT_W FIT_H MEDIA_X MEDIA_Y <<< "$GEOM"
 # to which layer is in the templates.
 STAGGER=0.2 RISE_D=0.5 RISE=28
 CARD_IN=(0 8.2 12) CARD_OUT=(3.2 11.6 "")
-CARDS=(title winners close)
 LAYER_INPUTS=() LAYER_CHAIN="" prev=a0 idx=5
 for ci in 0 1 2; do
   c=${CARDS[ci]}

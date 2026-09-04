@@ -23,7 +23,7 @@ run() { # run <label> <cmd...>
     rc=1
   fi
 }
-skip() { printf '\n\033[1m%s\033[0m\n  skipped (%s not installed)\n' "$1" "$2"; }
+skip() { printf '\n\033[1m%s\033[0m\n  skipped (%s)\n' "$1" "$2"; } # skip <label> <reason>
 
 # run_on_tracked <label> <glob> <cmd...>
 # Runs <cmd> over every tracked file matching <glob>, skipping with a note if the
@@ -38,10 +38,9 @@ run_on_tracked() {
   local files=() f
   while IFS= read -r f; do files+=("$f"); done < <(git ls-files "$glob" 2>/dev/null)
   if ! command -v "$1" >/dev/null 2>&1; then
-    skip "$label" "$1"
+    skip "$label" "$1 not installed"
   elif [[ ${#files[@]} == 0 ]]; then
-    printf '\n\033[1m%s\033[0m\n  skipped (no tracked %s files; not a git work tree?)\n' \
-      "$label" "$glob"
+    skip "$label" "no tracked $glob files; not a git work tree?"
   else
     run "$label" "$@" "${files[@]}"
   fi
@@ -56,7 +55,7 @@ run "repo invariants" python3 scripts/repo_checks.py
 if [[ $FAST == 0 ]]; then
   run "repo invariants self-test" python3 scripts/test_repo_checks.py
 else
-  printf '\n\033[1mrepo invariants self-test\033[0m\n  skipped (--fast; runs in CI)\n'
+  skip "repo invariants self-test" "--fast; runs in CI"
 fi
 
 # --- Shell ------------------------------------------------------------------
@@ -72,7 +71,7 @@ run_on_tracked "markdownlint" '*.md' markdownlint
 if [[ $FAST == 0 ]]; then
   run_on_tracked "html-validate" '*.html' npx --yes html-validate
 else
-  printf '\n\033[1mhtml-validate\033[0m\n  skipped (--fast; runs in CI)\n'
+  skip "html-validate" "--fast; runs in CI"
 fi
 
 printf '\n'

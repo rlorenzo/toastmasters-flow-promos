@@ -16,5 +16,6 @@ html,body{width:100vw;height:100vh;background:transparent;font-family:'Montserra
    LinkedIn feed is cropped to a centred 1080x1350, so 285px top and bottom is
    dead space: nothing essential (logo, theme, disclaimer, credit) sits in it.
    Landscape is never cropped that way and gets zero. */
-body{--safe-y:0px}
+/* Happy Yellow, the one accent every card uses (brand-cheatsheet.md). */
+body{--safe-y:0px;--tm-yellow:#F2DF74}
 body[data-aspect="portrait"]{--safe-y:285px}
