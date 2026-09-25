@@ -15,6 +15,11 @@ h1{color:#fff;font-weight:800;font-size:136px;letter-spacing:10px;line-height:1.
 .wod b{color:var(--tm-yellow);font-weight:700;letter-spacing:4px}
 .def{margin-top:16px;color:rgba(255,255,255,.8);font-weight:400;font-size:26px;letter-spacing:.5px}
 .def:empty{display:none}
+.tm{margin-top:40px;display:flex;align-items:center;justify-content:center;gap:24px;color:#fff;font-weight:500;font-size:30px;letter-spacing:1px}
+.tm img{width:150px;height:150px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.9)}
+.tm img[src=""]{display:none}
+.tm b{color:var(--tm-yellow);font-weight:700;letter-spacing:4px}
+.tm:has(b:empty){display:none}
 .disclaimer{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);width:1560px;color:rgba(255,255,255,.62);font-size:14.5px;font-weight:400;line-height:1.55;text-align:center}
 
 /* Portrait: only what a 1080px stage genuinely changes. The headline cannot
@@ -40,6 +45,7 @@ body[data-aspect="portrait"] .disclaimer{width:960px;bottom:calc(var(--safe-y) +
     <div class="rule" data-layer="4"></div>
     <div class="wod" data-layer="4">Word of the Day: <b>{{WORD_OF_DAY}}</b></div>
     <div class="def" data-layer="4">{{WORD_DEF}}</div>
+    <div class="tm" data-layer="5"><img src="{{TOASTMASTER_IMG}}" alt=""><span>Toastmaster: <b>{{TOASTMASTER}}</b></span></div>
   </div>
   <!-- Required by the Brand Manual in one of the first frames. Do not remove. -->
   <div class="disclaimer" data-layer="1">Toastmasters International and all other Toastmasters International trademarks and copyrights are the sole property of Toastmasters International. This video is the opinion of the creator and is independent of Toastmasters International. It is not authorized by, endorsed by, sponsored by, affiliated with, or otherwise approved by Toastmasters International.</div>

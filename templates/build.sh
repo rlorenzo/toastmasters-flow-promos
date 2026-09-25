@@ -170,6 +170,7 @@ echo "Aspect: $ASPECT (${W_OUT}x${H_OUT})"
 need() { [[ -f "$2" ]] || { echo "$CONFIG: $1 not found: $2" >&2; exit 1; }; }
 need BG_VIDEO "$BG_VIDEO"
 need LOGO "$LOGO"
+[[ -z "${TOASTMASTER_IMG:-}" ]] || need TOASTMASTER_IMG "$TOASTMASTER_IMG"
 [[ -z "${MUSIC:-}" ]] || need MUSIC "$MUSIC"
 for i in 1 2 3; do
   name="WINNER${i}_NAME"; img="WINNER${i}_IMG"
@@ -305,6 +306,9 @@ tokens = {
     'MEETING_DATE': esc('MEETING_DATE'),
     'WORD_OF_DAY': esc('WORD_OF_DAY'),
     'WORD_DEF': esc('WORD_DEF'),
+    'TOASTMASTER': esc('TOASTMASTER'),
+    'TOASTMASTER_IMG': html.escape('../' + os.environ['TOASTMASTER_IMG'], quote=True)
+                       if os.environ.get('TOASTMASTER_IMG', '').strip() else '',
     'ASPECT': os.environ['ASPECT'],
     'THEME_HTML': f'{line1}<br>{line2}' if line2 else line1,
     'WINNER_COUNT': str(count),
