@@ -36,6 +36,8 @@ friendly.
 **Names and awards are copied verbatim from `meeting.conf`. They are never paraphrased,
 re-capitalised, or written from memory of the conversation.** This is the same rule the
 video pipeline runs on. A model may write the sentences around a name, never the name.
+`meeting.conf` values are read literally (never as shell), so this is always safe to do
+regardless of what characters a name contains.
 After drafting, diff every person's name in your draft against `WINNERn_NAME`
 character by character and fix any drift before showing the user.
 

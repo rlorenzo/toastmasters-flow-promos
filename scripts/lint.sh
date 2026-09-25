@@ -49,6 +49,10 @@ run_on_tracked() {
 # --- Repo invariants: the rules from AGENTS.md and DESIGN.md ----------------
 run "repo invariants" python3 scripts/repo_checks.py
 
+# meeting.conf holds names copied in from a Zoom meeting; this proves build.sh
+# reads them as literal data and never as shell, however hostile they get.
+run "build.sh config reader" bash scripts/test_build_config.sh
+
 # A check that cannot fail reads as coverage without being any. This proves each
 # one still trips on a deliberate break. Full runs only: it is the checks
 # themselves it re-verifies, and those change far less often than the tree does.
@@ -62,14 +66,16 @@ fi
 run_on_tracked "shellcheck" '*.sh' shellcheck --severity=warning
 
 # --- Markdown ---------------------------------------------------------------
-run_on_tracked "markdownlint" '*.md' markdownlint
+# Pinned to match CI's install (see ci.yml); an unpinned local markdownlint
+# would otherwise silently drift from what CI enforces.
+run_on_tracked "markdownlint" '*.md' npx --yes markdownlint-cli@0.49.1
 
 # --- HTML (slower: pulls a validator) ---------------------------------------
 # templates/*.rendered.html is build output and untracked, so it stays out of
 # this on its own; the per-directory templates/.htmlvalidate.json handles the
 # one rule the cards legitimately break.
 if [[ $FAST == 0 ]]; then
-  run_on_tracked "html-validate" '*.html' npx --yes html-validate
+  run_on_tracked "html-validate" '*.html' npx --yes html-validate@10.17.0
 else
   skip "html-validate" "--fast; runs in CI"
 fi
