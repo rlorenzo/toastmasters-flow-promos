@@ -765,8 +765,8 @@
         "section": "colors"
       },
       {
-        "name": "The Four Registers Rule",
-        "body": "New small type takes a register centre: 0.62, 0.685, 0.78, or 0.92rem. The in-between values are per-context optical tunings recorded in `typography.scale`; stay inside the register's band, never mint a size outside it, and nothing sits between note (0.95rem) and body.",
+        "name": "The Three Registers Rule",
+        "body": "New small type takes a register centre: 0.6875, 0.78, or 0.92rem. Nothing goes below 0.6875rem (11px). The in-between values are per-context optical tunings recorded in `typography.scale`; stay inside the register's band, never mint a size outside it, and nothing sits between note (0.95rem) and body.",
         "section": "typography"
       },
       {

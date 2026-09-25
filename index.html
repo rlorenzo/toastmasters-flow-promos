@@ -136,7 +136,7 @@ strong{font-weight:700;color:var(--ink-bright)}
 
 /* Silkscreened plate lettering: equipment labels, never a heading kicker */
 .plate{
-  font-size:.685rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;
+  font-size:.6875rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;
   font-variation-settings:'wdth' 84;color:var(--ink-faint);
 }
 
@@ -235,9 +235,9 @@ strong{font-weight:700;color:var(--ink-bright)}
 }
 .station .lamp{--d:40px;margin:.2rem 0 .35rem}
 .station .name{font-weight:700;font-size:.88rem;line-height:1.24;letter-spacing:-.01em;text-align:center}
-.station .state{font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84}
+.station .state{font-size:.6875rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-variation-settings:'wdth' 84}
 .go .state{color:var(--go-ink)} .hold .state{color:var(--hold-ink)} .spend .state{color:var(--spend-ink)}
-.station .cost{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);margin-top:auto;padding-top:.5rem;text-align:center}
+.station .cost{font-family:var(--mono);font-size:.6875rem;color:var(--ink-faint);margin-top:auto;padding-top:.5rem;text-align:center}
 
 .rail-caption{margin-top:1rem;color:var(--ink-faint);font-size:.83rem}
 
@@ -276,7 +276,7 @@ section{padding:clamp(3.5rem,2rem + 5vw,6.5rem) 0}
 .step-head .num{font-family:var(--mono);font-size:.78rem;color:var(--ink-faint);font-weight:500}
 .step-head h3{flex:1 1 14rem}
 .step-head .state{
-  font-size:.63rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  font-size:.6875rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
   font-variation-settings:'wdth' 84;padding:.32rem .6rem;border-radius:3px;
   border:1px solid currentColor;
 }
@@ -355,7 +355,7 @@ p code,li code,td code{background:var(--housing);border:1px solid var(--hairline
 .faults{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.9rem}
 .faults caption{text-align:left;color:var(--ink-faint);font-size:.85rem;padding-bottom:.9rem}
 .faults th,.faults td{text-align:left;padding:.85rem .9rem;border-bottom:1px solid var(--hairline);vertical-align:top}
-.faults th{font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;font-variation-settings:'wdth' 84}
+.faults th{font-size:.6875rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;font-variation-settings:'wdth' 84}
 .faults td:first-child{color:var(--ink);font-weight:600;width:34%}
 .faults td:last-child{color:var(--ink-dim)}
 .faults tr:last-child td{border-bottom:0}
@@ -398,6 +398,46 @@ footer .disclaim{margin-top:1.6rem;padding-top:1.3rem;border-top:1px solid var(-
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   .is-lit .lamp{animation:none}
 }
+
+/* step-02 disclosure */
+/* Secondary explanation, tucked behind a native disclosure. Styled as an inset
+   fitting like .check: housing metal, hairline border, well radius, so it reads
+   as another machined component rather than a browser default. The global
+   prefers-reduced-motion block above already zeroes every transition-duration
+   on the page, so the chevron's rotation is covered without a second rule here. */
+.disclose{
+  margin:1.35rem 0 0;
+  background:var(--housing);border:1px solid var(--hairline);border-radius:8px;
+  overflow:hidden;
+}
+.disclose + .disclose{margin-top:.9rem}
+.disclose summary{
+  display:flex;align-items:center;justify-content:space-between;gap:.8rem;
+  padding:.85rem 1.1rem;
+  font-size:.92rem;font-weight:600;color:var(--ink-dim);
+  cursor:pointer;list-style:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .3s var(--ease);
+}
+/* Remove the native marker cleanly in both engines. */
+.disclose summary::-webkit-details-marker{display:none}
+.disclose summary::marker{content:''}
+.disclose summary:hover{color:var(--ink)}
+.disclose summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:3px}
+.disclose summary .chev{
+  flex:none;width:8px;height:8px;margin-top:-2px;
+  border-right:1.5px solid var(--ink-faint);border-bottom:1.5px solid var(--ink-faint);
+  transform:rotate(-45deg);
+  transition:transform .3s var(--ease);
+}
+.disclose[open] summary .chev{transform:rotate(45deg)}
+.disclose-body{
+  max-width:var(--measure);
+  padding:1rem 1.1rem 1.05rem;
+  border-top:1px solid var(--hairline);
+}
+.disclose-body > :first-child{margin-top:0}
+.disclose-body > :last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -493,6 +533,10 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <div class="shell">
     <div class="sec-head">
       <h2 id="h-before">Before you start</h2>
+      <p>You do not have to type any of this. Open the clone in Claude Code and ask
+      for this week's recap video; the <code>tm-meeting-recap</code> skill walks the
+      whole chain and asks you for whatever it needs. The commands below
+      are for anyone who would rather run them by hand.</p>
       <p>The repository ships documentation, templates, and a build script, and no assets
       at all. The Toastmasters logo belongs to Toastmasters International, and the meeting
       photos are of people who agreed to a club post, not to a public repository. You
@@ -562,9 +606,10 @@ cd toastmasters-flow-promos</pre>
           <p>The meeting scene will take a recording as happily as a still. Point
           <code>GROUP_VIDEO</code> at a Zoom gallery clip or someone mid-speech and it
           plays inside the same white card, with <code>GROUP_VIDEO_START</code> choosing
-          which 4.6 seconds. It runs silent on purpose: the music that came with the
-          background is the only audio in the piece, so a room of overlapping voices
-          cannot muddy it. Winner tiles stay stills either way.</p>
+          which 4.6 seconds. It runs silent on purpose: the piece carries exactly one
+          soundtrack, the background clip's own audio by default or <code>MUSIC</code> if
+          you set one, so a room of overlapping voices cannot muddy it. Winner tiles stay
+          stills either way.</p>
           <p>Footage you shot is not what the red lamp is about. Real motion of real
           people is untouched pixels, exactly like the photo; what the pipeline refuses is
           a <strong>model</strong> drawing faces or type. Record with the speaker spotlighted if
@@ -608,34 +653,45 @@ cd toastmasters-flow-promos</pre>
           no people, no objects, nothing that could be wrong. That single file does two
           jobs in the finished video. It is the moving wallpaper under all four scenes,
           played twice with a one-second crossfade to fill the fifteen seconds, and its
-          soundtrack is the only audio in the piece. Every other pixel is either a card
+          soundtrack carries the piece's audio, unless <code>meeting.conf</code> sets
+          <code>MUSIC</code>, which replaces it outright. Every other pixel is either a card
           your machine rendered from HTML or footage you supplied yourself.</p>
-          <p><strong>Whether you come back here every week is a setting.</strong>
-          <code>BG_MODE="reuse"</code>, the default, points <code>BG_VIDEO</code> at the
-          clip you already have and spends nothing; one background carries the whole
-          season and gives a run of recaps a consistent signature.
-          <code>BG_MODE="generate"</code> asks for a fresh clip each meeting so no two
-          recaps look alike. On a typical subscription that is a few percent of a month's credits for
-          a weekly club, so pick the one you prefer to look at rather than the one you
-          think you can afford.</p>
-          <p>A generated background can follow the meeting's mood, and this is the one
-          place the pipeline's rule needs restating rather than relaxing.
-          <code>BG_MOOD</code> describes light: <span class="q">cool dawn palette, pale
-          green and soft gold, light rising from below</span>. It never contains the
-          theme. A theme is text, Veo renders text it is given, and a prompt carrying
-          <span class="q">FRESH START</span> is how you get those two words drifting in
-          wobbly letters across the backdrop. The theme still reaches the video, through
-          <code>THEME_LINE1</code> and <code>THEME_LINE2</code>, rendered locally by
-          Chrome at a known size and proofread as a still. <code>build.sh</code> refuses
-          to build if <code>BG_MOOD</code> repeats a theme word or contains a
-          <code>#</code>, and it refuses before the spend rather than after it.</p>
-          <p>Google Flow has no public API and no official MCP server, so this step runs in
-          a real browser. That is the reason it is fenced: every other station in the chain
-          is a local process you can re-run, and this one is a paid request to a model that
-          returns something new each time.</p>
-          <p>You need <strong>one</strong> clip per recap, never two. The build loops a
-          single 8-second background to fill fifteen seconds, so a second generation for
-          the same video buys you nothing at all.</p>
+          <details class="disclose">
+            <summary><span>Reuse or regenerate each week?</span><span class="chev" aria-hidden="true"></span></summary>
+            <div class="disclose-body">
+              <p><strong>Whether you come back here every week is a setting.</strong>
+              <code>BG_MODE="reuse"</code>, the default, points <code>BG_VIDEO</code> at the
+              clip you already have and spends nothing; one background carries the whole
+              season and gives a run of recaps a consistent signature.
+              <code>BG_MODE="generate"</code> asks for a fresh clip each meeting so no two
+              recaps look alike. On a typical subscription that is a few percent of a month's credits for
+              a weekly club, so pick the one you prefer to look at rather than the one you
+              think you can afford.</p>
+              <p>Google Flow has no public API and no official MCP server, so this step runs in
+              a real browser. That is the reason it is fenced: every other station in the chain
+              is a local process you can re-run, and this one is a paid request to a model that
+              returns something new each time.</p>
+              <p>You need <strong>one</strong> clip per recap, never two. The build loops a
+              single 8-second background to fill fifteen seconds, so a second generation for
+              the same video buys you nothing at all.</p>
+            </div>
+          </details>
+          <details class="disclose">
+            <summary><span>Steering a generated clip's mood</span><span class="chev" aria-hidden="true"></span></summary>
+            <div class="disclose-body">
+              <p>A generated background can follow the meeting's mood, and this is the one
+              place the pipeline's rule needs restating rather than relaxing.
+              <code>BG_MOOD</code> describes light: <span class="q">cool dawn palette, pale
+              green and soft gold, light rising from below</span>. It never contains the
+              theme. A theme is text, Veo renders text it is given, and a prompt carrying
+              <span class="q">FRESH START</span> is how you get those two words drifting in
+              wobbly letters across the backdrop. The theme still reaches the video, through
+              <code>THEME_LINE1</code> and <code>THEME_LINE2</code>, rendered locally by
+              Chrome at a known size and proofread as a still. <code>build.sh</code> refuses
+              to build if <code>BG_MOOD</code> repeats a theme word or contains a
+              <code>#</code>, and it refuses before the spend rather than after it.</p>
+            </div>
+          </details>
           <pre><span class="c"># The prompt that worked first try. Every NO is load-bearing.</span>
 Generate ONE 8-second 16:9 video clip using the fastest/cheapest
 video model. Subject: an abstract, minimalist, premium corporate
@@ -680,6 +736,7 @@ narration, no sound effects.</pre>
           on the way into the templates, so an ampersand in a club name is safe to type
           literally.</p>
           <pre>CLUB_NAME=<span class="p">"YOUR CLUB TOASTMASTERS"</span>
+CLUB_URL=<span class="p">"yourclub.toastmastersclubs.org"</span>
 MEETING_DATE=<span class="p">"MARCH 12, 2026"</span>   <span class="c"># full date; meetings are weekly</span>
 THEME_LINE1=<span class="p">"FRESH"</span>
 THEME_LINE2=<span class="p">"START"</span>          <span class="c"># empty for a one-line theme</span>
@@ -689,13 +746,26 @@ WINNER1_NAME=<span class="p">"FIRST NAME"</span>
 WINNER1_AWARD=<span class="p">"Best Speaker"</span>
 WINNER1_IMG=<span class="p">"assets/winner1_crop.png"</span>
 
-PHRASE=<span class="p">"Find Your Voice"</span>   <span class="c"># exactly one approved phrase</span></pre>
+CREDIT=<span class="p">"Created by Your Name · Your Club Toastmasters, Area X, District NN · © 2026 Your Club Toastmasters"</span>
+PHRASE=<span class="p">"Find Your Voice"</span>   <span class="c"># exactly one approved phrase</span>
+
+<span class="c"># optional</span>
+<span class="c"># WORD_DEF="fluent or persuasive in speaking"</span>
+<span class="c"># TOASTMASTER="FIRST NAME"</span>
+<span class="c"># TOASTMASTER_IMG="assets/toastmaster.png"</span>
+<span class="c"># MEETING_TIME="WEDNESDAYS · 7:00-8:30 PM PT · ON ZOOM"</span>
+<span class="c"># MUSIC="assets/sting.wav"</span>
+<span class="c"># GROUP_VIDEO="assets/meeting.mp4"</span></pre>
           <p>Two fields carry compliance weight rather than taste. <code>PHRASE</code> must
           be one of the approved Toastmasters phrases and only one per video.
           <code>CREDIT</code> must name the creator, the club, the District, and the
           copyright year. The Brand Manual asks for all four in the end credits.</p>
           <p>Leave <code>WINNER2</code> and <code>WINNER3</code> empty and the row
           re-centres for a single winner; fill all three and the tiles resize to fit.</p>
+          <p><code>ASPECT</code> and <code>BG_MODE</code> live in the same file but
+          are set once, not every meeting. <code>ASPECT</code> picks portrait or
+          landscape; <code>BG_MODE</code> decides whether step 02 reuses the background
+          you already have or asks for a fresh one.</p>
         </div>
       </article>
 
@@ -711,11 +781,13 @@ PHRASE=<span class="p">"Find Your Voice"</span>   <span class="c"># exactly one 
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 002 2h14"/><path d="M18 22V8a2 2 0 00-2-2H2"/></svg>Pillow</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>agent</li>
           </ul>
-          <p>Cut a landscape tile per winner out of the group photo. The tiles are roughly
-          1.9:1 to match the card, and the crop box matters for one specific reason: Zoom
-          burns a name label into the bottom-left of every tile. Include it and you have
-          put un-proofread text back into your video, the exact failure the whole pipeline
-          exists to prevent.</p>
+          <p>Cut a tile per winner out of the group photo. The tile keeps whatever aspect
+          ratio you crop. A landscape build lines the tiles up side by side; a portrait
+          build (the default) stacks them. Whatever the shape, the crop box matters for
+          one specific reason: Zoom burns a name label
+          into the bottom-left of every tile. Include it and you have put un-proofread
+          text back into your video, the exact failure the whole pipeline exists to
+          prevent.</p>
           <pre>python3 -c <span class="p">"
 from PIL import Image
 im = Image.open('assets/group_photo.png')
@@ -783,6 +855,7 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>The disclaimer is readable in the opening frames: 14px or larger at 1080p, 60% white or brighter.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>No Zoom name label survived into a winner crop.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>The logo is unaltered and not overlapped, with the club name below it.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>If <code>MUSIC</code> is set, listen through: no vocals, no lyrics. A sung lyric is AI-generated words, arriving through the speakers instead of the screen.</span></li>
             </ul>
           </div>
         </div>
@@ -797,12 +870,14 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
     <div class="sec-head">
       <h2 id="h-fifteen">What the fifteen seconds are made of</h2>
       <p>One 8-second clip, played twice with a one-second crossfade, carrying four
-      overlays that fade their alpha channel in and out. Because the background never
-      stops moving underneath, it reads as one designed piece rather than four slides.</p>
+      cards whose elements arrive layer by layer: each group fades in over half a second
+      while rising 28 pixels, 0.2 seconds after the layer before it. Because the
+      background never stops moving underneath, it reads as one designed piece rather
+      than four slides.</p>
     </div>
     <div class="readout">
       <div class="tl">
-        <div><div class="t">0.0 → 3.6</div><div class="s">Title</div><div class="d">Theme, word of the day, club name under the logo, TI disclaimer</div></div>
+        <div><div class="t">0.0 → 3.6</div><div class="s">Title</div><div class="d">Meeting date, theme, word of the day with an optional definition, club name under the logo, TI disclaimer, optional Toastmaster name and photo</div></div>
         <div><div class="t">3.6 → 8.2</div><div class="s">Meeting</div><div class="d">Your photo or a silent clip, in a white rounded card</div></div>
         <div><div class="t">8.2 → 12.0</div><div class="s">Winners</div><div class="d">One to three tiles with names and awards</div></div>
         <div><div class="t">12.0 → 15.0</div><div class="s">Close</div><div class="d">Logo, club name, one approved phrase, URL, optional meeting time, credits</div></div>
@@ -867,7 +942,8 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
     <code>tm-social-post</code> skill drives your own signed-in browser to a Facebook Page
     and personal LinkedIn, drafts a caption with every name copied verbatim from
     <code>meeting.conf</code>, and stops for your explicit approval before it clicks
-    anything.</p>
+    anything; the <code>freetoasthost</code> skill can put the same file on the club's
+    FreeToastHost website afterward.</p>
   </div>
 </section>
 
@@ -883,6 +959,7 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
     commands, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/tree/main/.claude/skills"><code>.claude/skills/</code></a> for the five skills, and
     <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/AGENTS.md"><code>AGENTS.md</code></a> for the instructions that let any coding
     agent drive all of it.</p>
+    <p>Six steps, and only the red one costs anything: nothing is spent until you approve it.</p>
     <p class="licence">MIT licensed. The licence covers the scripts, templates,
     and documentation, not Toastmasters International trademarks or brand assets, not
     Montserrat, and not any media you supply.</p>
