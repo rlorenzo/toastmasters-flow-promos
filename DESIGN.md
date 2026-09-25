@@ -86,7 +86,7 @@ typography:
     fontVariation: "'wdth' 100"
   label:
     fontFamily: "Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif"
-    fontSize: "0.685rem"
+    fontSize: "0.6875rem"
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "0.17em"
@@ -97,11 +97,7 @@ typography:
     fontWeight: 400
     lineHeight: 1.72
   scale:
-    badge: "0.62rem"
-    badge-boxed: "0.63rem"
-    plate-table: "0.66rem"
-    plate-cost: "0.68rem"
-    plate: "0.685rem"
+    plate: "0.6875rem"
     plate-ruler: "0.7rem"
     meta-time: "0.73rem"
     meta-chip: "0.775rem"
@@ -307,22 +303,21 @@ file, it is set in JetBrains Mono.
 - **Title** (800, clamp(1.18rem, 1.06rem + 0.5vw, 1.45rem), tracking −0.012em): step and panel titles.
 - **Lede** (400, clamp(1.08rem, 1rem + 0.5vw, 1.32rem), line-height 1.55, `ink-dim`, max 56ch): the masthead standfirst; bold runs get `ink` at weight 600.
 - **Body** (400, clamp(16px, 15px + 0.18vw, 17.5px), line-height 1.62, `wdth` 100): prose, held to the 68ch measure.
-- **Label / Plate** (700, 0.685rem, tracking 0.17em, uppercase, `wdth` 84, `ink-faint`): silkscreened equipment labels such as "Repository", "Read before posting". State words and badges are the same voice at 0.62–0.63rem / 0.15em tracking, coloured by state ink; table headers at 0.66rem.
-- **Code** (400, 0.82rem, line-height 1.72 in blocks; 0.88em inline): JetBrains Mono. Also station numbers (0.78rem, 500), timestamps (0.73rem), costs (0.68rem), rulers (0.7rem).
+- **Label / Plate** (700, 0.6875rem, tracking 0.17em, uppercase, `wdth` 84, `ink-faint`): silkscreened equipment labels such as "Repository", "Read before posting". State words, badges and table headers are the same voice at the same size with 0.15em tracking, state words coloured by state ink.
+- **Code** (400, 0.82rem, line-height 1.72 in blocks; 0.88em inline): JetBrains Mono. Also station numbers (0.78rem, 500), timestamps (0.73rem), costs (0.6875rem), rulers (0.7rem).
 
 ### Small-type registers
 
 Below body size the page runs twenty literal sizes, but they are not twenty steps. They
-collapse into four registers, each with a centre and a narrow optical band; the full
+collapse into three registers, each with a centre and a narrow optical band; the full
 enumeration, keyed by register, is the frontmatter `typography.scale` map.
 
-- **Badge** (0.62–0.63rem, centre **0.62**): uppercase state words; the bordered badge runs 0.63 to offset its box.
-- **Plate** (0.66–0.70rem, centre **0.685**): silkscreen labels: table headers 0.66, mono costs 0.68, rulers 0.70.
+- **Plate** (0.6875–0.70rem, centre **0.6875**): every silkscreen label: state words, badges, table headers, mono costs, plates; rulers 0.70. 0.6875rem is 11px, the floor for UI text; the old sub-11px badge register was retired because it failed it.
 - **Meta** (0.73–0.83rem, centre **0.78**, mono-dominant): ordinals and cell descriptions 0.78, timestamps 0.73, driver chips 0.775, legal fine print 0.79, the origin line 0.80, code blocks 0.82, captions 0.83.
 - **Note** (0.85–0.95rem, centre **0.92**): supporting prose one step under body: table captions 0.85, footer 0.86, station names 0.88, legend and table body 0.90, checklists and warns 0.92, clearance items 0.93, legend words 0.95.
 
-**The Four Registers Rule.** New small type takes a register centre: 0.62, 0.685, 0.78,
-or 0.92rem. The in-between values are per-context optical tunings recorded in
+**The Three Registers Rule.** New small type takes a register centre: 0.6875, 0.78,
+or 0.92rem. Nothing goes below 0.6875rem (11px). The in-between values are per-context optical tunings recorded in
 `typography.scale`; stay inside the register's band, never mint a size outside it, and
 nothing sits between note (0.95rem) and body.
 
@@ -429,7 +424,7 @@ rail.
 Raised `panel` consoles (12px radius) with a lit header strip: `panel-hi → panel`
 gradient over a hairline bottom border, containing lamp, mono step number in `ink-faint`
 (the full-contrast duplicate that licenses the station's low-contrast stamp), title, and
-a state badge (uppercase silkscreen at 0.63rem, 1px `currentColor` border, 3px radius,
+a state badge (uppercase silkscreen at 0.6875rem, 1px `currentColor` border, 3px radius,
 coloured by state ink). Bodies pad fluidly and hold prose to the measure. **Only the
 spend step gets hazard weight:** border rgba(206,75,54,.42), head gradient tinted from
 rgba(206,75,54,.20), and a warn callout leading the body. No other step may borrow this
@@ -440,6 +435,14 @@ treatment.
 Flex row inside spend contexts: 19px triangle icon in `spend-ink`, text at 0.92rem in
 `warn-ink` (#EBD5CF), on rgba(206,75,54,.09) with a rgba(206,75,54,.32) border, 8px
 radius. Bold runs take `spend-ink`.
+
+### Disclosure
+
+Native `<details class="disclose">` for secondary explanation inside a step, so the
+actionable content stays in view: `housing` fill (an inset fitting, like checklists),
+hairline border, 8px radius. The summary is 0.92rem/600 in `ink-dim`, brightening to
+`ink` on hover, with a CSS border chevron that flips on `[open]`; the body sits under a
+hairline divider and is capped at `--measure`. No JavaScript, no colour of its own.
 
 ### Driver Chips
 
