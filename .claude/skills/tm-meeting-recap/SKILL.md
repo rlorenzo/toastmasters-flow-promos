@@ -55,6 +55,10 @@ then do as they ask.
 3. **Config.** Edit `meeting.conf` only: `THEME_LINE1`/`THEME_LINE2`, `MEETING_DATE`,
    `WORD_OF_DAY`, the `WINNERn_*` triples, and `OUTPUT`. Leave a `WINNERn_NAME` empty to
    drop that tile; the row re-centers. Never hardcode content into the templates.
+   Values are read literally, never as shell, so a name copied verbatim (including
+   `$`, backticks or parentheses in a Zoom display name) is always safe to write as
+   `KEY="value"`. The only thing a value can't contain is a double quote; if a name
+   has one, write around it rather than trying to escape it.
    `ASPECT` (`portrait` | `landscape`) picks the output shape and defaults to `portrait`;
    confirm it matches what the club wants rather than re-asking every week.
 4. **Background.** Read `BG_MODE` in `meeting.conf`. `reuse` (the default) means use the

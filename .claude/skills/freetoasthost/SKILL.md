@@ -118,8 +118,14 @@ on phones:
   set `.value`, then sync and submit as above. Reload the admin page afterwards and
   confirm the textarea holds your change.
 - **Reading content back:** the Chrome tool blocks output containing `?`, `=`, `&` or
-  base64 as possible secrets. Replace those characters with placeholders and read the
-  content in 800-character slices.
+  base64 as possible secrets, which is real protection you should not blanket-defeat.
+  Prefer `.value`/`innerText` on the specific element (as above) over raw page HTML.
+  If you must read raw HTML, strip anything that looks like a token first: hidden
+  inputs, `csrfmiddlewaretoken`, `Set-Cookie`, session ids, and signed media URLs.
+  Only for the page's own visible content (hero text, links, embed markup) is it
+  safe to placeholder-substitute `?`/`=`/`&` and read in 800-character slices. Never
+  apply that substitution to anything that could be a token, cookie, or CSRF value;
+  let the filter block those.
 
 ## Before you save
 

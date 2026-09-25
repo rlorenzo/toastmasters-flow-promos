@@ -12,14 +12,60 @@ cd "$(dirname "$0")/.."
 
 CONFIG="${CONFIG:-meeting.conf}"
 [[ -f "$CONFIG" ]] || { echo "Missing $CONFIG; see README.md" >&2; exit 1; }
-# set -a exports everything the config defines so the render step below can read
-# it from the environment instead of us threading 15 values through argv.
-set -a
-# shellcheck source-path=SCRIPTDIR source=../meeting.conf disable=SC1090
-source "$CONFIG"
-set +a
+
+# meeting.conf is data, not code: it holds a Zoom display name or chat handle
+# copied in verbatim by the tm-meeting-recap skill, so it must never be run as
+# bash. load_config reads only KEY=value and KEY="value" lines, takes the value
+# literally (no $expansion, no `command`), and exports it so the render step
+# below can read everything from the environment instead of us threading 15
+# values through argv. Anything else on a line is a hard failure with the line
+# number, rather than a silent empty value or an opaque bash syntax error.
+_config_quoted_re='^([A-Z_][A-Z0-9_]*)="([^"]*)"[[:space:]]*(#.*)?$'
+_config_bare_re='^([A-Z_][A-Z0-9_]*)=([^[:space:]"]*)[[:space:]]*(#.*)?$'
+_config_comment_re='^[[:space:]]*(#.*)?$'
+# Only these keys may be set, so a config can't export PATH, PYTHONPATH, CHROME
+# or BASH_ENV into the commands this script runs. Adding a meeting.conf key
+# means adding it here too; an unknown key fails the build with its line number.
+_config_keys=" ASPECT BG_MODE BG_MOOD BG_VIDEO CLUB_NAME CLUB_URL CREDIT
+  GROUP_PHOTO GROUP_VIDEO GROUP_VIDEO_START LOGO MEETING_DATE MEETING_TIME MUSIC
+  MUSIC_START OUTPUT PHRASE THEME_LINE1 THEME_LINE2 TOASTMASTER TOASTMASTER_IMG
+  WINNER1_AWARD WINNER1_IMG WINNER1_NAME WINNER2_AWARD WINNER2_IMG WINNER2_NAME
+  WINNER3_AWARD WINNER3_IMG WINNER3_NAME WORD_DEF WORD_OF_DAY "
+_config_keys="${_config_keys//$'\n'/ }"
+
+load_config() {
+  local file="$1" n=0 line key val
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    n=$((n + 1))
+    line="${line%$'\r'}"
+    [[ "$line" =~ $_config_comment_re ]] && continue
+    if [[ "$line" =~ $_config_quoted_re ]]; then
+      key="${BASH_REMATCH[1]}"; val="${BASH_REMATCH[2]}"
+    elif [[ "$line" =~ $_config_bare_re ]]; then
+      key="${BASH_REMATCH[1]}"; val="${BASH_REMATCH[2]}"
+    else
+      echo "$file:$n: invalid line, want KEY=value or KEY=\"value\": $line" >&2
+      exit 1
+    fi
+    if [[ "$_config_keys" != *" $key "* ]]; then
+      echo "$file:$n: unknown key $key; see meeting.conf for the supported keys" >&2
+      exit 1
+    fi
+    export "$key=$val"
+  done < "$file"
+}
+load_config "$CONFIG"
 
 OUT="${1:-${OUTPUT:-Meeting_Recap.mp4}}"
+
+# Lets CI (or anyone) ask "what file will this config produce?" through the
+# same data-only load_config path above, instead of sourcing the config
+# directly and reintroducing the shell-execution risk load_config exists to
+# close.
+if [[ "${PRINT_OUTPUT_PATH:-0}" == "1" ]]; then
+  echo "$OUT"
+  exit 0
+fi
 
 # --- Preflight ---------------------------------------------------------------
 # Chrome renders a missing image or font as blank space rather than failing, so
