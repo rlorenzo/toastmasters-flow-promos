@@ -34,3 +34,5 @@ agent-review-summary.md
 .impeccable/config.local.json
 .impeccable/questions/
 .impeccable/sketches/
+.impeccable/critique/
+.impeccable/live/
