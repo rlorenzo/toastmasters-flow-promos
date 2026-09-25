@@ -137,5 +137,8 @@ quietly ship as coverage.
   empty by default and `.def:empty` hides the line, so an unset value renders the
   title card exactly as it did before the token existed. Keep it to one line; it
   sits below the word at 26px and a second line would crowd the disclaimer.
+- `TOASTMASTER` is optional and names who ran the meeting on the title card. Empty
+  hides the line (`.tm:has(b:empty)`), so an unset value renders the card as before.
+  `TOASTMASTER_IMG` optionally adds a round photo beside the name; empty hides it.
 - `PHRASE` is validated against the eight approved phrases (the list lives in `build.sh`,
   `meeting.conf`, `brand-cheatsheet.md` and the `tm-brand` skill; update all four).
