@@ -152,7 +152,7 @@ From the Brand Manual (v2.0, p.35); see [brand-cheatsheet.md](brand-cheatsheet.m
 
 ## Using it with Claude Code
 
-Four skills ship in [.claude/skills/](.claude/skills/) and load automatically when you
+Five skills ship in [.claude/skills/](.claude/skills/) and load automatically when you
 open the clone:
 
 | Skill | What it does |
@@ -160,6 +160,7 @@ open the clone:
 | `tm-meeting-recap` | Runs the whole pipeline: collects the week's details, crops the winners, fills `meeting.conf`, builds, and verifies |
 | `google-flow` | Drives Google Flow for the background clip, with the credit-approval rules that keep you from overspending |
 | `tm-brand` | Toastmasters brand compliance for any club material, not just video |
+| `freetoasthost` | Edits a club website hosted on FreeToastHost 4: hero photo (animated WebP works), home page content, video embeds, and the limits the official docs leave out |
 | `tm-social-post` | Posts the finished video to a Facebook Page and personal LinkedIn by driving your own signed-in browser, with no API keys and no OAuth app. Drafts a caption you approve before anything publishes |
 
 None of them are required. [AGENTS.md](AGENTS.md) gives any coding agent enough to drive
@@ -175,7 +176,7 @@ the pipeline, and every step is a plain command you can run yourself.
 - [flow-prompts.md](flow-prompts.md): prompt patterns that work in Flow, and known failure modes
 - [ffmpeg-pipeline.md](ffmpeg-pipeline.md): the assembly commands, run by hand
 - [templates/](templates/): card HTML/CSS + `build.sh`
-- [.claude/skills/](.claude/skills/): the four Claude Code skills above
+- [.claude/skills/](.claude/skills/): the five Claude Code skills above
 - [AGENTS.md](AGENTS.md): instructions for AI coding agents working in this repo
 - [scripts/](scripts/): the lint entry point and this repo's own invariant checks
 

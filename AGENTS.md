@@ -74,7 +74,7 @@ quietly ship as coverage.
   only: the cards are 1920x1080 or 1080x1920 fragments Chrome screenshots, never pages a
   browser navigates to, so requiring a `<title>` in `<head>` would be noise. Every other
   rule applies, so put new exceptions somewhere they can be justified rather than here.
-- `.claude/skills/`: `tm-meeting-recap`, `google-flow`, `tm-brand`, `tm-social-post`;
+- `.claude/skills/`: `tm-meeting-recap`, `google-flow`, `tm-brand`, `tm-social-post`, `freetoasthost`;
   they ship with the repo so a clone gets them, and they must stay club-agnostic like
   everything else here
 - `index.html`: the visual walkthrough page. Its design is deliberately NOT

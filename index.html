@@ -532,12 +532,12 @@ cd toastmasters-flow-promos</pre>
   <div class="shell">
     <div class="sec-head">
       <h2 id="h-chain">The chain</h2>
-      <p>Each station names the tool that drives it. Four Claude Code skills ship in this
+      <p>Each station names the tool that drives it. Five Claude Code skills ship in this
       repo under <code>.claude/skills/</code> and load automatically once you open the
       clone. <code>tm-meeting-recap</code> runs the whole chain,
       <code>google-flow</code> covers the credit-spending station,
-      <code>tm-brand</code> knows the compliance rules, and <code>tm-social-post</code>
-      publishes the result. They do the orchestration you would otherwise do by hand:
+      <code>tm-brand</code> knows the compliance rules, <code>tm-social-post</code>
+      publishes the result, and <code>freetoasthost</code> puts it on the club website. They do the orchestration you would otherwise do by hand:
       reading the brand manual, checking the Flow dialog before approving it, proofreading
       the rendered cards.</p>
     </div>
@@ -880,7 +880,7 @@ ffmpeg -i Meeting_Recap.mp4 -af volumedetect -f null - 2>&amp;1 | grep volume</p
     rules, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/flow-prompts.md"><code>flow-prompts.md</code></a> for prompt patterns
     and the rest of the failure log,
     <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/ffmpeg-pipeline.md"><code>ffmpeg-pipeline.md</code></a> for the assembly
-    commands, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/tree/main/.claude/skills"><code>.claude/skills/</code></a> for the four skills, and
+    commands, <a href="https://github.com/rlorenzo/toastmasters-flow-promos/tree/main/.claude/skills"><code>.claude/skills/</code></a> for the five skills, and
     <a href="https://github.com/rlorenzo/toastmasters-flow-promos/blob/main/AGENTS.md"><code>AGENTS.md</code></a> for the instructions that let any coding
     agent drive all of it.</p>
     <p class="licence">MIT licensed. The licence covers the scripts, templates,
