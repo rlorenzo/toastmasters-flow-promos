@@ -44,6 +44,7 @@ The fix is a **hybrid pipeline**: split the work by what each tool is good at:
 |---|---|
 | `ffmpeg` + `ffprobe` | `brew install ffmpeg` / `apt install ffmpeg` |
 | `python3` + Pillow | `pip3 install Pillow` |
+| *(optional)* `numpy` + Pillow | Only for `scripts/descreen.py`, when the meeting photo is a phone shot of a screen. `brew install numpy pillow` |
 | Google Chrome or Chromium | Used headless to render the text cards. Auto-detected on macOS/Linux; override with `CHROME=/path/to/chrome` |
 | A Google Flow account | Only for generating the background clip: about 12 credits, one time. You can skip Flow entirely and supply your own 8s background video |
 
@@ -106,6 +107,8 @@ Each overlay alpha-fades in/out over 0.4s; the final 0.6s fades to black; audio 
 
 1. **Gather assets.** See "What you need to supply" above. On macOS, screenshot filenames
    contain a narrow no-break space (U+202F) before "PM", so `cp` by glob, not by typed name.
+   If the group photo is a phone shot of the screen rather than a screenshot, clean it
+   first; see "Photo of a screen instead of a screenshot" below.
 2. **Generate the background in Flow**, or don't. `BG_MODE` in `meeting.conf` decides:
    `reuse` (the default) points `BG_VIDEO` at the clip you already have and spends
    nothing, while `generate` asks for a fresh one each meeting so no two recaps look
@@ -137,6 +140,34 @@ Each overlay alpha-fades in/out over 0.4s; the final 0.6s fades to black; audio 
    the video.
 6. **Verify.** Proofread the PNGs in `cards/`, then extract a contact sheet and check
    spelling, faces, and contrast. Commands in [ffmpeg-pipeline.md](ffmpeg-pipeline.md).
+
+## Photo of a screen instead of a screenshot
+
+A phone photo of a monitor picks up the screen's pixel grid as fine evenly spaced
+lines across every face, plus tilt, glare and the Zoom toolbar. Blurring hides the
+grid only by softening everyone. `scripts/descreen.py` removes it with an FFT notch
+filter: the grid is periodic, so it sits in a narrow frequency band that can be zeroed
+while real detail survives. It is plain filtering, not AI enhancement, so no face or
+name label is redrawn.
+
+```bash
+scripts/descreen.py assets/group.jpg /tmp/descreened.png
+# Straighten (measure the tilt from a tile edge) and crop off the toolbar. Then
+# stretch each channel on its own, which neutralises the phone's colour cast, and
+# restore the contrast and saturation the screen glare washed out.
+magick /tmp/descreened.png -rotate -0.25 +repage \
+  -gravity north -crop 1790x1018+0+4 +repage \
+  -separate -contrast-stretch 0.3%x0.3% -combine \
+  -sigmoidal-contrast 4.5,48% -modulate 104,128 -unsharp 0x0.8+0.6+0.01 \
+  -quality 95 assets/group-clean.jpg
+```
+
+The rotate and crop values are per photo. If skin turns orange or whites clip, lower
+the `-modulate` saturation (the second number) or the `4.5` contrast first. Zoom in on a face before and after: if lines
+remain, the grid pitch is outside the script's band, so widen `LO`/`HI` at its top.
+Paint out a stray mouse cursor by cloning a patch of the dark background over it
+(`\( +clone -crop WxH+X+Y +repage \) -geometry +X2+Y2 -composite`).
+`scripts/descreen.py --self-test` checks the filter on a synthetic grid.
 
 ## Compliance checklist before posting
 
@@ -178,7 +209,8 @@ the pipeline, and every step is a plain command you can run yourself.
 - [templates/](templates/): card HTML/CSS + `build.sh`
 - [.claude/skills/](.claude/skills/): the five Claude Code skills above
 - [AGENTS.md](AGENTS.md): instructions for AI coding agents working in this repo
-- [scripts/](scripts/): the lint entry point and this repo's own invariant checks
+- [scripts/](scripts/): the lint entry point, this repo's own invariant checks, and
+  `descreen.py` for cleaning up a photo of a screen
 
 ## Contributing
 
